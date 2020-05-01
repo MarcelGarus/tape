@@ -15,6 +15,14 @@ impl<T> Single<T> for [T] {
     }
 }
 
+pub enum Case {
+    Camel,     // CamelCase
+    Dromedar,  // dromedarCase
+    Kebab,     // kebab-case
+    Snake,     // snake_case
+    Screaming, // SCREAMING_CASE
+}
+
 /// Returns a lambda that returns [true] for elements that match the given
 /// pattern and [false] for the rest.
 #[macro_export]
