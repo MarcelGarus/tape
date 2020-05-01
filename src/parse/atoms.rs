@@ -1,6 +1,6 @@
 use crate::parse::error::ParseError;
-use crate::parse::utils::{CursorParser, IntoString};
-use crate::utils::Positioned;
+use crate::parse::utils::CursorParser;
+use crate::utils::{IntoString, Positioned};
 use num::bigint::BigUint;
 
 /// A minimally higher representation of the source's characters, differentiating between
@@ -9,7 +9,6 @@ use num::bigint::BigUint;
 /// exception being comments, which are already grouped together to a single atom.
 #[derive(Debug)]
 pub enum Atom {
-    // Newlines(usize), // newlines
     BraceOpen,       // {
     BraceClose,      // }
     TagOpen,         // <
@@ -29,7 +28,7 @@ pub enum Atom {
     Number(BigUint), // e.g. 5 or 141847320417234732
     String(String),  // e.g. "Hi 😊"
     Comment(String), // single line comment e.g. // Hi.
-    Word(String),    // A word.
+    Word(String),    // A word (possibly keyword or identifier).
 }
 
 trait CharUtils {
@@ -43,13 +42,7 @@ impl CharUtils for char {
     }
 
     fn is_word(&self) -> bool {
-        match self {
-            'a'..='z' => true,
-            'A'..='Z' => true,
-            '0'..='9' => true,
-            '_' => true,
-            _ => false,
-        }
+        matches!(self, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '-')
     }
 }
 
@@ -64,7 +57,7 @@ impl AtomParser {
         let mut atoms: Vec<Positioned<Atom>> = vec![];
         let mut errors: Vec<ParseError> = vec![];
         loop {
-            let cursor_before = self.cursor;
+            let cursor_before = self.cursor();
             match self.next_atom() {
                 None => break (atoms, errors), // We are done.
                 Some(result) => {
@@ -72,7 +65,7 @@ impl AtomParser {
                     match maybe_atom {
                         Some(atom) => atoms.push(Positioned {
                             data: atom,
-                            position: cursor_before..self.cursor,
+                            position: cursor_before..self.cursor(),
                         }),
                         _ => {}
                     }
@@ -111,7 +104,7 @@ impl AtomParser {
                 }
             }
             chr if chr.is_decimal_digit() => Some(Atom::Number(
-                self.advance_while_with_initial(|chr| chr.is_decimal_digit(), vec![*chr])
+                self.advance_while_with_initial(|chr| chr.is_decimal_digit(), vec![chr])
                     .into_string()
                     .parse()
                     .unwrap(),
