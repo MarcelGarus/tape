@@ -1,8 +1,12 @@
 Roadmap:
 - [ ] Parsing
 - [ ] Formatting
+- [ ] be more generous in accepting commas between fields and variants
 - [ ] Binary specification
+- [ ] Enum variant auto-chooser for values. "Hi" instead of string("Hi")
 - [ ] Rust backend
+- [ ] arithmetics (+ - *)
+- [ ] support full semantic versions
 - [ ] CLI
 - [ ] Language Server for highlighting and analyzing
 - [ ] semantic versioning enforement
