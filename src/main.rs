@@ -15,8 +15,8 @@ fn main() -> Result<(), Box<dyn std::error::Error + 'static>> {
     println!("Source is {}", source);
     let program: TapeFile = source.parse()?;
     println!();
-    for atom in program.atoms {
-        println!("{:?}", atom.data);
+    for element in program.elements {
+        println!("{:?}", element);
     }
     Ok(())
 }

@@ -9,13 +9,15 @@ use num::bigint::BigUint;
 /// exception being comments, which are already grouped together to a single atom.
 #[derive(Debug)]
 pub enum Atom {
-    Newlines(usize), // newlines
+    // Newlines(usize), // newlines
     BraceOpen,       // {
     BraceClose,      // }
     TagOpen,         // <
     TagClose,        // >
     ParenOpen,       // (
     ParenClose,      // )
+    BracketOpen,     // [ TODO: parse
+    BracketClose,    // ] TODO: parse
     Colon,           // :
     EqualSign,       // =
     Dot,             // .
@@ -58,7 +60,7 @@ impl AtomParser {
         AtomParser::from(source.chars().collect())
     }
 
-    pub fn parse(&self) -> (Vec<Positioned<Atom>>, Vec<ParseError>) {
+    pub fn parse(&mut self) -> (Vec<Positioned<Atom>>, Vec<ParseError>) {
         let mut atoms: Vec<Positioned<Atom>> = vec![];
         let mut errors: Vec<ParseError> = vec![];
         loop {
@@ -88,18 +90,6 @@ impl AtomParser {
         let mut errors: Vec<ParseError> = vec![];
         // println!("Parsing atom. Next char is {}", next_char);
         let atom = match self.advance()? {
-            chr if chr.is_whitespace() => {
-                let num_newlines = self
-                    .advance_while_with_initial(|chr| chr.is_whitespace(), vec![chr])
-                    .iter()
-                    .filter(|chr| **chr == '\n')
-                    .count();
-                if num_newlines > 0 {
-                    Some(Atom::Newlines(num_newlines))
-                } else {
-                    None
-                }
-            }
             '{' => Some(Atom::BraceOpen),
             '}' => Some(Atom::BraceClose),
             '<' => Some(Atom::TagOpen),
@@ -121,7 +111,7 @@ impl AtomParser {
                 }
             }
             chr if chr.is_decimal_digit() => Some(Atom::Number(
-                self.advance_while_with_initial(|chr| chr.is_decimal_digit(), vec![chr])
+                self.advance_while_with_initial(|chr| chr.is_decimal_digit(), vec![*chr])
                     .into_string()
                     .parse()
                     .unwrap(),
@@ -148,9 +138,9 @@ impl AtomParser {
                             errors.push(ParseError::invalid_escaping_in_string(self.cursor));
                             // While this is an error, continue parsing the string. Add the faultily
                             // escaped character to the string as well.
-                            string.push(chr);
+                            string.push(*chr);
                         }
-                        (Some(chr), false) => string.push(chr),
+                        (Some(chr), false) => string.push(*chr),
                         (None, _) => {
                             errors.push(ParseError::unterminated_string(start_offset..self.cursor))
                         }
@@ -175,7 +165,7 @@ impl AtomParser {
                 ))
             }
             chr if chr.is_word() => Some(Atom::Word(
-                self.advance_while_with_initial(|chr| chr.is_word(), vec![chr])
+                self.advance_while_with_initial(|chr| chr.is_word(), vec![*chr])
                     .into_string(),
             )),
             _ => {

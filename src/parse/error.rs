@@ -29,8 +29,6 @@ impl DecideIfAbortParsing for Vec<ParseError> {
     }
 }
 
-// fn proceed_to_next_stage
-
 impl ParseError {
     // Errors thrown during atom parsing.
     pub fn newline_in_string(newline_position: usize) -> Self {
