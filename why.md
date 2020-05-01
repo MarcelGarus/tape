@@ -1,13 +1,13 @@
 There are already some pretty cool protocol formats, like json, or Protobuf.
-So why do we need a new one?
+Some protocol formats are already widely adopted, so why do we need a new one?
 
 Let's have a look at a few interesting aspects of APIs and how json and Protobuf try to deliver on that.
 
 ## Discoverability
 
-Protobuf is not intended to be read by humans, so you need to consult external documentation to find out what the API endpoint might answer. Especially when you're experimenting and wondering what the meaning of a concrete response is, it might become a hassle to have to switch back and forth between the documentation and the response to find out what the fields mean.
+You can just go to a browser and type in the API endpoint. The result is human-readable, so you can inspect and explore the API hands on.
 
-On the other hand, JSON is dynamically typed and you can easily make requests and inspect answers right in your browser. That's a great way to explore an API.
+Protobuf is not intended to be read by humans, so you need to consult external documentation to find out what the API endpoint might answer. Especially when you're experimenting and wondering what the meaning of a concrete response is, it might become a hassle to have to switch back and forth between the documentation and the response to find out what the fields mean.
 
 ## Efficiency
 
@@ -17,9 +17,9 @@ JSON is by nature a much more verbose format. While there exist interesting (de-
 
 ## Typedness
 
-Types are great! They make large projects more stable, so it's not surprising most of the industry fancies languages that use them – TypeScript, Dart, Rust, Kotlin are all languages with types.
+> Types are great! They make large projects more stable, so it's not surprising most of the industry fancies languages that use them – just to name a few, Dart, Rust, Kotlin are all languages with types. And even in the web type-safe languages like TypeScript and Elm are gaining popularity.
 
-Protobuf is strongly typed. That means, there's no way a dynamic or unknown type is returned from an API – all types are specified before and each type can only contain pre-defined known other types. That makes it easy to automatically generate the corresponding types for all major languages.
+Protobuf is strongly typed. That means, there's no way a dynamic or unknown type is returned from an API – all types are specified before and each type can only contain pre-defined known other types. That makes it easy to automatically generate the corresponding types for all major languages. The types are somewhat limited though – for example, they can't represent generics, a concept found in most typed languages.
 
 JSON is dynamically typed. There are no user-defined types, it's just a tree of pre-defined types like numbers, strings, maps, and lists.
 
@@ -34,6 +34,8 @@ Patch: Generated code doesn't change.
 
 
 ---
+
+Protobuf marrying JSON's discoverability, Rust-like types, and great package-tooling, Kotlin's semicolons (none).
 
 There has to be a middle ground somewhere!
 That's why I'm introducing **The API Package Ecosystem** (TAPE for short).
@@ -52,7 +54,7 @@ Other tooling, like formatters, language servers, documentation generators, code
 
 Like other
 
-Structs, Enums, Type Aliases
+Structs, Enums, Aliases
 Generics
 Constants
 Debug Mode
