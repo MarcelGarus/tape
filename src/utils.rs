@@ -15,6 +15,27 @@ impl<T> Single<T> for [T] {
     }
 }
 
+/// Shortcut for being able to use `.into_string()` on a `Vec<char>`.
+pub trait IntoString {
+    fn into_string(self) -> String;
+}
+
+impl IntoString for Vec<char> {
+    fn into_string(self) -> String {
+        self.into_iter().collect()
+    }
+}
+
+/// Returns a lambda that returns `true` for elements that match the given pattern and `false` for
+/// the rest.
+#[macro_export]
+macro_rules! matcher {
+    ($p:pat) => {
+        |value| matches!(value, $p)
+    };
+}
+
+// TODO: Move this into a package.
 pub enum Case {
     Camel,     // CamelCase
     Dromedar,  // dromedarCase
@@ -23,19 +44,10 @@ pub enum Case {
     Screaming, // SCREAMING_CASE
 }
 
-/// Returns a lambda that returns [true] for elements that match the given
-/// pattern and [false] for the rest.
-#[macro_export]
-macro_rules! matcher {
-    ($p:pat) => {
-        |value| matches!(value, $p)
-    };
-}
-
 /// Position in the source file in bytes.
 pub type SourceRange = Range<usize>;
 
-/// A higher-level abstraction of the source.
+/// Wraps an arbitrary type with position data.
 #[derive(Debug, Eq, PartialEq)]
 pub struct Positioned<T> {
     pub data: T,
@@ -49,8 +61,8 @@ impl<T> Deref for Positioned<T> {
     }
 }
 
-/// Pattern that applies the given pattern [p] to the [data] of a [Positioned],
-/// making the matching independent from the [Positioned]'s [position].
+/// Pattern that applies the given pattern `p` to the `data` of a `Positioned`, making the matching
+/// independent from the `position`.
 #[macro_export]
 macro_rules! AnyPos {
     ($p:pat) => {
