@@ -1,0 +1,11 @@
+[package]
+name = "fruit"
+description = "Blub."
+version = "0.1.0"
+authors = ["Marcel Garus <marcel.garus@gmail.com>"]
+tape = "0.2.0"
+
+[dependencies]
+duration = "0.2.5"
+rgb_color = { git = "https://github.com/marcelgarus/rgb_color" }
+utils = { path = "hello_utils" }
