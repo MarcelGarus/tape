@@ -44,13 +44,11 @@
 
 use crate::parse::atoms::AtomParser;
 use crate::parse::error::{DecideIfAbortParsing, ParseError};
-use crate::parse::organisms::OrganismParser;
-use crate::parse::organisms::RootElement;
+use crate::parse::organisms::{OrganismParser, RootElement};
 use std::fmt;
 
 mod atoms;
 mod error;
-// mod molecules;
 mod organisms;
 mod utils;
 
