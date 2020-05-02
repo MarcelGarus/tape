@@ -42,14 +42,14 @@
 //! source code is so messed up that it's impossible to continue parsing a piece of the code, so
 //! most parsing methods you'll see have an `Option` as a return type.
 
-use crate::parse::atoms::AtomParser;
 use crate::parse::error::{DecideIfAbortParsing, ParseError};
 use crate::parse::organisms::{OrganismParser, RootElement};
+use crate::parse::tokens::parse_tokens;
 use std::fmt;
 
-mod atoms;
 mod error;
 mod organisms;
+mod tokens;
 mod utils;
 
 /// A parsed tape file.
@@ -83,17 +83,17 @@ impl std::str::FromStr for TapeFile {
     type Err = TapeParseFailure;
     fn from_str(source: &str) -> Result {
         let mut errors: Vec<ParseError> = vec![];
-        // Parse atoms.
+        // Parse source into tokens.
         println!("Parsing {} bytes…", source.len());
-        let atoms = AtomParser::from(source.chars().collect(), &mut errors).parse();
+        let tokens = parse_tokens(source, &mut errors);
         if errors.should_abort_parsing() {
             return Err(TapeParseFailure { errors });
         }
 
-        // Parse molecules.
-        println!("Parsing {} atoms…", atoms.len());
+        // Parse tokens into organisms.
+        println!("Parsing {} tokens…", tokens.len());
         let mut parser = OrganismParser::from(
-            atoms.into_iter().map(|pos_atom| pos_atom.data).collect(),
+            tokens.into_iter().map(|pos_atom| pos_atom.data).collect(),
             &mut errors,
         );
         let elements = parser.parse();

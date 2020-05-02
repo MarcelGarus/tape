@@ -19,6 +19,8 @@ impl<T> MatchActions<T> for Option<T> {
     }
 }
 
+pub type ErrorRegistry = Vec<ParseError>;
+
 /// Provides a cursor-based parsing environment and error handling.
 ///
 /// This class is used by multiple parsers on different abstraction layers. It offers two features:
@@ -32,16 +34,16 @@ impl<T> MatchActions<T> for Option<T> {
 pub struct CursorParser<'a, T> {
     items: Vec<Option<T>>,
     cursor: usize,
-    errors: &'a mut Vec<ParseError>,
+    error_registry: &'a mut ErrorRegistry,
 }
 
 impl<T> CursorParser<'_, T> {
     /// Creates a new struct that contains the given items.
-    pub fn from<'a>(items: Vec<T>, errors: &'a mut Vec<ParseError>) -> CursorParser<'a, T> {
+    pub fn from<'a>(items: Vec<T>, error_registry: &'a mut ErrorRegistry) -> CursorParser<'a, T> {
         CursorParser {
             items: items.into_iter().map(|item| Some(item)).collect(),
             cursor: 0,
-            errors,
+            error_registry,
         }
     }
 
@@ -55,15 +57,15 @@ impl<T> CursorParser<'_, T> {
 
     /// Registers an error.
     pub fn register(&mut self, error: ParseError) {
-        self.errors.push(error);
+        self.error_registry.push(error);
     }
 
     /// Returns the next item (the same that calling `advance()` would return).
-    fn internal_peek(&self) -> Option<T> {
+    pub fn peek(&self) -> Option<&T> {
         if self.cursor < self.items.len() {
             let maybe_item: Option<T> = self.items[self.cursor];
             let item: T = self.items[self.cursor].unwrap();
-            Some(item)
+            Some(&item)
         } else {
             None
         }
@@ -73,7 +75,7 @@ impl<T> CursorParser<'_, T> {
     where
         M: FnOnce(&T) -> R,
     {
-        self.internal_peek().map(|item| mapper(&item))
+        self.peek().map(|item| mapper(&item))
     }
 
     /// Moves the current item out of the structure and advances the cursor.
@@ -101,7 +103,7 @@ impl<T> CursorParser<'_, T> {
     where
         P: FnOnce(&T) -> bool,
     {
-        match self.internal_peek() {
+        match self.peek() {
             Some(item) if predicate(&item) => {
                 let item = self.advance()?;
                 Some(item)
@@ -114,9 +116,9 @@ impl<T> CursorParser<'_, T> {
     where
         P: FnOnce(T) -> Option<S>,
     {
-        match self.internal_peek() {
+        match self.peek() {
             None => None,
-            Some(item) => match predicate(item) {
+            Some(&item) => match predicate(item) {
                 Some(mapped_value) => Some(mapped_value),
                 None => None,
             },
@@ -144,5 +146,19 @@ impl<T> CursorParser<'_, T> {
                 None => break elements,
             }
         }
+    }
+}
+
+pub trait CharUtils {
+    fn is_decimal_digit(&self) -> bool;
+    fn is_word(&self) -> bool;
+}
+
+impl CharUtils for char {
+    fn is_decimal_digit(&self) -> bool {
+        self.is_digit(10)
+    }
+    fn is_word(&self) -> bool {
+        matches!(self, 'a'..='z' | 'A'..='Z' | '0'..='9' | '_' | '-')
     }
 }

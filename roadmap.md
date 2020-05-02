@@ -11,7 +11,8 @@ Roadmap:
   - [ ] single tick-encoded strings
   - [ ] trailing commas after fields and variants
   - [ ] semicolons after type definitions
-  - [ ] unicorn easter egg
+  - [ ] unicorn character easter egg
+  - [ ] custom message for encoded newline
 - [ ] support full semantic versions
 - [ ] CLI
 - [ ] Language Server for highlighting and analyzing

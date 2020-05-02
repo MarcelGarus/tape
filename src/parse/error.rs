@@ -1,4 +1,8 @@
-use crate::utils::SourceRange;
+use crate::parse::organisms::AddedAnnotation;
+use crate::parse::organisms::Comment;
+use crate::parse::organisms::Identifier;
+use crate::parse::tokens::Token;
+use crate::utils::Span;
 use num::BigUint;
 
 #[derive(Debug)]
@@ -9,7 +13,7 @@ pub struct ParseError {
     pub description: String,
     pub suggestions: Vec<&'static str>,
     pub personalized_suggestions: Vec<String>,
-    pub position: SourceRange,
+    pub span: Span,
 }
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
@@ -46,7 +50,7 @@ impl ParseError {
                 example, \"ab\" \"cd\" is equivalent to \"abcd\".",
             ],
             personalized_suggestions: vec![],
-            position: newline_position..newline_position,
+            span: newline_position..newline_position,
         }
     }
 
@@ -60,11 +64,11 @@ impl ParseError {
                 .to_string(),
             suggestions: vec!["Remove the backslash."],
             personalized_suggestions: vec![],
-            position: (escaped_char_position - 1)..escaped_char_position,
+            span: (escaped_char_position - 1)..escaped_char_position,
         }
     }
 
-    pub fn unterminated_string(string_range: SourceRange) -> Self {
+    pub fn unterminated_string(string_span: Span) -> Self {
         ParseError {
             id: "unterminated_string",
             level: Level::Fatal,
@@ -72,7 +76,7 @@ impl ParseError {
             description: "Strings need to be terminated with a '\"'.".to_string(),
             suggestions: vec!["Add a '\"' at the end of the string."],
             personalized_suggestions: vec![],
-            position: string_range,
+            span: string_span,
         }
     }
 
@@ -88,7 +92,7 @@ impl ParseError {
                 "If you tried to start a comment, use a double slash like this: '// Some comment.'",
             ],
             personalized_suggestions: vec![],
-            position: slash_position..(slash_position + 1),
+            span: slash_position..(slash_position + 1),
         }
     }
 
@@ -101,7 +105,7 @@ impl ParseError {
                 .to_string(),
             suggestions: vec!["Add a space."],
             personalized_suggestions: vec![],
-            position: (missing_space_position - 2)..missing_space_position,
+            span: (missing_space_position - 2)..missing_space_position,
         }
     }
 
@@ -115,7 +119,7 @@ impl ParseError {
                 .to_string(),
             suggestions: vec!["Remove this character."],
             personalized_suggestions: vec![],
-            position: char_position..(char_position + 1),
+            span: char_position..(char_position + 1),
         }
     }
 
@@ -134,7 +138,7 @@ impl ParseError {
                 "If you attempted to not change the sign of a number, just omit the '+'.",
             ],
             personalized_suggestions: vec![],
-            position: plus_position..plus_position,
+            span: plus_position..plus_position,
         }
     }
 
@@ -155,11 +159,11 @@ impl ParseError {
                 a smarta** and remove both of them.",
             ],
             personalized_suggestions: vec![],
-            position: minus_position..minus_position,
+            span: minus_position..minus_position,
         }
     }
 
-    pub fn expected_patch_version(version_position: SourceRange) -> Self {
+    pub fn expected_patch_version(version_position: Span) -> Self {
         ParseError {
             id: "expected_patch_version",
             level: Level::Error,
@@ -172,11 +176,11 @@ impl ParseError {
                 "If this should be a floating point number, remove the last dot.",
             ],
             personalized_suggestions: vec![],
-            position: version_position,
+            span: version_position,
         }
     }
 
-    pub fn version_too_big(version_position: SourceRange, version: BigUint) -> Self {
+    pub fn version_too_big(version_position: Span, version: BigUint) -> Self {
         ParseError {
             id: "version_too_big",
             level: Level::Error,
@@ -191,13 +195,17 @@ impl ParseError {
                 "Otherwise, open an issue at ….", // TODO: add GitHub link
             ],
             personalized_suggestions: vec![],
-            position: version_position,
+            span: version_position,
         }
     }
 
     // Errors thrown during organism parsing.
 
-    pub fn expected_struct_field_type(non_type_position: SourceRange) -> Self {
+    pub fn expected_package_statement(span: Span) -> Self {
+        unimplemented!();
+    }
+
+    pub fn expected_struct_field_type(non_type_position: Span) -> Self {
         ParseError {
             id: "expected_struct_field_type",
             level: Level::Error,
@@ -205,10 +213,11 @@ impl ParseError {
             description: "You started a struct field but didn't provide a type.".to_string(),
             suggestions: vec!["Add a type."],
             personalized_suggestions: vec![],
-            position: non_type_position,
+            span: non_type_position,
         }
     }
-    pub fn expected_val_name(position: Option<SourceRange>) -> Self {
+
+    pub fn expected_value_name(span: Span) -> Self {
         ParseError {
             id: "expected_val_name",
             level: Level::Error,
@@ -217,7 +226,84 @@ impl ParseError {
                 .to_string(),
             suggestions: vec!["Add a name."],
             personalized_suggestions: vec![],
-            position,
+            span,
         }
+    }
+
+    pub fn expected_source(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_use_keyword(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_import(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_definition(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_definition_after_decoration(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_annotation(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_opening_parenthesis(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_version(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_closing_parenthesis(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_deprecation_reason(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_comma(span: Span) -> Self {
+        unimplemented!()
+    }
+    pub fn multiple_comments(first: Comment, second: Comment) -> Self {
+        unimplemented!()
+    }
+    pub fn unknown_annotation(name: Identifier) -> Self {
+        unimplemented!()
+    }
+    pub fn multiple_added_annotations(first: AddedAnnotation, second: AddedAnnotation) -> Self {
+        unimplemented!()
+    }
+    pub fn multiple_deprecated_annotations(
+        first: AddedAnnotation,
+        second: AddedAnnotation,
+    ) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_major_version_number(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_minor_version_number(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_patch_version_number(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_dot(token: Token) -> Self {
+        unimplemented!()
+    }
+
+    pub fn expected_struct_name(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_opening_brace(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_colon(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_field_type(token: Token) -> Self {
+        unimplemented!()
+    }
+    pub fn expected_enum_name(token: Token) -> Self {
+        unimplemented!()
     }
 }

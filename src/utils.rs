@@ -1,4 +1,3 @@
-use std::ops::Deref;
 use std::ops::Range;
 
 pub trait Single<T> {
@@ -45,37 +44,4 @@ pub enum Case {
 }
 
 /// Position in the source file in bytes.
-pub type SourceRange = Range<usize>;
-
-/// Wraps an arbitrary type with position data.
-#[derive(Debug, Eq, PartialEq)]
-pub struct Positioned<T> {
-    pub data: T,
-    pub position: SourceRange,
-}
-
-impl<T> Deref for Positioned<T> {
-    type Target = T;
-    fn deref(&self) -> &T {
-        &self.data
-    }
-}
-
-/// Pattern that applies the given pattern `p` to the `data` of a `Positioned`, making the matching
-/// independent from the `position`.
-#[macro_export]
-macro_rules! AnyPos {
-    ($p:pat) => {
-        crate::utils::Positioned { data: $p, .. }
-    };
-}
-
-#[macro_export]
-macro_rules! Pos {
-    ($data: pat, $pos: pat) => {
-        crate::utils::Positioned {
-            data: $data,
-            position: $pos,
-        }
-    };
-}
+pub type Span = Range<usize>;
