@@ -1,11 +1,17 @@
 Roadmap:
 - [ ] Parsing
 - [ ] Formatting
-- [ ] be more generous in accepting commas between fields and variants
 - [ ] Binary specification
 - [ ] Enum variant auto-chooser for values. "Hi" instead of string("Hi")
 - [ ] Rust backend
 - [ ] arithmetics (+ - *)
+- [ ] make parser more resilient against
+  - [ ] other arrows (--> and =>)
+  - [ ] double colons (::)
+  - [ ] single tick-encoded strings
+  - [ ] trailing commas after fields and variants
+  - [ ] semicolons after type definitions
+  - [ ] unicorn easter egg
 - [ ] support full semantic versions
 - [ ] CLI
 - [ ] Language Server for highlighting and analyzing
