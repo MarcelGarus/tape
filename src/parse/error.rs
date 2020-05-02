@@ -194,4 +194,30 @@ impl ParseError {
             position: version_position,
         }
     }
+
+    // Errors thrown during organism parsing.
+
+    pub fn expected_struct_field_type(non_type_position: SourceRange) -> Self {
+        ParseError {
+            id: "expected_struct_field_type",
+            level: Level::Error,
+            summary: "Expected type of the struct field.",
+            description: "You started a struct field but didn't provide a type.".to_string(),
+            suggestions: vec!["Add a type."],
+            personalized_suggestions: vec![],
+            position: non_type_position,
+        }
+    }
+    pub fn expected_val_name(position: Option<SourceRange>) -> Self {
+        ParseError {
+            id: "expected_val_name",
+            level: Level::Error,
+            summary: "Expected name of a value.",
+            description: "You started a `val` statement but no name for the value was found."
+                .to_string(),
+            suggestions: vec!["Add a name."],
+            personalized_suggestions: vec![],
+            position,
+        }
+    }
 }

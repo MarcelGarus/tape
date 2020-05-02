@@ -27,7 +27,7 @@
 //! source file. For example, we want to be able to format the file, highlight references of fields
 //! for refactoring etc. That's why there's a `Positioned<T>` struct that can be wrapped around any
 //! type and also adds positioning information. The position is a range indicating the start and end
-//! byte in the original source file.
+//! character (as in, Unicode character) in the original source file.
 //!
 //! ## Error handling
 //!
@@ -85,24 +85,23 @@ impl std::str::FromStr for TapeFile {
         let mut errors: Vec<ParseError> = vec![];
         // Parse atoms.
         println!("Parsing {} bytes…", source.len());
-        let (atoms, mut atom_errors) = AtomParser::from_source(source).parse();
-        errors.append(&mut atom_errors);
+        let atoms = AtomParser::from(source.chars().collect(), &mut errors).parse();
         if errors.should_abort_parsing() {
             return Err(TapeParseFailure { errors });
         }
 
         // Parse molecules.
         println!("Parsing {} atoms…", atoms.len());
-        let mut parser =
-            OrganismParser::from_atoms(atoms.into_iter().map(|pos_atom| pos_atom.data).collect());
+        let mut parser = OrganismParser::from(
+            atoms.into_iter().map(|pos_atom| pos_atom.data).collect(),
+            &mut errors,
+        );
         let elements = parser.parse();
-        for error in &parser.errors {
+        for error in &errors {
             println!("Error: {:?}", error);
         }
         elements
             .map(|elements| TapeFile { elements })
-            .ok_or(TapeParseFailure {
-                errors: parser.errors,
-            })
+            .ok_or(TapeParseFailure { errors })
     }
 }

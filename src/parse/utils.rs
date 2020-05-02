@@ -1,6 +1,24 @@
 use crate::parse::error::ParseError;
 use std::mem;
 
+pub trait MatchActions<T> {
+    fn on_no_match<R, A>(self, action: A) -> Option<R>
+    where
+        A: FnOnce() -> R;
+}
+
+impl<T> MatchActions<T> for Option<T> {
+    fn on_no_match<R, A>(self, action: A) -> Option<R>
+    where
+        A: FnOnce() -> R,
+    {
+        match self {
+            Some(_) => None,
+            None => Some(action()),
+        }
+    }
+}
+
 /// Provides a cursor-based parsing environment and error handling.
 ///
 /// This class is used by multiple parsers on different abstraction layers. It offers two features:
@@ -11,18 +29,19 @@ use std::mem;
 /// and the cursor is advanced. Contrary it standard `Iterator`s or `Peekable`s, the `CursorParser`
 /// allows peeking arbitrarily beyond the cursor position (peeking beyond the bounds of the vector
 /// just results in returning None).
-pub struct CursorParser<T> {
+pub struct CursorParser<'a, T> {
     items: Vec<Option<T>>,
     cursor: usize,
-    errors: Vec<ParseError>,
+    errors: &'a mut Vec<ParseError>,
 }
 
-impl<T> CursorParser<T> {
+impl<T> CursorParser<'_, T> {
     /// Creates a new struct that contains the given items.
-    pub fn from(items: Vec<T>) -> CursorParser<T> {
+    pub fn from<'a>(items: Vec<T>, errors: &'a mut Vec<ParseError>) -> CursorParser<'a, T> {
         CursorParser {
             items: items.into_iter().map(|item| Some(item)).collect(),
             cursor: 0,
+            errors,
         }
     }
 
@@ -30,32 +49,31 @@ impl<T> CursorParser<T> {
         self.cursor
     }
 
+    pub fn is_done(&self) -> bool {
+        self.cursor < self.items.len()
+    }
+
+    /// Registers an error.
     pub fn register(&mut self, error: ParseError) {
         self.errors.push(error);
     }
 
-    /// Returns the nth item after the cursor.
-    pub fn peek_n(&self, offset: usize) -> Option<&T> {
-        let index = self.cursor + offset;
-        if index < self.items.len() {
-            Some(&self.items[index].unwrap())
+    /// Returns the next item (the same that calling `advance()` would return).
+    fn internal_peek(&self) -> Option<T> {
+        if self.cursor < self.items.len() {
+            let maybe_item: Option<T> = self.items[self.cursor];
+            let item: T = self.items[self.cursor].unwrap();
+            Some(item)
         } else {
             None
         }
     }
 
-    /// Returns the next item (the same that calling `advance()` would return).
-    pub fn peek(&self) -> Option<&T> {
-        self.peek_n(1)
-    }
-
-    /// Advances the cursor n times and returns the last item.
-    pub fn advance_n(&mut self, n: usize) -> Option<T> {
-        let mut last: Option<T>;
-        for i in 0..n {
-            last = self.advance();
-        }
-        last
+    pub fn peek_map<R, M>(&self, mapper: M) -> Option<R>
+    where
+        M: FnOnce(&T) -> R,
+    {
+        self.internal_peek().map(|item| mapper(&item))
     }
 
     /// Moves the current item out of the structure and advances the cursor.
@@ -65,6 +83,43 @@ impl<T> CursorParser<T> {
             mem::replace(&mut self.items[self.cursor - 1], None)
         } else {
             None
+        }
+    }
+
+    /// Advances the cursor n times and returns the last item.
+    pub fn advance_n(&mut self, n: usize) -> Vec<Option<T>> {
+        let mut items: Vec<Option<T>> = vec![];
+        for i in 0..n {
+            items.push(self.advance());
+        }
+        items
+    }
+
+    /// Expects the predicate to match the next character. If it does, consumes the next item and
+    /// returns it. Otherwise returns `None`.
+    pub fn advance_if<P>(&mut self, predicate: P) -> Option<T>
+    where
+        P: FnOnce(&T) -> bool,
+    {
+        match self.internal_peek() {
+            Some(item) if predicate(&item) => {
+                let item = self.advance()?;
+                Some(item)
+            }
+            _ => None,
+        }
+    }
+
+    pub fn advance_if_map<S, P>(&mut self, predicate: P) -> Option<S>
+    where
+        P: FnOnce(T) -> Option<S>,
+    {
+        match self.internal_peek() {
+            None => None,
+            Some(item) => match predicate(item) {
+                Some(mapped_value) => Some(mapped_value),
+                None => None,
+            },
         }
     }
 
@@ -84,12 +139,9 @@ impl<T> CursorParser<T> {
     {
         let mut elements = initial;
         loop {
-            match self.peek() {
-                Some(item) if predicate(&item) => {
-                    elements.push(*item);
-                    self.advance();
-                }
-                _ => break elements,
+            match self.advance_if(predicate) {
+                Some(item) => elements.push(item),
+                None => break elements,
             }
         }
     }

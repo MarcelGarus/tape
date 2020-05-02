@@ -1,7 +1,8 @@
 use crate::parse::atoms::Atom;
 use crate::parse::error::ParseError;
-use crate::parse::utils::CursorParser;
+use crate::parse::utils::{CursorParser, MatchActions};
 use crate::utils::Case;
+use crate::utils::Positioned;
 use num::{BigInt, ToPrimitive};
 use semver::Version;
 
@@ -9,19 +10,19 @@ use semver::Version;
 pub enum RootElement {
     Comment(Comment),
     Package(PackageName),
-    Use(Use),
+    Import(Import), // TODO: Rename to import
     Annotation(Annotation),
     Struct(Struct),
     Enum(Enum),
     Alias(Alias),
-    Const(Const),
+    Const(Val),
 }
 
 type PackageName = String;
 type Comment = String;
 
 #[derive(Debug)]
-struct Use {
+struct Import {
     source: String,
     imports: Vec<String>,
 }
@@ -78,7 +79,7 @@ pub struct Alias {
 }
 
 #[derive(Debug)]
-pub struct Const {
+pub struct Val {
     name: String,
     value: Value,
 }
@@ -100,23 +101,13 @@ pub enum Value {
 
 // ---
 
-pub struct OrganismParser {
-    parser: CursorParser<Atom>,
-    pub errors: Vec<ParseError>,
-}
+pub type OrganismParser<'a> = CursorParser<'a, Positioned<Atom>>;
 
-impl OrganismParser {
-    pub fn from_atoms(atoms: Vec<Atom>) -> Self {
-        OrganismParser {
-            parser: CursorParser::from(atoms),
-            errors: vec![],
-        }
-    }
-
+impl OrganismParser<'_> {
     pub fn parse(&mut self) -> Option<Vec<RootElement>> {
         let mut body: Vec<RootElement> = vec![];
         loop {
-            match self.parser.peek() {
+            match self.peek() {
                 None => break Some(body), // This body has ended.
                 Some(Atom::Comment(_)) => self
                     .parse_comment()
@@ -126,11 +117,11 @@ impl OrganismParser {
                     .map(|annotation| RootElement::Annotation(annotation)),
                 Some(Atom::Word(word)) => match word.as_ref() {
                     "package" => self.parse_package().map(|name| RootElement::Package(name)),
-                    "from" => self.parse_use().map(|u| RootElement::Use(u)),
+                    "from" => self.parse_use().map(|u| RootElement::Import(u)),
                     "struct" => self.parse_struct().map(|s| RootElement::Struct(s)),
                     "enum" => self.parse_enum().map(|e| RootElement::Enum(e)),
                     "alias" => self.parse_alias().map(|alias| RootElement::Alias(alias)),
-                    "val" => self.parse_const().map(|value| RootElement::Const(value)),
+                    "val" => self.parse_val().map(|value| RootElement::Const(value)),
                     _ => unimplemented!(),
                 },
                 _ => unimplemented!(), // TODO: throw
@@ -142,10 +133,10 @@ impl OrganismParser {
     fn parse_comment(&mut self) -> Option<Comment> {
         let mut text = "".to_string();
         loop {
-            match self.parser.peek() {
+            match self.peek() {
                 Some(Atom::Comment(comment)) => {
                     text.push_str(&comment);
-                    self.parser.advance();
+                    self.advance();
                 }
                 _ => break Some(text), // We found something non-comment-y, so we're done here.
             }
@@ -153,23 +144,20 @@ impl OrganismParser {
     }
 
     fn parse_annotation(&mut self) -> Option<Annotation> {
-        self.expect_match(matcher!(Atom::At))?;
+        self.advance_if(matcher!(Atom::At))?;
         match self.parse_word(None)?.as_ref() {
             "added" => {
-                self.expect_match(matcher!(Atom::ParenOpen))?;
+                self.advance_if(matcher!(Atom::ParenOpen))?;
                 let version = self.parse_version()?;
-                self.expect_match(matcher!(Atom::ParenClose))?;
+                self.advance_if(matcher!(Atom::ParenClose))?;
                 Some(Annotation::Added { version })
             }
             "deprecated" => {
-                self.expect_match(matcher!(Atom::ParenOpen))?;
+                self.advance_if(matcher!(Atom::ParenOpen))?;
                 let version = self.parse_version()?;
-                self.expect_match(matcher!(Atom::Comma))?;
-                let reason = match self.parser.advance() {
-                    Some(Atom::String(string)) => string.clone(),
-                    _ => return None, // TODO:
-                };
-                self.expect_match(matcher!(Atom::ParenClose))?;
+                self.advance_if(matcher!(Atom::Comma))?;
+                let reason = self.parse_string()?;
+                self.advance_if(matcher!(Atom::ParenClose))?;
                 Some(Annotation::Deprecated {
                     version,
                     reason: reason.to_string(),
@@ -181,9 +169,9 @@ impl OrganismParser {
 
     fn parse_version(&mut self) -> Option<Version> {
         let major = self.parse_version_number()?;
-        self.expect_match(matcher!(Atom::Dot))?;
+        self.advance_if(matcher!(Atom::Dot))?;
         let minor = self.parse_version_number()?;
-        self.expect_match(matcher!(Atom::Dot))?;
+        self.advance_if(matcher!(Atom::Dot))?;
         let patch = self.parse_version_number()?;
         Some(Version {
             major,
@@ -195,7 +183,7 @@ impl OrganismParser {
     }
 
     fn parse_version_number(&mut self) -> Option<u64> {
-        match self.parser.advance() {
+        match self.advance() {
             Some(Atom::Number(num)) => match num.to_u64() {
                 Some(num) => Some(num),
                 None => None, // TODO:
@@ -209,26 +197,27 @@ impl OrganismParser {
         self.parse_word(Some(Case::Kebab))
     }
 
-    fn parse_use(&mut self) -> Option<Use> {
+    fn parse_use(&mut self) -> Option<Import> {
         self.expect_keyword("from")?;
         let source = self.parse_word(Some(Case::Kebab))?;
         self.expect_keyword("use")?;
         let mut imports = vec![self.parse_word(None)?];
-        while matches!(self.parser.peek(), Some(Atom::Comma)) {
-            self.parser.advance(); // Consume comma.
-            imports.push(self.parse_word(None)?);
+        loop {
+            match self.advance_if(matcher!(Atom::Comma)) {
+                Some(_) => imports.push(self.parse_word(None)?),
+                None => break Some(Import { source, imports }),
+            }
         }
-        Some(Use { source, imports })
     }
 
     fn parse_struct(&mut self) -> Option<Struct> {
         self.expect_keyword("struct")?;
         let name = self.parse_word(Some(Case::Camel))?;
-        self.expect_match(matcher!(Atom::BraceOpen))?;
+        self.advance_if(matcher!(Atom::BraceOpen))?;
 
         let mut body: Vec<StructElement> = vec![];
         loop {
-            match self.parser.peek() {
+            match self.peek() {
                 Some(Atom::BraceClose) => break, // This body has ended.
                 Some(Atom::Comment(_)) => self
                     .parse_comment()
@@ -248,14 +237,13 @@ impl OrganismParser {
 
     fn parse_struct_field(&mut self) -> Option<StructField> {
         let name = self.parse_word(Some(Case::Snake))?;
-        self.expect_match(matcher!(Atom::Colon))?;
-        let field_type = self.parse_type()?;
-        let default = match self.parser.peek() {
-            Some(Atom::EqualSign) => {
-                self.parser.advance(); // Consume sign.
-                Some(self.parse_value()?)
-            }
-            _ => None,
+        self.advance_if(matcher!(Atom::Colon))?;
+        let field_type = self
+            .parse_type()
+            .on_no_match(|| self.register(ParseError::expected_struct_field_type()))?;
+        let default = match self.advance_if(matcher!(Atom::EqualSign)) {
+            Some(_) => Some(self.parse_value()?),
+            None => None,
         };
         Some(StructField {
             name,
@@ -267,21 +255,15 @@ impl OrganismParser {
     fn parse_enum(&mut self) -> Option<Enum> {
         self.expect_keyword("enum")?;
         let name = self.parse_word(Some(Case::Camel))?;
-        self.expect_match(matcher!(Atom::BraceOpen))?;
+        self.advance_if(matcher!(Atom::BraceOpen))?;
 
         let mut body: Vec<EnumElement> = vec![];
         loop {
-            match self.parser.peek() {
+            match self.peek() {
                 Some(Atom::BraceClose) => break, // This body has ended.
-                Some(Atom::Comment(_)) => self
-                    .parse_comment()
-                    .map(|comment| EnumElement::Comment(comment)),
-                Some(Atom::At) => self
-                    .parse_annotation()
-                    .map(|annotation| EnumElement::Annotation(annotation)),
-                Some(Atom::Word(_)) => self
-                    .parse_enum_variant()
-                    .map(|variant| EnumElement::Variant(variant)),
+                Some(Atom::Comment(_)) => self.parse_comment().map(|c| EnumElement::Comment(c)),
+                Some(Atom::At) => self.parse_annotation().map(|a| EnumElement::Annotation(a)),
+                Some(Atom::Word(_)) => self.parse_enum_variant().map(|v| EnumElement::Variant(v)),
                 _ => unimplemented!(), // TODO: throw
             }
             .map(|element| body.push(element));
@@ -291,7 +273,7 @@ impl OrganismParser {
 
     fn parse_enum_variant(&mut self) -> Option<EnumVariant> {
         let name = self.parse_word(Some(Case::Dromedar))?;
-        let associated_type = match self.parser.peek() {
+        let associated_type = match self.advance_if(matcher!(Atom::Arrow)) {
             Some(Atom::Arrow) => Some(self.parse_type()?),
             _ => None,
         };
@@ -304,54 +286,69 @@ impl OrganismParser {
     fn parse_alias(&mut self) -> Option<Alias> {
         self.expect_keyword("alias")?;
         let name = self.parse_word(Some(Case::Camel))?;
-        self.expect_match(matcher!(Atom::EqualSign))?;
+        self.advance_if(matcher!(Atom::EqualSign))?;
         let aliased_type = self.parse_type()?;
         Some(Alias { name, aliased_type })
     }
 
-    fn parse_const(&mut self) -> Option<Const> {
-        self.expect_keyword("const")?;
-        let name = self.parse_word(Some(Case::Camel))?;
-        self.expect_match(matcher!(Atom::EqualSign))?;
+    /// Parses a `val something = value` statement. Returns `Some(Val)` or `None` if the statement
+    /// was improperly formatted.
+    fn parse_val(&mut self) -> Option<Val> {
+        self.expect_keyword("val")?;
+        let name = match self.parse_word(Some(Case::Camel)) {
+            Ok(word) => word,
+            Err(()) => {
+                self.register(ParseError::expected_val_name(
+                    self.peek_map(|atom| atom.position),
+                ));
+                None
+            }
+        };
+        self.advance_if(matcher!(Atom::EqualSign))?;
         let value = self.parse_value()?;
-        Some(Const { name, value })
+        Some(Val { name, value })
     }
 
-    fn parse_type(&mut self) -> Option<Type> {
+    /// Parses a type. Returns `Ok(Some(Type))` if a type was found, `Ok(None)` if an improperly
+    /// formatted type was found, and `Err(())` if no type was found at all.
+    fn parse_type(&mut self) -> Result<Option<Type>, ()> {
         unimplemented!();
     }
 
+    /// Parses a value. Returns `Ok(Some(Value))` if a value was found, `Ok(None)` if it was
+    /// improperly formatted, and `Err(())` if no value was found at all.
     fn parse_value(&mut self) -> Option<Value> {
         unimplemented!();
     }
 
-    fn parse_word(&mut self, case: Option<Case>) -> Option<String> {
-        match self.parser.advance() {
-            Some(Atom::Word(word)) => Some(word.to_string()), // TODO: check casing
-            _ => None,                                        // TODO: add error.
+    /// Parses a word. Returns `Ok(String)`, or `Err(())` if no word was found.
+    fn parse_word(&mut self, case: Option<Case>) -> Result<String, ()> {
+        match self.advance() {
+            Some(Atom::Word(word)) => Ok(word.to_string()), // TODO: check casing
+            _ => Err(()),
         }
     }
 
+    /// Parses a string. Panics if no string was found.
+    fn parse_string(&mut self) -> String {
+        let mut string = match self.advance_if(matcher!(AnyPos!(Atom::String(_)))) {
+            Some(Atom::String(string)) => string,
+            _ => panic!("parse_string called but there is no string."),
+        };
+        loop {
+            match self.advance_if(matcher!(Atom::String(_))) {
+                Some(Atom::String(additional_string)) => string.push_str(&additional_string),
+                _ => break string,
+            }
+        }
+    }
+
+    /// Parses a keyword. Returns `Some(())` if the specified keyword was found or `None` otherwise.
     fn expect_keyword(&mut self, keyword: &str) -> Option<()> {
-        match self.parser.peek() {
-            Some(Atom::Word(word)) if word == keyword => {
-                self.parser.advance(); // Consume keyword.
-                Some(())
-            }
-            _ => None, // TODO: add error
-        }
-    }
-
-    fn expect_match<P>(&mut self, predicate: P) -> Option<()>
-    where
-        P: FnOnce(&Atom) -> bool,
-    {
-        match self.parser.peek() {
-            Some(atom) if predicate(&atom) => {
-                self.parser.advance();
-                Some(())
-            }
-            _ => None, // TODO: add error
-        }
+        self.advance_if(|atom| match atom {
+            AnyPos!(Atom::Word(word)) if word == keyword => true,
+            _ => false,
+        })
+        .map(|_| {})
     }
 }
