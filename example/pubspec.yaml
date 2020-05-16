@@ -1,0 +1,9 @@
+name: example
+
+dependencies:
+  tape:
+    path: ../tape
+
+dev_dependencies:
+  tape_generator:
+    path: ../tape_generator
