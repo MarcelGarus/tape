@@ -1,0 +1,10 @@
+name: tape_generator
+version: 0.0.1
+homepage: https://github.com/marcelgarus/tape
+
+environment:
+  sdk: ">= 2.7.0 <3.0.0"
+
+dependencies:
+  tape:
+    path: ../tape
