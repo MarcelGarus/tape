@@ -4,10 +4,9 @@ import 'type_registry.dart';
 
 part 'tape_reader.dart';
 part 'tape_writer.dart';
+part 'reader_writer_utils.dart';
 
 const Tape = TapeApi();
-
-const _reservedTypeIds = 32768;
 
 class TapeApi {
   const TapeApi();

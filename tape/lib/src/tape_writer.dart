@@ -1,9 +1,11 @@
 part of 'tape.dart';
 
-/// [AdapterFor]s use the [TapeWriter] when serializing data.
+/// The [TapeWriter] is used when serializing data.
 class TapeWriter {
   /// We make use of the [_ResizingByteData] defined below to get a [ByteData]
-  /// where we don't have to care about increasing the length anymore.
+  /// where we don't have to worry about running out of memory. We can just
+  /// write to this object – it takes care about automatically reallocating
+  /// memory when it's needed.
   final _resizingData = _ResizingByteData();
   ByteData get _data => _resizingData._data;
   Uint8List get _dataAsUint8List => Uint8List.view(_data.buffer, 0, _offset);
@@ -21,8 +23,6 @@ class TapeWriter {
     // Either way, we need to tell the deserializer how many bytes to skip when
     // encountering an unknown type id. That's why we save the length of the
     // serialized content parts in the binary format.
-    // That also means we can prevent a single adapter gone rogue from
-    // corrupting our binary format – errors are contained locally!
     // So, how do we save the number of bytes that an adapter wrote in front of
     // the actual bytes? We just leave a little space for the length to be
     // written into and then continue serializing. When the adapter finishes,
@@ -35,13 +35,9 @@ class TapeWriter {
     //
     // This is how the format looks like when finished:
     // type id | content length | content
-    // 2 bytes | 4 bytes        | n bytes
+    // 8 bytes | 4 bytes (u32)  | n bytes
 
-    // Note: The above does not apply to some primitive adapters which extend
-    // [UnsafeTypeAdapter]. They exist purely for efficiency reason.
-
-    writeUint16(typeId + _reservedTypeIds);
-
+    writeTypeId(typeId);
     _reserve(4); // Reserve bytes for the length.
     final start = _offset;
 

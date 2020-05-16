@@ -26,8 +26,7 @@ class TapeReader {
 
   /// Finds a fitting adapter for the given [value] and then writes it.
   T read<T>() {
-    final offsettedTypeId = readUint16();
-    final typeId = offsettedTypeId - _reservedTypeIds;
+    final typeId = readTypeId();
     final adapter = TypeRegistry.findAdapterById(typeId);
 
     if (adapter == null) {
