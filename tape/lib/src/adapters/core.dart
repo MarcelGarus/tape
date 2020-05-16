@@ -1,3 +1,5 @@
+/// Adapters for types from `dart:core`.
+
 part of 'adapters.dart';
 
 /// Adapter for `Null`s.
