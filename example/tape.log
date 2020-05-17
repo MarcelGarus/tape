@@ -1,0 +1,164 @@
+This is a class.This is not a class: void main()This is a class: class FruitThis is not a class: void main()
+This is a class: class Fruit
+This is not a class: void main()
+This is not a class: void main()
+{"name":"Fruit","fields":[]}
+{"name":"Fruit","fields":[]}
+{"name":"Fruit","fields":[]}
+{"name":"Fruit","fields":[{"id":1,"type":"int","name":"amount"}]}
+{"name":"Fruit","fields":[{"id":1,"type":"int","name":"amount"}]}
+uri=package:example/main.dart
+contents=import 'package:meta/meta.dart';
+import 'package:tape/tape.dart';
+
+part 'main.g.dart';
+
+@TapeType()
+class Fruit {
+  Fruit({@required this.color, @required this.amount});
+
+  final String color;
+
+  @TapeField(1)
+  // @Default(3)
+  final int amount;
+}
+
+void main() {}
+// Hello from the code generator.
+
+source=/example/lib/main.dart
+{"name":"Fruit","fields":[{"id":1,"type":"int","name":"amount"}]}
+uri=package:example/main.dart
+contents=import 'package:meta/meta.dart';
+import 'package:tape/tape.dart';
+
+part 'main.g.dart';
+
+@TapeType()
+class Fruit {
+  Fruit({@required this.color, @required this.amount});
+
+  final String color;
+
+  @TapeField(1)
+  // @Default(3)
+  final int amount;
+}
+
+void main() {}
+// Hello from the code generator.
+// Hello from the code generator.
+
+source=/example/lib/main.dart
+uri=package:example/main.dart
+contents=import 'package:meta/meta.dart';
+import 'package:tape/tape.dart';
+
+part 'main.g.dart';
+
+@TapeType()
+class Fruit {
+  Fruit({@required this.color, @required this.amount});
+
+  final String color;
+
+  @TapeField(1)
+  // @Default(3)
+  final int amount;
+}
+
+void main() {}
+// Hello from the code generator.
+// Hello from the code generator.
+
+source=/example/lib/main.dart
+uri=package:example/main.dart
+contents=import 'package:meta/meta.dart';
+import 'package:tape/tape.dart';
+
+part 'main.g.dart';
+
+@TapeType()
+class Fruit {
+  Fruit({@required this.color, @required this.amount});
+
+  final String color;
+
+  @TapeField(1)
+  // @Default(3)
+  final int amount;
+}
+
+void main() {}
+// Hello from the code generator.
+// Hello from the code generator.
+
+source=/example/lib/main.dart
+{"name":"Fruit","fields":[{"id":1,"type":"int","name":"amount"}]}
+uri=package:example/main.dart
+contents=import 'package:meta/meta.dart';
+import 'package:tape/tape.dart';
+
+part 'main.g.dart';
+
+@TapeType()
+class Fruit {
+  Fruit({@required this.color, @required this.amount});
+
+  final String color;
+
+  @TapeField(1)
+  // @Default(3)
+  final int amount;
+}
+
+void main() {}
+// Hello from the code generator.
+// Hello from the code generator.
+// Hello from the code generator (from a dynamic path).
+
+source=/example/lib/main.dart
+uri=package:example/user.dart
+contents=import 'package:tape/tape.dart';
+
+part 'user.g.dart';
+
+@TapeType()
+class User {
+  User(this.name);
+
+  @TapeField()
+  final String name;
+}
+
+source=/example/lib/user.dart
+{"name":"User","fields":[{"id":null,"type":"String","name":"name"}]}
+uri=package:example/user.dart
+source=/example/lib/user.dart
+uri=package:example/main.dart
+source=/example/lib/main.dart
+location_components=[package:example/main.dart, package:example/main.dart, Fruit]
+location_encoding=package:example/main.dart;package:example/main.dart;Fruit
+{"name":"Fruit","fields":[{"id":1,"type":"int","name":"amount"}]}
+uri=package:example/main.dart
+source=/example/lib/main.dart
+uri=package:example/user.dart
+source=/example/lib/user.dart
+location_components=[package:example/user.dart, package:example/user.dart, User]
+location_encoding=package:example/user.dart;package:example/user.dart;User
+location_type=ElementLocationImpl
+{"name":"User","fields":[{"id":null,"type":"String","name":"name"}]}
+uri=package:example/user.dart
+source=/example/lib/user.dart
+location_components=[package:example/user.dart, package:example/user.dart, User]
+location_encoding=package:example/user.dart;package:example/user.dart;User
+location_type=ElementLocationImpl
+{"name":"User","fields":[{"id":null,"type":"String","name":"name"}]}
+uri=package:example/main.dart
+source=/example/lib/main.dart
+location_components=[package:example/main.dart, package:example/main.dart, Fruit]
+location_encoding=package:example/main.dart;package:example/main.dart;Fruit
+location_type=ElementLocationImpl
+{"name":"Fruit","fields":[{"id":1,"type":"int","name":"amount"}]}
+"User","fields":[{"id":null,"type":"String","name":"name"}]}

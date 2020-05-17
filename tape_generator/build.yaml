@@ -1,0 +1,8 @@
+builders:
+  tape:
+    import: "package:tape_generator/builder.dart"
+    builder_factories: ["getTapeBuilder"]
+    build_extensions: { ".dart": ["tape.g.part"] }
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
