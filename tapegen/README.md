@@ -10,6 +10,14 @@ Here's what the responsibilities of each of those are:
 * **Lock file:** This file gets generated in your project root and contains information about the the types (id, name) and what fields they have (id, name, type). This can be used to prevent users from making backwards-incompatible changes. The lock file can always be deleted by the user to override this functionality.
 * **Generated source files:** These are ephmeral files that get deleted for every code generation. That makes sense because modifying or parsing them is dangerous — they might contain other code from codegen packages unrelated to tape.
 
+The standard way of generating code is using `build_runner`.
+The problem with that is that tape is not side-effect free, i.e. it may also modify code or create other files (like `tape.lock`, `tape.dart` etc.
+That's why tape uses a hybrid-approach:
+For ensuring the validity of the `@TapeType`s, adding tracking ids, field numbers etc., there's the `tapegen` tool run by `pub run tapegen build`.
+For the actual generation of the serializing/deserializing code in `some_file.g.dart`, there's the normal `pub run build_runner build` that tape hooks into.
+
+Sadly, the analyzer only throws errors
+
 Here's the steps of the code generation, which is executed for every `@TapeType()`:
 
 1. Parse the type into a `ConcreteTapeType` that has `ConcreteTypeField`s.

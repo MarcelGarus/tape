@@ -1,4 +1,4 @@
-name: tape_generator
+name: tapegen
 version: 0.0.1
 homepage: https://github.com/marcelgarus/tape
 
@@ -11,6 +11,8 @@ dependencies:
   build_config: ">=0.4.2 <1.0.0"
   meta: ^1.1.0
   source_gen: ^0.9.0
+  watcher: any
+  pub_semver: any
   tape:
     path: ../tape
 
