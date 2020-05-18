@@ -2,15 +2,10 @@ import 'package:tape/tape.dart';
 
 part 'user.g.dart';
 
-@TapeType()
+@TapeType('DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW')
 class User {
   User(this.name);
 
-  @TapeField()
+  @TapeField(1)
   final String name;
 }
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).

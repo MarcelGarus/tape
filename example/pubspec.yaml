@@ -7,5 +7,5 @@ dependencies:
 
 dev_dependencies:
   build_runner: any
-  tape_generator:
-    path: ../tape_generator
+  tapegen:
+    path: ../tapegen

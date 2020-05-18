@@ -3,22 +3,14 @@ import 'package:tape/tape.dart';
 
 part 'main.g.dart';
 
-@TapeType(0, 'abcdef123')
+@TapeType('yqDBMar2IOhvaGZt4mir8ngmX8YYGD7N')
+@TapeClass()
 class Fruit {
-  Fruit({@required this.color, @required this.amount});
+  Fruit({@required this.color, @required this.blub, @required this.amount});
 
   final String color;
-
-  @TapeField(1)
-  // @Default(3)
+  final bool blub;
   final int amount;
 }
 
 void main() {}
-// Hello from the code generator.
-// Hello from the code generator.
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
-// Hello from the code generator (from a dynamic path).
