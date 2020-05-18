@@ -1,5 +1,5 @@
 class TapeType {
-  const TapeType(this.trackingCode);
+  const TapeType(this.trackingCode) : assert(trackingCode != null);
 
   final String trackingCode;
 }
@@ -17,7 +17,7 @@ class TapeClass {
 /// it should get serialization and deserialization code should get created for
 /// it when running `tapegen`.
 class TapeField {
-  const TapeField([this.id]);
+  const TapeField(this.id) : assert(id != null);
 
   /// An id that uniquely identifies this field among other fields of this
   /// class that currently exist, existed in the past, and will exist in the

@@ -6,17 +6,23 @@ import 'utils.dart';
 
 /// A concrete class that has been annotated with `@TapeType()` and that wants
 /// a generated adapter.
-class ConcreteTapeType {
-  ConcreteTapeType({@required this.name, @required this.fields})
-      : assert(name != null),
+class ConcreteTapeClass {
+  ConcreteTapeClass({
+    @required this.name,
+    @required this.trackingCode,
+    @required this.fields,
+  })  : assert(name != null),
+        assert(trackingCode != null),
         assert(fields != null);
 
   final String name;
+  final String trackingCode;
   final List<ConcreteTapeField> fields;
 
-  factory ConcreteTapeType.fromElement(ClassElement element) {
-    return ConcreteTapeType(
+  factory ConcreteTapeClass.fromElement(ClassElement element) {
+    return ConcreteTapeClass(
       name: element.name,
+      trackingCode: element.trackingCode,
       fields: [
         for (final field in element.fields.where((field) => field.isTapeField))
           ConcreteTapeField.fromElement(field),
@@ -24,9 +30,10 @@ class ConcreteTapeType {
     );
   }
 
-  factory ConcreteTapeType.fromJson(Map<String, dynamic> data) {
-    return ConcreteTapeType(
+  factory ConcreteTapeClass.fromJson(Map<String, dynamic> data) {
+    return ConcreteTapeClass(
       name: data['name'],
+      trackingCode: data['tracking_code'],
       fields: (data['fields'] as List<Map<String, dynamic>>)
           .map((fieldData) => ConcreteTapeField.fromJson(fieldData))
           .toList(),
@@ -36,6 +43,7 @@ class ConcreteTapeType {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
+      'tracking_code': trackingCode,
       'fields': fields.map((field) => field.toJson()).toList(),
     };
   }
@@ -45,22 +53,26 @@ class ConcreteTapeField {
   ConcreteTapeField({
     @required this.id,
     @required this.type,
+    @required this.typeTrackingCode,
     @required this.name,
   })  : assert(id != null),
         assert(type != null),
         assert(name != null);
 
   final int id;
-  final DartType type;
+  final String type;
+  final String typeTrackingCode;
   final String name;
 
   factory ConcreteTapeField.fromElement(FieldElement element) {
     assert(element.isTapeField);
-    var obj = tapeFieldChecker.firstAnnotationOfExact(element);
-    var id = obj.getField('id').toIntValue();
+
     return ConcreteTapeField(
-      id: id,
-      type: element.type,
+      id: element.fieldId,
+      type: element.type.getDisplayString(),
+      typeTrackingCode: (element.type.element?.hasTrackingCode ?? false)
+          ? element.type.element.trackingCode
+          : element.type.getDisplayString(),
       name: element.name,
     );
   }
@@ -68,7 +80,8 @@ class ConcreteTapeField {
   factory ConcreteTapeField.fromJson(Map<String, dynamic> data) {
     return ConcreteTapeField(
       id: data['id'],
-      type: data['type'], // TODO:
+      type: data['type'],
+      typeTrackingCode: data['type_tracking_code'],
       name: data['name'],
     );
   }
@@ -76,7 +89,8 @@ class ConcreteTapeField {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'type': type.element.name,
+      'type': type,
+      'type_tracking_code': typeTrackingCode,
       'name': name,
     };
   }

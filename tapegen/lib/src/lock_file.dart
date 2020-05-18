@@ -8,6 +8,11 @@ class LockFile {
     @required this.types,
   });
 
+  final Version version;
+
+  /// Map from tracking codes to concrete types.
+  final Map<String, ConcreteTapeType> types;
+
   factory LockFile.fromJson(Map<String, dynamic> data) {
     return LockFile(
       version: Version.parse(data['version'] as String),
@@ -17,9 +22,4 @@ class LockFile {
       },
     );
   }
-
-  final Version version;
-
-  /// Map from tracking codes to concrete types.
-  final Map<String, ConcreteTapeType> types;
 }

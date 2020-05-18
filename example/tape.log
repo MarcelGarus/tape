@@ -1,1179 +1,251 @@
-uri=package:example/main.dart
-source=/example/lib/main.dart
-span=<_FileSpan: from <FileLocation: 126 package:example/main.dart:8:7> to <FileLocation: 131 package:example/main.dart:8:12> "Fruit">
-location_components=[package:example/main.dart, package:example/main.dart, Fruit]
-location_encoding=package:example/main.dart;package:example/main.dart;Fruit
-location_type=ElementLocationImpl
 {"name":"Fruit","fields":[]}
-Annotations are [@TapeType TapeType(String trackingCode), @TapeClass TapeClass({int nextFieldId})]
-Annotations are [@TapeType TapeType(String trackingCode)]
-Annotations are [TapeType TapeType(String trackingCode), TapeClass TapeClass({int nextFieldId})]
-Annotations are [TapeType TapeType(String trackingCode)]
-Annotations are [TapeType TapeType(String trackingCode), TapeClass TapeClass({int nextFieldId})]
-Annotations are [TapeType TapeType(String trackingCode)]
-Annotations are [TapeType TapeType(String trackingCode), TapeClass TapeClass({int nextFieldId})]
-Annotations are [TapeType TapeType(String trackingCode)]
-Annotations are [TapeType TapeType(String trackingCode), TapeClass TapeClass({int nextFieldId})]
-uri=package:example/main.dartAsource=/example/lib/main.dart
-span=<_FileSpan: from <Filuri=package:example/user.dart
-source=/example/lib/user.dart
-span=<_FileSpan: from <FileLocation: 92 package:elocation_components=[package:example/main.dart, package:example/main.dart, Fruit]
-llocation_components=[package:example/user.dart, package:example/user.dart, User]
-location_encoding=package:example/user.dart;package:example/user.dart;User
-location_type=ElementLocationImpl
-{"name":"User","fields":[{"id":1,"type":"String","name":"name"}]}
-Annotations are [TapeType TapeType(String trackingCode)]
-Changing file lib//annotations.dart
-uri=package:example/user.dart
-source=/example/lib/user.dart
-span=<_FileSpan: from <FileLocation: 92 package:example/user.dart:6:7> to <FileLocation: 96 package:example/user.dart:6:11> "User">
-Annotations are [TapeType TapeType(String trackingCode), TapeClass TapeClass({in
-location_encodinChanging file lib//annotations.dart
-uri=package:example/main.dart
-source=/example/lib/main.dart
-span=<_FileSpan: from <FileLocation: 140 package:example/main.dart:8:7> to <FileLocation: 145 package:example/main.dart:8:12> "Fruit">
-location_components=[package:example/main.dart, package:example/main.dart, Fruit]
-location_encoding=package:example/main.dart;package:example/main.dart;Fruit
-location_type=ElementLocationImpl
+{"name":"Fruit","fields":[{"id":0,"type":"String","name":"color"},{"id":1,"type":"bool","name":"blub"},{"id":2,"type":"int","name":"amount"}]}
 {"name":"Fruit","fields":[]}
-Annotations are [TapeType TapeType(String trackingCode), TapeClass TapeClass({int nextFieldId})]
-Changing file lib//annotations.dart
-uri=package:example/main.dart
-source=/example/lib/main.dart
-span=<_FileSpan: from <FileLocation: 126 package:example/main.dart:8:7> to <FileLocation: 131 package:example/main.dart:8:12> "Fruit">
-location_components=[package:example/main.dart, package:example/main.dart, Fruit]
-location_encoding=package:example/main.dart;package:example/main.dart;Fruit
-location_type=ElementLocationImpl
-{"name":"Fruit","fields":[]}
-Annotations are [TapeType TapeType(String trackingCode)]
-Changing file lib//annotations.dart
-uri=package:example/user.dart
-source=/example/lib/user.dart
-span=<_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-location_components=[package:example/user.dart, package:example/user.dart, User]
-location_encoding=package:example/user.dart;package:example/user.dart;User
-location_type=ElementLocationImpl
-{"name":"User","fields":[{"id":1,"type":"String","name":"name"}]}
-Annotations are [TapeType TapeType(String trackingCode)]
-Annotation span is <_FileSpan: from <FileLocation: 26 package:tape/src/annotations.dart:2:9> to <FileLocation: 26 package:tape/src/annotations.dart:2:9> "">
-Changing file lib/annotations.dart
-uri=package:example/user.dart
-source=/example/lib/user.dart
-span=<_FileSpan: from <FileLocation: 92 package:example/user.dart:6:7> to <FileLocation: 96 package:example/user.dart:6:11> "User">
-location_components=[package:example/user.dart, package:example/user.dart, User]Alocation_encoding=package:example/user.dart;package:example/user.dart;User
-location_type=ElementLocationImpl
-{"name":"User","fields":[{"id":1,"type":"String","name":"name"}]}
-ons.dart:2:9> to <FileLocation: 26 package:tape/src/annotations.dart:2:9> "">
-Changing file lib/annotations.dart
-uri=package:example/main.dart
-source=/example/lib/main.dart
-span=<_FileSpan: from <FileLocation: 140 package:example/main.dart:8:7> to <FileLocation: 145 package:example/main.dart:8:12> "Fruit">
-location_components=[package:example/main.dart, package:example/main.dart, Fruit]
-location_encoding=package:example/main.dart;package:example/main.dart;Fruit
-location_type=ElementLocationImpl
-{"name":"Fruit","fields":[]}
-Span is <_FileSpan: from <FileLocation: 126 package:example/main.dart:8:7> to <FileLocation: 131 package:example/main.dart:8:12> "Fruit">
-Changing file libmain.dart
-Span is <_FileSpan: from <FileLocation: 92 package:example/user.dart:6:7> to <FileLocation: 96 package:example/user.dart:6:11> "User">
-Changing file libuser.dart
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Changing file libmain.dart
-uri=package:example/main.dart
-source=/example/lib/main.dart
-span=<_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-location_components=[package:example/main.dart, package:example/main.dart, Fruit]
-location_encoding=package:example/main.dart;package:example/main.dart;Fruit
-location_type=ElementLocationImpl
-{"name":"Fruit","fields":[]}
-Span is <_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-Changing file libuser.dart
-uri=package:example/user.dart
-source=/example/lib/user.dart
-span=<_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-location_components=[package:example/user.dart, package:example/user.dart, User]
-location_encoding=package:example/user.dart;package:example/user.dart;User
-location_type=ElementLocationImpl
-{"name":"User","fields":[{"id":1,"type":"String","name":"name"}]}
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Changing file lib/main.dart
-Span is <_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-Changing file lib/user.dart
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Changing file lib/main.dart
-RangeError: Value not in range: 131
-#0      _StringBase.substring (dart:core-patch/string_patch.dart:394:7)
-#1      TapeGenerator.generateForAnnotatedElement (package:tapegen/src/tape_generator.dart:42:20)
-<asynchronous suspension>
-#2      GeneratorForAnnotation.generate (package:source_gen/src/generator_for_annotation.dart:53:30)
-#3      _generate (package:source_gen/src/builder.dart:298:35)
-<asynchronous suspension>
-#4      _Builder._generateForLibrary (package:source_gen/src/builder.dart:79:15)
-#5      _Builder.build (package:source_gen/src/builder.dart:71:11)
-<asynchronous suspension>
-#6      runBuilder.buildForInput (package:build/src/generate/run_builder.dart:55:21)
-#7      MappedListIterable.elementAt (dart:_internal/iterable.dart:417:29)
-#8      ListIterator.moveNext (dart:_internal/iterable.dart:346:26)
-#9      Future.wait (dart:async/future.dart:393:26)
-#10     runBuilder.<anonymous closure> (package:build/src/generate/run_builder.dart:61:36)
-#11     _rootRun (dart:async/zone.dart:1126:13)
-#12     _CustomZone.run (dart:async/zone.dart:1023:19)
-#13     _runZoned (dart:async/zone.dart:1518:10)
-#14     runZoned (dart:async/zone.dart:1502:12)
-#15     scopeLogAsync (package:build/src/builder/logging.dart:26:3)
-#16     runBuilder (package:build/src/generate/run_builder.dart:61:9)
-#17     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:486:19)
-#18     _NoOpBuilderActionTracker.trackStage (package:build_runner_core/src/generate/performance_tracker.dart:302:15)
-#19     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:484:23)
-<asynchronous suspension>
-#20     NoOpTimeTracker.track (package:timing/src/timing.dart:222:44)
-#21     _SingleBuild._runForInput.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:441:22)
-#22     Pool.withResource (package:pool/pool.dart:127:28)
-<asynchronous suspension>
-#23     _SingleBuild._runForInput (package:build_runner_core/src/generate/build_impl.dart:437:17)
-#24     _SingleBuild._runBuilder.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:375:38)
-#25     MappedIterator.moveNext (dart:_internal/iterable.dart:395:18)
-#26     Future.wait (dart:async/future.dart:393:26)
-#27     _SingleBuild._runBuilder (package:build_runner_core/src/generate/build_impl.dart:374:36)
-#28     _SingleBuild._runPhases.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:320:20)
-<asynchronous suspension>
-#29     _NoOpBuildPerformanceTracker.trackBuildPhase (package:build_runner_core/src/generate/performance_tracker.dart:184:15)
-#30     _SingleBuild._runPhases.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:316:47)
-#31     NoOpTimeTracker.track (package:timing/src/timing.dart:222:44)
-#32     _SingleBuild._runPhases (package:build_runner_core/src/generate/build_impl.dart:310:32)
-#33     logTimedAsync (package:build_runner_core/src/logging/logging.dart:25:30)
-#34     _SingleBuild._safeBuild.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:267:26)
-#35     _rootRun (dart:async/zone.dart:1126:13)
-#36     _CustomZone.run (dart:async/zone.dart:1023:19)
-#37     _runZoned (dart:async/zone.dart:1518:10)
-#38     runZoned (dart:async/zone.dart:1502:12)
-#39     _SingleBuild._safeBuild (package:build_runner_core/src/generate/build_impl.dart:262:5)
-#40     _SingleBuild.run (package:build_runner_core/src/generate/build_impl.dart:209:24)
-#41     BuildImpl.run (package:build_runner_core/src/generate/build_impl.dart:94:56)
-#42     BuildRunner.run (package:build_runner_core/src/generate/build_runner.dart:25:14)
-#43     build (package:build_runner/src/generate/build.dart:107:21)
-<asynchronous suspension>
-#44     BuildCommand._run (package:build_runner/src/entrypoint/build.dart:35:24)
-#45     BuildCommand.run.<anonymous closure> (package:build_runner/src/entrypoint/build.dart:31:15)
-#46     _rootRun (dart:async/zone.dart:1126:13)
-#47     _CustomZone.run (dart:async/zone.dart:1023:19)
-#48     _runZoned (dart:async/zone.dart:1518:10)
-#49     runZoned (dart:async/zone.dart:1465:12)
-#50     withEnabledExperiments (package:build/src/experiments.dart:18:5)
-#51     BuildCommand.run (package:build_runner/src/entrypoint/build.dart:30:12)
-#52     CommandRunner.runCommand (package:args/command_runner.dart:197:27)
-#53     CommandRunner.run.<anonymous closure> (package:args/command_runner.dart:112:25)
-#54     new Future.sync (dart:async/future.dart:224:31)
-#55     CommandRunner.run (package:args/command_runner.dart:112:14)
-#56     run (package:build_runner/src/entrypoint/run.dart:25:31)
-<asynchronous suspension>
-#57     main (file:///C:/projects/tape/example/.dart_tool/build/entrypoint/build.dart:21:22)
-#58     _startIsolate.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:303:32)
-#59     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:174:12)
-
-Span is <_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-Changing file lib/user.dart
-RangeError: Value not in range: 77
-#0      _StringBase.substring (dart:core-patch/string_patch.dart:394:7)
-#1      TapeGenerator.generateForAnnotatedElement (package:tapegen/src/tape_generator.dart:42:20)
-<asynchronous suspension>
-#2      GeneratorForAnnotation.generate (package:source_gen/src/generator_for_annotation.dart:53:30)
-#3      _generate (package:source_gen/src/builder.dart:298:35)
-<asynchronous suspension>
-#4      _Builder._generateForLibrary (package:source_gen/src/builder.dart:79:15)
-#5      _Builder.build (package:source_gen/src/builder.dart:71:11)
-<asynchronous suspension>
-#6      runBuilder.buildForInput (package:build/src/generate/run_builder.dart:55:21)
-#7      MappedListIterable.elementAt (dart:_internal/iterable.dart:417:29)
-#8      ListIterator.moveNext (dart:_internal/iterable.dart:346:26)
-#9      Future.wait (dart:async/future.dart:393:26)
-#10     runBuilder.<anonymous closure> (package:build/src/generate/run_builder.dart:61:36)
-#11     _rootRun (dart:async/zone.dart:1126:13)
-#12     _CustomZone.run (dart:async/zone.dart:1023:19)
-#13     _runZoned (dart:async/zone.dart:1518:10)
-#14     runZoned (dart:async/zone.dart:1502:12)
-#15     scopeLogAsync (package:build/src/builder/logging.dart:26:3)
-#16     runBuilder (package:build/src/generate/run_builder.dart:61:9)
-#17     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:486:19)
-#18     _NoOpBuilderActionTracker.trackStage (package:build_runner_core/src/generate/performance_tracker.dart:302:15)
-#19     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:484:23)
-<asynchronous suspension>
-#20     NoOpTimeTracker.track (package:timing/src/timing.dart:222:44)
-#21     _SingleBuild._runForInput.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:441:22)
-#22     Pool.withResource (package:pool/pool.dart:127:28)
-<asynchronous suspension>
-#23     _SingleBuild._runForInput (package:build_runner_core/src/generate/build_impl.dart:437:17)
-#24     _SingleBuild._runBuilder.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:375:38)
-#25     MappedIterator.moveNext (dart:_internal/iterable.dart:395:18)
-#26     Future.wait (dart:async/future.dart:393:26)
-#27     _SingleBuild._runBuilder (package:build_runner_core/src/generate/build_impl.dart:374:36)
-#28     _AsyncAwaitCompleter.start (dart:async-patch/async_patch.dart:45:6)
-#29     _SingleBuild._runBuilder (package:build_runner_core/src/generate/build_impl.dart:372:40)
-#30     _SingleBuild._runPhases.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:320:20)
-#31     _asyncThenWrapperHelper.<anonymous closure> (dart:async-patch/async_patch.dart:73:64)
-#32     _rootRunUnary (dart:async/zone.dart:1134:38)
-#33     _CustomZone.runUnary (dart:async/zone.dart:1031:19)
-#34     _FutureListener.handleValue (dart:async/future_impl.dart:139:18)
-#35     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:680:45)
-#36     Future._propagateToListeners (dart:async/future_impl.dart:709:32)
-#37     Future._completeWithValue (dart:async/future_impl.dart:524:5)
-#38     _AsyncAwaitCompleter.complete (dart:async-patch/async_patch.dart:32:15)
-#39     _completeOnAsyncReturn (dart:async-patch/async_patch.dart:290:13)
-#40     _SingleBuild._matchingPrimaryInputs (package:build_runner_core/src/generate/build_impl.dart)
-#41     _asyncThenWrapperHelper.<anonymous closure> (dart:async-patch/async_patch.dart:73:64)
-#42     _rootRunUnary (dart:async/zone.dart:1134:38)
-#43     _CustomZone.runUnary (dart:async/zone.dart:1031:19)
-#44     _FutureListener.handleValue (dart:async/future_impl.dart:139:18)
-#45     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:680:45)
-#46     Future._propagateToListeners (dart:async/future_impl.dart:709:32)
-#47     Future._completeWithValue (dart:async/future_impl.dart:524:5)
-#48     Future.wait.<anonymous closure> (dart:async/future.dart:400:22)
-#49     _rootRunUnary (dart:async/zone.dart:1134:38)
-#50     _CustomZone.runUnary (dart:async/zone.dart:1031:19)
-#51     _FutureListener.handleValue (dart:async/future_impl.dart:139:18)
-#52     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:680:45)
-#53     Future._propagateToListeners (dart:async/future_impl.dart:709:32)
-#54     Future._completeWithValue (dart:async/future_impl.dart:524:5)
-#55     Future._asyncComplete.<anonymous closure> (dart:async/future_impl.dart:554:7)
-#56     _rootRun (dart:async/zone.dart:1126:13)
-#57     _CustomZone.run (dart:async/zone.dart:1023:19)
-#58     _CustomZone.runGuarded (dart:async/zone.dart:925:7)
-#59     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:965:23)
-#60     _microtaskLoop (dart:async/schedule_microtask.dart:43:21)
-#61     _startMicrotaskLoop (dart:async/schedule_microtask.dart:52:5)
-#62     _runPendingImmediateCallback (dart:isolate-patch/isolate_patch.dart:118:13)
-#63     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:175:5)
-
-Span is <_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-Changing file lib/user.dart
-RangeError: Value not in range: 68
-#0      _StringBase.substring (dart:core-patch/string_patch.dart:394:7)
-#1      TapeGenerator.generateForAnnotatedElement (package:tapegen/src/tape_generator.dart:42:20)
-<asynchronous suspension>
-#2      GeneratorForAnnotation.generate (package:source_gen/src/generator_for_annotation.dart:53:30)
-#3      _generate (package:source_gen/src/builder.dart:298:35)
-<asynchronous suspension>
-#4      _Builder._generateForLibrary (package:source_gen/src/builder.dart:79:15)
-#5      _Builder.build (package:source_gen/src/builder.dart:71:11)
-<asynchronous suspension>
-#6      runBuilder.buildForInput (package:build/src/generate/run_builder.dart:55:21)
-#7      MappedListIterable.elementAt (dart:_internal/iterable.dart:417:29)
-#8      ListIterator.moveNext (dart:_internal/iterable.dart:346:26)
-#9      Future.wait (dart:async/future.dart:393:26)
-#10     runBuilder.<anonymous closure> (package:build/src/generate/run_builder.dart:61:36)
-#11     _rootRun (dart:async/zone.dart:1126:13)
-#12     _CustomZone.run (dart:async/zone.dart:1023:19)
-#13     _runZoned (dart:async/zone.dart:1518:10)
-#14     runZoned (dart:async/zone.dart:1502:12)
-#15     scopeLogAsync (package:build/src/builder/logging.dart:26:3)
-#16     runBuilder (package:build/src/generate/run_builder.dart:61:9)
-#17     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:486:19)
-#18     _NoOpBuilderActionTracker.trackStage (package:build_runner_core/src/generate/performance_tracker.dart:302:15)
-#19     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:484:23)
-<asynchronous suspension>
-#20     NoOpTimeTracker.track (package:timing/src/timing.dart:222:44)
-#21     _SingleBuild._runForInput.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:441:22)
-#22     Pool.withResource (package:pool/pool.dart:127:28)
-<asynchronous suspension>
-#23     _SingleBuild._runForInput (package:build_runner_core/src/generate/build_impl.dart:437:17)
-#24     _SingleBuild._runBuilder.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:375:38)
-#25     MappedIterator.moveNext (dart:_internal/iterable.dart:395:18)
-#26     Future.wait (dart:async/future.dart:393:26)
-#27     _SingleBuild._runBuilder (package:build_runner_core/src/generate/build_impl.dart:374:36)
-#28     _AsyncAwaitCompleter.start (dart:async-patch/async_patch.dart:45:6)
-#29     _SingleBuild._runBuilder (package:build_runner_core/src/generate/build_impl.dart:372:40)
-#30     _SingleBuild._runPhases.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:320:20)
-#31     _asyncThenWrapperHelper.<anonymous closure> (dart:async-patch/async_patch.dart:73:64)
-#32     _rootRunUnary (dart:async/zone.dart:1134:38)
-#33     _CustomZone.runUnary (dart:async/zone.dart:1031:19)
-#34     _FutureListener.handleValue (dart:async/future_impl.dart:139:18)
-#35     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:680:45)
-#36     Future._propagateToListeners (dart:async/future_impl.dart:709:32)
-#37     Future._completeWithValue (dart:async/future_impl.dart:524:5)
-#38     _AsyncAwaitCompleter.complete (dart:async-patch/async_patch.dart:32:15)
-#39     _completeOnAsyncReturn (dart:async-patch/async_patch.dart:290:13)
-#40     _SingleBuild._matchingPrimaryInputs (package:build_runner_core/src/generate/build_impl.dart)
-#41     _asyncThenWrapperHelper.<anonymous closure> (dart:async-patch/async_patch.dart:73:64)
-#42     _rootRunUnary (dart:async/zone.dart:1134:38)
-#43     _CustomZone.runUnary (dart:async/zone.dart:1031:19)
-#44     _FutureListener.handleValue (dart:async/future_impl.dart:139:18)
-#45     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:680:45)
-#46     Future._propagateToListeners (dart:async/future_impl.dart:709:32)
-#47     Future._completeWithValue (dart:async/future_impl.dart:524:5)
-#48     Future.wait.<anonymous closure> (dart:async/future.dart:400:22)
-#49     _rootRunUnary (dart:async/zone.dart:1134:38)
-#50     _CustomZone.runUnary (dart:async/zone.dart:1031:19)
-#51     _FutureListener.handleValue (dart:async/future_impl.dart:139:18)
-#52     Future._propagateToListeners.handleValueCallback (dart:async/future_impl.dart:680:45)
-#53     Future._propagateToListeners (dart:async/future_impl.dart:709:32)
-#54     Future._completeWithValue (dart:async/future_impl.dart:524:5)
-#55     Future._asyncComplete.<anonymous closure> (dart:async/future_impl.dart:554:7)
-#56     _rootRun (dart:async/zone.dart:1126:13)
-#57     _CustomZone.run (dart:async/zone.dart:1023:19)
-#58     _CustomZone.runGuarded (dart:async/zone.dart:925:7)
-#59     _CustomZone.bindCallbackGuarded.<anonymous closure> (dart:async/zone.dart:965:23)
-#60     _microtaskLoop (dart:async/schedule_microtask.dart:43:21)
-#61     _startMicrotaskLoop (dart:async/schedule_microtask.dart:52:5)
-#62     _runPendingImmediateCallback (dart:isolate-patch/isolate_patch.dart:118:13)
-#63     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:175:5)
-
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Changing file lib/main.dart
-RangeError: Value not in range: 122
-#0      _StringBase.substring (dart:core-patch/string_patch.dart:394:7)
-#1      TapeGenerator.generateForAnnotatedElement (package:tapegen/src/tape_generator.dart:42:20)
-<asynchronous suspension>
-#2      GeneratorForAnnotation.generate (package:source_gen/src/generator_for_annotation.dart:53:30)
-#3      _generate (package:source_gen/src/builder.dart:298:35)
-<asynchronous suspension>
-#4      _Builder._generateForLibrary (package:source_gen/src/builder.dart:79:15)
-#5      _Builder.build (package:source_gen/src/builder.dart:71:11)
-<asynchronous suspension>
-#6      runBuilder.buildForInput (package:build/src/generate/run_builder.dart:55:21)
-#7      MappedListIterable.elementAt (dart:_internal/iterable.dart:417:29)
-#8      ListIterator.moveNext (dart:_internal/iterable.dart:346:26)
-#9      Future.wait (dart:async/future.dart:393:26)
-#10     runBuilder.<anonymous closure> (package:build/src/generate/run_builder.dart:61:36)
-#11     _rootRun (dart:async/zone.dart:1126:13)
-#12     _CustomZone.run (dart:async/zone.dart:1023:19)
-#13     _runZoned (dart:async/zone.dart:1518:10)
-#14     runZoned (dart:async/zone.dart:1502:12)
-#15     scopeLogAsync (package:build/src/builder/logging.dart:26:3)
-#16     runBuilder (package:build/src/generate/run_builder.dart:61:9)
-#17     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:486:19)
-#18     _NoOpBuilderActionTracker.trackStage (package:build_runner_core/src/generate/performance_tracker.dart:302:15)
-#19     _SingleBuild._runForInput.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:484:23)
-<asynchronous suspension>
-#20     NoOpTimeTracker.track (package:timing/src/timing.dart:222:44)
-#21     _SingleBuild._runForInput.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:441:22)
-#22     Pool.withResource (package:pool/pool.dart:127:28)
-<asynchronous suspension>
-#23     _SingleBuild._runForInput (package:build_runner_core/src/generate/build_impl.dart:437:17)
-#24     _SingleBuild._runBuilder.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:375:38)
-#25     MappedIterator.moveNext (dart:_internal/iterable.dart:395:18)
-#26     Future.wait (dart:async/future.dart:393:26)
-#27     _SingleBuild._runBuilder (package:build_runner_core/src/generate/build_impl.dart:374:36)
-#28     _SingleBuild._runPhases.<anonymous closure>.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:320:20)
-<asynchronous suspension>
-#29     _NoOpBuildPerformanceTracker.trackBuildPhase (package:build_runner_core/src/generate/performance_tracker.dart:184:15)
-#30     _SingleBuild._runPhases.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:316:47)
-#31     NoOpTimeTracker.track (package:timing/src/timing.dart:222:44)
-#32     _SingleBuild._runPhases (package:build_runner_core/src/generate/build_impl.dart:310:32)
-#33     logTimedAsync (package:build_runner_core/src/logging/logging.dart:25:30)
-#34     _SingleBuild._safeBuild.<anonymous closure> (package:build_runner_core/src/generate/build_impl.dart:267:26)
-#35     _rootRun (dart:async/zone.dart:1126:13)
-#36     _CustomZone.run (dart:async/zone.dart:1023:19)
-#37     _runZoned (dart:async/zone.dart:1518:10)
-#38     runZoned (dart:async/zone.dart:1502:12)
-#39     _SingleBuild._safeBuild (package:build_runner_core/src/generate/build_impl.dart:262:5)
-#40     _SingleBuild.run (package:build_runner_core/src/generate/build_impl.dart:209:24)
-#41     BuildImpl.run (package:build_runner_core/src/generate/build_impl.dart:94:56)
-#42     BuildRunner.run (package:build_runner_core/src/generate/build_runner.dart:25:14)
-#43     build (package:build_runner/src/generate/build.dart:107:21)
-<asynchronous suspension>
-#44     BuildCommand._run (package:build_runner/src/entrypoint/build.dart:35:24)
-#45     BuildCommand.run.<anonymous closure> (package:build_runner/src/entrypoint/build.dart:31:15)
-#46     _rootRun (dart:async/zone.dart:1126:13)
-#47     _CustomZone.run (dart:async/zone.dart:1023:19)
-#48     _runZoned (dart:async/zone.dart:1518:10)
-#49     runZoned (dart:async/zone.dart:1465:12)
-#50     withEnabledExperiments (package:build/src/experiments.dart:18:5)
-#51     BuildCommand.run (package:build_runner/src/entrypoint/build.dart:30:12)
-#52     CommandRunner.runCommand (package:args/command_runner.dart:197:27)
-#53     CommandRunner.run.<anonymous closure> (package:args/command_runner.dart:112:25)
-#54     new Future.sync (dart:async/future.dart:224:31)
-#55     CommandRunner.run (package:args/command_runner.dart:112:14)
-#56     run (package:build_runner/src/entrypoint/run.dart:25:31)
-<asynchronous suspension>
-#57     main (file:///C:/projects/tape/example/.dart_tool/build/entrypoint/build.dart:21:22)
-#58     _startIsolate.<anonymous closure> (dart:isolate-patch/isolate_patch.dart:303:32)
-#59     _RawReceivePortImpl._handleMessage (dart:isolate-patch/isolate_patch.dart:174:12)
-
-Span is <_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-Changing file lib/user.dart
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 68
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 67
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 66
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 65
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 64
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 63
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 62
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 61
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 60
-Part is import 'package:tape/tape.dart';
-
-part 'user.g.dart';
-
-@TapeType()
-class . Getting substring from 59
-uri=package:example/user.dartSsource=/example/lib/user.dart
-span=<_FileSpan: from <FileLocation: 78 package:example/user.dart:6:7> to <FileLocation: 82 package:example/user.dart:6:11> "User">
-location_components=[package:example/user.dart, package:example/user.dart, User]
-location_encoding=package:example/user.dart;package:example/user.dart;User
-location_type=ElementLocationImpl
-{"name":"User","fields":[{"id":1,"type":"String","name":"name"}]}
-main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 121
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 120
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 119
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 118
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 117
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 116
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 115
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 114
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 113
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 112
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 111
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 110
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 109
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 108
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 107
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 106
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 105
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 104
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 103
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 102
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 101
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 100
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 99
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 98
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 97
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 96
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 95
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 94
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 93
-uri=package:example/main.dart
-source=/example/lib/main.dart
-span=<_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-location_components=[package:example/main.dart, package:example/main.dart, Fruit]
-location_encoding=package:example/main.dart;package:example/main.dart;Fruit
-location_type=ElementLocationImpl
-{"name":"Fruit","fields":[]}
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Changing file lib/main.dart
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 122
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 121
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 120
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 119
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 118
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 117
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 116
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 115
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 114
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 113
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 112
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 111
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 110
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 109
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 108
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 107
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 106
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 105
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 104
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 103
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 102
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 101
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 100
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 99
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 98
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 97
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 96
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 95
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 94
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 93
-Span is <_FileSpan: from <FileLocation: 132 package:example/main.dart:8:7> to <FileLocation: 137 package:example/main.dart:8:12> "Fruit">
-Changing file lib/main.dart
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 122
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 121
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 120
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 119
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 118
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 117
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 116
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 115
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 114
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 113
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 112
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 111
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 110
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 109
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 108
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 107
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 106
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 105
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 104
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 103
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 102
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 101
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 100
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 99
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 98
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 97
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 96
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 95
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 94
-Part is import 'package:meta/meta.dart';
-import 'package:tape/tape.dart';
-
-part 'main.g.dart';
-
-@TapeType(/** */)
-@TapeClass()
-class . Getting substring from 93
+{"name":"Fruit","tracking_code":"jI1mkQgN8EoVLUsTFpJQaNlk9KHaiP8f","fields":[{"id":0,"type":"String","type_tracking_code":"String","name":"color"},{"id":1,"type":"bool","type_tracking_code":"bool","name":"blub"},{"id":2,"type":"int","type_tracking_code":"int","name":"amount"}]}
+{"name":"Fruit","tracking_code":"jI1mkQgN8EoVLUsTFpJQaNlk9KHaiP8f","fields":[{"id":0,"type":"String","type_tracking_code":"String","name":"color"},{"id":1,"type":"bool","type_tracking_code":"bool","name":"blub"},{"id":2,"type":"int","type_tracking_code":"int","name":"amount"}]}
+{
+  "name": "Fruit",
+  "tracking_code": "jI1mkQgN8EoVLUsTFpJQaNlk9KHaiP8f",
+  "fields": [
+    {
+      "id": 0,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "color"
+    },
+    {
+      "id": 1,
+      "type": "bool",
+      "type_tracking_code": "bool",
+      "name": "blub"
+    },
+    {
+      "id": 2,
+      "type": "int",
+      "type_tracking_code": "int",
+      "name": "amount"
+    }
+  ]
+}
+{
+  "name": "Fruit",
+  "tracking_code": "jI1mkQgN8EoVLUsTFpJQaNlk9KHaiP8f",
+  "fields": [
+    {
+      "id": 0,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "color"
+    },
+    {
+      "id": 1,
+      "type": "bool",
+      "type_tracking_code": "bool",
+      "name": "blub"
+    },
+    {
+      "id": 2,
+      "type": "int",
+      "type_tracking_code": "int",
+      "name": "amount"
+    }
+  ]
+}
+{
+  "name": "Fruit",
+  "tracking_code": "jI1mkQgN8EoVLUsTFpJQaNlk9KHaiP8f",
+  "fields": [
+    {
+      "id": 0,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "color"
+    },
+    {
+      "id": 1,
+      "type": "bool",
+      "type_tracking_code": "bool",
+      "name": "blub"
+    },
+    {
+      "id": 2,
+      "type": "int",
+      "type_tracking_code": "int",
+      "name": "amount"
+    }
+  ]
+}
+{
+  "name": "User",
+  "tracking_code": "DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW",
+  "fields": [
+    {
+      "id": 1,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "name"
+    },
+    {
+      "id": 2,
+      "type": "Fruit",
+      "type_tracking_code": "jI1mkQgN8EoVLUsTFpJQaNlk9KHaiP8f",
+      "name": "favoriteFruit"
+    }
+  ]
+}
+{
+  "name": "Fruit",
+  "tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+  "fields": [
+    {
+      "id": 0,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "color"
+    },
+    {
+      "id": 1,
+      "type": "bool",
+      "type_tracking_code": "bool",
+      "name": "blub"
+    },
+    {
+      "id": 2,
+      "type": "int",
+      "type_tracking_code": "int",
+      "name": "amount"
+    }
+  ]
+}
+{
+  "name": "User",
+  "tracking_code": "DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW",
+  "fields": [
+    {
+      "id": 1,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "name"
+    },
+    {
+      "id": 2,
+      "type": "Fruit",
+      "type_tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+      "name": "favoriteFruit"
+    }
+  ]
+}
+{
+  "name": "Fruit",
+  "tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+  "fields": [
+    {
+      "id": 0,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "color"
+    },
+    {
+      "id": 1,
+      "type": "bool",
+      "type_tracking_code": "bool",
+      "name": "blub"
+    },
+    {
+      "id": 2,
+      "type": "int",
+      "type_tracking_code": "int",
+      "name": "amount"
+    }
+  ]
+}
+{
+  "name": "User",
+  "tracking_code": "DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW",
+  "fields": [
+    {
+      "id": 1,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "name"
+    },
+    {
+      "id": 2,
+      "type": "Fruit",
+      "type_tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+      "name": "favoriteFruit"
+    }
+  ]
+}
+{
+  "name": "User",
+  "tracking_code": "DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW",
+  "fields": [
+    {
+      "id": 1,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "name"
+    },
+    {
+      "id": 2,
+      "type": "Fruit",
+      "type_tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+      "name": "favoriteFruit"
+    }
+  ]
+}
+{
+  "name": "User",
+  "tracking_code": "DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW",
+  "fields": [
+    {
+      "id": 1,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "name"
+    },
+    {
+      "id": 2,
+      "type": "Fruit",
+      "type_tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+      "name": "favoriteFruit"
+    }
+  ]
+}
+{
+  "name": "Fruit",
+  "tracking_code": "aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx",
+  "fields": [
+    {
+      "id": 0,
+      "type": "String",
+      "type_tracking_code": "String",
+      "name": "color"
+    },
+    {
+      "id": 1,
+      "type": "bool",
+      "type_tracking_code": "bool",
+      "name": "blub"
+    },
+    {
+      "id": 2,
+      "type": "int",
+      "type_tracking_code": "int",
+      "name": "amount"
+    }
+  ]
+}
+{
+  "name": "FruitBowl",
+  "tracking_code": "oTWO5bCjZVMDaypmX8wW7yNLkh70HMyz",
+  "fields": [
+    {
+      "id": 0,
+      "type": "List<Fruit>",
+      "type_tracking_code": "List<Fruit>",
+      "name": "fruits"
+    }
+  ]
+}

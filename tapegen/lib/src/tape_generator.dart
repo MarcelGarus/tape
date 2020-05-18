@@ -17,83 +17,60 @@ class TapeGenerator extends Generator {
   Future<String> generate(LibraryReader library, BuildStep buildStep) async {
     // Initialize logging.
     final logSink = File('tape.log').openWrite(mode: FileMode.append);
-    // final outSink = File('tape.out').openWrite(mode: FileMode.writeOnly);
     void log(String message) => logSink.writeln(message);
-    // void out(String output) => outSink.write(output);
+
+    // Load lock file.
+    final lockFile = Object();
+
+    final foundClasses = <ConcreteTapeClass>[];
 
     for (final element in library.allElements) {
-      if (element is ClassElement && !element.isEnum) {
-        if (tapeTypeChecker.hasAnnotationOf(element)) {
-          await _ensureTapeTypeAnnotationValid(log, element);
-        }
+      // @TapeClass
+      if (element is ClassElement && element.isTapeClass) {
+        if (element.isEnum) throw 'Enum is annotated with @TapeClass.';
+        if (element.isNotTapeType)
+          throw 'Class is annotated with @TapeClass, but not @TapeType.';
+        if (element.hasNoTrackingCode)
+          throw 'Class does not have a tracking code. Consider running `pub run tape`.';
+
+        foundClasses.add(ConcreteTapeClass.fromElement(element));
       }
     }
 
+    for (final foundClass in foundClasses) {
+      log(JsonEncoder.withIndent('  ').convert(foundClass));
+    }
     await logSink.close();
-    return '/*Some generated code.*/';
-  }
-
-  Future<void> _ensureTapeTypeAnnotationValid(
-    void Function(String) log,
-    Element element,
-  ) async {
-    final trackingCodeValue =
-        tapeTypeChecker.firstAnnotationOf(element).getField('trackingCode');
-    final trackingCode =
-        trackingCodeValue.isNull ? null : trackingCodeValue.toIntValue();
-
-    if (trackingCode != null) {
-      return;
-    }
-
-    // Insert a new tracking code into the source code.
-    final span = spanForElement(element);
-    log('Span is $span');
-    final path =
-        'lib/${span.sourceUrl.toString().substring('package:example/'.length)}';
-    final file = await File(path).open(mode: FileMode.append);
-    log('Changing file $path');
-
-    // We got the span of the class name. The annotation is somewhere before
-    // that, but we don't know exactly where. So we just assume it's somewhere
-    // in the previous 512 bytes, if there are that many.
-    final classStart = span.start.offset;
-    final lookStart = max(0, classStart - 512);
-    await file.setPosition(lookStart);
-    final part = utf8.decode(await file.read(classStart - lookStart));
-    for (var i = part.length - '@TapeType'.length - 1; i >= 0; i--) {
-      log('Part is $part. Getting substring from $i');
-      if (part.substring(i, i + '@TapeType'.length) == '@TapeType') {
-        await file.setPosition(lookStart + i);
-        break;
-      }
-    }
-    while (true) {
-      final byte = await file.readByte();
-      if (byte < 0) return;
-      if (byte == '(') break;
-    }
-
-    await file.writeString('testx');
-    await file.close();
-
-    log('uri=${element.librarySource.uri}');
-    // log('contents=${element.librarySource.contents.data}');
-    log('source=${element.librarySource.source}');
-    log('span=${spanForElement(element)}');
-
-    // Write to the source file.
-    // final absolutePath =
-    //     element.librarySource.source.fullName; // /example/lib/main.dart
-    // final pathFromRoot = absolutePath.substring(1); // example/lib/main.dart
-    // final pathFromProject =
-    //     pathFromRoot.substring(pathFromRoot.indexOf('/') + 1); // lib/main.dart
-    log('location_components=${element.location.components}');
-    log('location_encoding=${element.location.encoding}');
-    log('location_type=${element.location.runtimeType}');
-
-    final classElement = element as ClassElement;
-    final classToTape = ConcreteTapeType.fromElement(classElement);
-    log(json.encode(classToTape));
+    return [
+      for (final foundClass in foundClasses) ...[
+        'class AdapterFor${foundClass.name} extends AdapterFor<${foundClass.name}> {',
+        '  const AdapterFor${foundClass.name}();',
+        '',
+        '  @override',
+        '  void write(TapeWriter writer, ${foundClass.name} obj) {',
+        [
+          '    writer',
+          for (final field in foundClass.fields) ...[
+            '..writeFieldId(${field.id})',
+            '..write(obj.${field.name})',
+          ],
+          ';',
+        ].join(),
+        '  }',
+        '',
+        '  @override',
+        '  ${foundClass.name} read(TapeReader reader) {',
+        '    final fields = <int, dynamic>{',
+        '      for (; reader.hasAvailableBytes;) reader.readFieldId(): reader.read(),',
+        '    };',
+        '',
+        '    return ${foundClass.name}(',
+        for (final field in foundClass.fields)
+          '      ${field.name}: fields[${field.id}],',
+        '    );',
+        '  }',
+        '}',
+      ],
+    ].join('\n');
   }
 }
