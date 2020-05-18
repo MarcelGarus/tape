@@ -1,20 +1,21 @@
-/// Annotating a class with `@TapeType` indicates that a [TapeAdapter] should
-/// get generated for it when running the `tape_generator`.
 class TapeType {
-  const TapeType([this.nextFieldId, this.trackingCode]);
+  const TapeType(this.trackingCode);
 
-  /// The id of the next field to be inserted.
-  final int nextFieldId;
-
-  /// A code that uniquely identifies this types among others that are
-  /// registered in the `tape.lock` file. If the `tape.lock` file gets deleted,
-  /// this tracking code can also be deleted as it isn't used anywhere else.
   final String trackingCode;
 }
 
-/// Annotating a field in a `@TapeType` class with `@TapeField` indicates that
+/// Annotating a class with `@TapeClass` indicates that a [TapeAdapter] should
+/// get generated for it when running `tapegen`.
+class TapeClass {
+  const TapeClass({this.nextFieldId});
+
+  /// The id of the next field to be inserted.
+  final int nextFieldId;
+}
+
+/// Annotating a field in a `@TapeClass` class with `@TapeField` indicates that
 /// it should get serialization and deserialization code should get created for
-/// it when running the `tape_generator`.
+/// it when running `tapegen`.
 class TapeField {
   const TapeField([this.id]);
 
@@ -24,8 +25,8 @@ class TapeField {
   final int id;
 }
 
-const TapeAll = TapeAllImpl();
+const DoNotTape = DoNotTapeImpl();
 
-class TapeAllImpl {
-  const TapeAllImpl();
+class DoNotTapeImpl {
+  const DoNotTapeImpl();
 }
