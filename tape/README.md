@@ -19,7 +19,7 @@ Additional features include:
 * **Future- and backwards-compatible.** When adding, renaming, or removing fields, you can deserialize values that have been serialized with previous or future versions. That means, saving taped objects for a long time or sending them to other phones is fine, no matter which version of your code is used.
 * **Helpful tapegen:** Because adapters need to be generated for each type, you have to annotate types that you want to make tapeable. Luckily, besides actually generating the adapters, the [<kbd>tapegen</kbd>](https://pub.dev/packages/tapegen) tool also helps you with annotating types and alerts you when you make backwards-incompatible changes to them (TODO: it doesn't yet).
 * **Extensible API** for publishing serializations for external types. If a package introduces custom data types, it's worth checking if someone wrote a `taped_…` package for it. For example, there's a `taped_flutter` package (there is not yet), that makes `Color`, … tapeable.
-* **Compatible with [<kbd>freezed</kbd>](https://pub.dev/packages/freezed)**. That makes your type definitions even shorter.
+* **Compatible with [<kbd>freezed</kbd>](https://pub.dev/packages/freezed)** (TODO: not yet). That makes your type definitions even shorter.
 
 ## How to use?
 
