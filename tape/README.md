@@ -1,9 +1,13 @@
+⚠ This package is in early, early, early preview yet. Do not use in production.
+
+---
+
 You probably already know some serialization formats, the most famous being json. So, why do we need a new one?
 Sadly, all of these encodings suffer from one of the following two problems:
 
 * **Loss of type information:** For example, while you can implement a `user.toJson()` method so you can do `json.encode(someUser)`, you can't simply do `json.decode(...)` to get back the user. Rather, you need to call `User.fromJson(...)` — that means you need to know the type up-front.  
   This can be especially tricky when dealing with dynamic typing — good luck trying to parse some json that is either a `User` or a `FancyUser` without writing some complicated logic.  
-  Even projects like [<kbd>hive</kbd>](https://pub.dev/packages/hive) that use custom formats, struggle with generic types and subclassing.
+  Even [<kbd>hive</kbd>](https://pub.dev/packages/hive) which uses a custom format, struggles with generic types and subclassing.
 * **External definition:** Projects like Google's [ProtoBuf](https://developers.google.com/protocol-buffers) or [Cap'n Proto](https://capnproto.org/) can be a godsend if you're aiming for interoperability across multiple languages. But they rely on external definitions in a custom language as well as a custom compiler. That shifts the source of truth away from your Dart code and adds a lot of overhead and friction. For simple app-internal types that's often not worth it.
 
 Meet [<kbd>tape</kbd>](https://pub.dev/packages/tape), a truly type-safe encoding (although you need to register types first).
@@ -11,31 +15,28 @@ Use `tape(...)` to turn an object into some bytes and `untape(...)` to turn thos
 
 Additional features include:
 
-* **Helpful code generator:** The code generator helps you by modifying code and alerting you when you make backwards-incompatible changes to the types.
-* **Extensible API** for publishing serializations for external types. If a package introduces custom data types, it's worth checking if someone wrote a `taped_…` package for it. For example, there's a `taped_flutter` package, that makes `Color`, … tapeable.
-* **Compatible with other code-gen packages,** like [<kbd>freezed</kbd>](https://pub.dev/packages/freezed). Using some functionality shouldn't make you sacrifice on other parts.
-* **Future- and backwards-compatible.** When adding or removing fields, you can deserialize values that have been serialized with previous or future versions. That means, saving taped objects for a long time or sending them to other phones is fine.
-  That even works when renaming fields
-
-That being said, there's some overhead involved to be able to serialize custom types:
+* **Small encoding**: The encoding is a custom binary format and magnitudes more efficient than json.
+* **Future- and backwards-compatible.** When adding, renaming, or removing fields, you can deserialize values that have been serialized with previous or future versions. That means, saving taped objects for a long time or sending them to other phones is fine, no matter which version of your code is used.
+* **Helpful tapegen:** Because adapters need to be generated for each type, you have to annotate types that you want to make tapeable. Luckily, besides actually generating the adapters, the [<kbd>tapegen</kbd>](https://pub.dev/packages/tapegen) tool also helps you with annotating types and alerts you when you make backwards-incompatible changes to them (TODO: it doesn't yet).
+* **Extensible API** for publishing serializations for external types. If a package introduces custom data types, it's worth checking if someone wrote a `taped_…` package for it. For example, there's a `taped_flutter` package (there is not yet), that makes `Color`, … tapeable.
+* **Compatible with [<kbd>freezed</kbd>](https://pub.dev/packages/freezed)**. That makes your type definitions even shorter.
 
 ## How to use?
 
 First, add the following dependencies to your `pubspec.yaml`:
 
-```dart
+```yaml
 dependencies:
   tape:
 
 dev_dependencies:
   build_runner:
-  tapegen:
+  tapegen: # Contains code generators
 ```
 
-In your project root directory, run `pub run tape init`.
-
-This will generate a `tape.dart` file next to your `main.dart` file. This file will contain an `initialize` method that registers all your types.
-Also, you `main.dart` file now calls that `initialize` method:
+In your project root directory, run `pub run tapegen init`.  
+This will generate a `tape.dart` file next to your `main.dart` file. This file contains an `initialize` method that registers all your types.
+Also, your `main` method now calls that `initialize` method (todo: tapegen init is not working yet):
 
 ```dart
 import 'tape.dart' as tape;
@@ -46,14 +47,11 @@ void main() {
 }
 ```
 
-Next up, it's time to register some types to tape. Each type will need a `TapeAdapter`. Luckily, we can automatically generate that most of the time! Just run `pub run build_runner watch` in your project root.
-
-Open a file that contains a type you want to serialize. Just add `part 'file_name.g.dart';` at the top and annotate your type with `@TapeAll`:
+If you want to serialize a type defined in your package, it's worth running `pub run tapegen`. This tool will help you annotating your types.  
+Just annotate a class with `@TapeClass`:
 
 ```dart
-part 'user.g.dart';
-
-@TapeAll
+@TapeClass
 class User {
   User(this.firstName, this.lastName);
 
@@ -62,17 +60,32 @@ class User {
 }
 ```
 
-As soon as you hit save, the `@TapeAll` annotation will get replaced with a `@TapeType(...)` annotation that contains some cryptic String — don't worry about that for now. Also, all the fields should get annotated with `@TapeField(someId)`.
+As soon as you save the file, <kbd>tapegen</kbd> will spring to live and help your annotate all the fields:
 
-In tape, every field has an id that uniquely identifies it. When you rename the field, previous encodings are still valid. This is different from, say, json, where if you change a field name, it usually also changes in the json code itself.  
-By the way: The field ids automatically count up. If you add a new field, just annotate it with `@TapeField()` and hit save — <kbd>tapegen</kbd> will fill out the id for you.
-Also, feel free to remove or reorder fields along with their annotations.
+```dart
+part 'my_file.g.dart';
 
+@TapeClass(nextFieldId: 2)
+class User {
+  User(this.firstName, this.lastName);
+
+  @TapeField(0)
+  final String firstName;
+
+  @TapeField(1)
+  final String lastName;
+}
+```
+
+In tape, every field has an id that uniquely identifies it. If you add, reorder, rename or delete fields, previous encodings are still valid. This is different from, say, json, where if you change a field name, it usually also changes in the json encoding itself.  
+
+If you add a field and have <kbd>tapegen</kbd> running, the `@TapeField` annotation will automatically get added.
+If you have a field that you don't want to tape, annotate it with `@DoNotTape` instead of `@TapeField`.
+
+When you're done annotating your types, run `pub run build_runner build` to actually generate the adapters for those types.
+
+Then, register them in your `tape.dart`.
 
 ## How does the encoding work?
 
-**Won’t fixed-width integers, unset optional fields, and padding waste space on the wire?**
-
-Yes. However, since all these extra bytes are zeros, when bandwidth matters, we can apply an extremely fast Cap’n-Proto-specific compression scheme to remove them. Cap’n Proto calls this “packing” the message; it achieves similar (better, even) message sizes to protobuf encoding, and it’s still faster.
-
-When bandwidth really matters, you should apply general-purpose compression, like zlib or LZ4, regardless of your encoding format.
+TODO
