@@ -3,10 +3,7 @@ import 'package:tape/tape.dart';
 
 import 'user.dart';
 
-part 'main.g.dart';
-
-@TapeType('aVvYHJi6FEuMMc1VBpghBYzpYHgdBzgx')
-@TapeClass()
+@TapeClass(nextFieldId: 3)
 class Fruit {
   Fruit({@required this.color, @required this.blub, @required this.amount});
 
@@ -18,8 +15,7 @@ class Fruit {
   final int amount;
 }
 
-@TapeType('oTWO5bCjZVMDaypmX8wW7yNLkh70HMyz')
-@TapeClass()
+@TapeClass(nextFieldId: 1)
 class FruitBowl {
   FruitBowl({@required this.fruits});
 
