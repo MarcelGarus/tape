@@ -1,5 +1,5 @@
 name: tape
-description: A typed serializer for Dart.
+description: A serializer for Dart objects that is completely type-safe and future- and backwards-compatible.
 version: 0.0.2
 homepage: https://github.com/marcelgarus/tape
 
