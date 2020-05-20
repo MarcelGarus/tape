@@ -1,5 +1,4 @@
 import 'package:analyzer/dart/element/element.dart';
-import 'package:analyzer/dart/element/type.dart';
 import 'package:meta/meta.dart';
 
 import 'utils.dart';
@@ -9,20 +8,19 @@ import 'utils.dart';
 class ConcreteTapeClass {
   ConcreteTapeClass({
     @required this.name,
-    @required this.trackingCode,
+    @required this.type,
     @required this.fields,
   })  : assert(name != null),
-        assert(trackingCode != null),
         assert(fields != null);
 
   final String name;
-  final String trackingCode;
+  final String type;
   final List<ConcreteTapeField> fields;
 
   factory ConcreteTapeClass.fromElement(ClassElement element) {
     return ConcreteTapeClass(
       name: element.name,
-      trackingCode: element.trackingCode,
+      type: element.thisType.getDisplayString(withNullability: false),
       fields: [
         for (final field in element.fields.where((field) => field.isTapeField))
           ConcreteTapeField.fromElement(field),
@@ -33,7 +31,7 @@ class ConcreteTapeClass {
   factory ConcreteTapeClass.fromJson(Map<String, dynamic> data) {
     return ConcreteTapeClass(
       name: data['name'],
-      trackingCode: data['tracking_code'],
+      type: data['type'],
       fields: (data['fields'] as List<Map<String, dynamic>>)
           .map((fieldData) => ConcreteTapeField.fromJson(fieldData))
           .toList(),
@@ -43,7 +41,7 @@ class ConcreteTapeClass {
   Map<String, dynamic> toJson() {
     return {
       'name': name,
-      'tracking_code': trackingCode,
+      'type': type,
       'fields': fields.map((field) => field.toJson()).toList(),
     };
   }

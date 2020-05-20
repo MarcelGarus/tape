@@ -38,3 +38,8 @@ extension IsTapeType on Element {
     return field.isNull ? null : field.toIntValue();
   }
 }
+
+extension InitializingFormalParameters on ConstructorElement {
+  Iterable<ParameterElement> get initializingFormalParameters =>
+      parameters.where((param) => param.isInitializingFormal);
+}
