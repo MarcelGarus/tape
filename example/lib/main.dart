@@ -3,6 +3,8 @@ import 'package:tape/tape.dart';
 
 import 'user.dart';
 
+part 'main.g.dart';
+
 @TapeClass(nextFieldId: 3)
 class Fruit {
   Fruit({@required this.color, @required this.blub, @required this.amount});

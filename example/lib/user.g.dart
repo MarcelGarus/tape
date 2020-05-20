@@ -6,27 +6,27 @@ part of 'user.dart';
 // TapeGenerator
 // **************************************************************************
 
-class AdapterForUser extends AdapterFor<User> {
+class AdapterForUser<T, S> extends AdapterFor<User<T, S>> {
   const AdapterForUser();
 
   @override
-  void write(TapeWriter writer, User obj) {
+  void write(TapeWriter writer, User<T, S> obj) {
     writer
-      ..writeFieldId(1)
+      ..writeFieldId(0)
       ..write(obj.name)
-      ..writeFieldId(2)
-      ..write(obj.favoriteFruit);
+      ..writeFieldId(1)
+      ..write(obj.favorite);
   }
 
   @override
-  User read(TapeReader reader) {
+  User<T, S> read(TapeReader reader) {
     final fields = <int, dynamic>{
       for (; reader.hasAvailableBytes;) reader.readFieldId(): reader.read(),
     };
 
     return User(
-      name: fields[1],
-      favoriteFruit: fields[2],
+      fields[0] as String,
+      fields[1] as List<List<T>>,
     );
   }
 }

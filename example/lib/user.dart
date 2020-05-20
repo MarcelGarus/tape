@@ -4,14 +4,13 @@ import 'main.dart';
 
 part 'user.g.dart';
 
-@TapeType('DUgcHXvONuSNbiqEphWwsjYBJYNqE6uW')
-@TapeClass()
-class User {
-  User(this.name, this.favoriteFruit);
+@TapeClass(nextFieldId: 2)
+class User<T, S> {
+  User(this.name, this.favorite);
 
-  @TapeField(1)
+  @TapeField(0)
   final String name;
 
-  @TapeField(2)
-  final Fruit favoriteFruit;
+  @TapeField(1)
+  final List<List<T>> favorite;
 }

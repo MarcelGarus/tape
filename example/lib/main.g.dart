@@ -27,9 +27,9 @@ class AdapterForFruit extends AdapterFor<Fruit> {
     };
 
     return Fruit(
-      color: fields[0],
-      blub: fields[1],
-      amount: fields[2],
+      color: fields[0] as String,
+      blub: fields[1] as bool,
+      amount: fields[2] as int,
     );
   }
 }
@@ -51,7 +51,7 @@ class AdapterForFruitBowl extends AdapterFor<FruitBowl> {
     };
 
     return FruitBowl(
-      fruits: fields[0],
+      fruits: fields[0] as List<Fruit>,
     );
   }
 }
