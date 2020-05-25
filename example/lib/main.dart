@@ -1,3 +1,4 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:tape/tape.dart';
 
@@ -9,11 +10,13 @@ part 'main.g.dart';
 class Fruit {
   Fruit({@required this.color, @required this.blub, @required this.amount});
 
-  @TapeField(0)
+  @TapeField(0, 'red')
   final String color;
-  @TapeField(1)
+
+  @TapeField(1, true)
   final bool blub;
-  @TapeField(2)
+
+  @doNotTape
   final int amount;
 }
 
@@ -21,7 +24,8 @@ class Fruit {
 class FruitBowl {
   FruitBowl({@required this.fruits});
 
-  @TapeField(0)
+  @TapeField(0, [])
+  @Default([Fruit(color: 'yellow', blub: ture, amount: 2)])
   final List<Fruit> fruits;
 }
 
