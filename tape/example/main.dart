@@ -8,11 +8,13 @@ import 'main.g.dart';
 class Fruit {
   Fruit({@required this.color, @required this.blub, @required this.amount});
 
-  @TapeField(0)
+  @TapeField(0, defaultValue: 'red')
   final String color;
-  @TapeField(1)
+
+  @TapeField(1, true)
   final bool blub;
-  @TapeField(2)
+
+  @doNotTape
   final int amount;
 }
 
