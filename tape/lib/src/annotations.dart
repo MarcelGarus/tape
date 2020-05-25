@@ -25,7 +25,7 @@ class TapeField {
   final int id;
 }
 
-const DoNotTape = DoNotTapeImpl();
+const doNotTape = DoNotTapeImpl();
 
 class DoNotTapeImpl {
   const DoNotTapeImpl();
