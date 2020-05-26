@@ -1,20 +1,32 @@
-## The Tape serializer
+## Tape
 
-The Tape serializer is used for serializing and deserializing Dart objects while retaining type information.
-It's inspired by Protobuf and Cap'n Proto.
+Welcome to the tape repository! Tape is a type-safe serialization framework for Dart objects. For more information about what tape is, see [this readme](tape/README.md).  
+Tape divided into the following layers:
 
-There are two typical use cases for this package:
+```
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ tape assist                         ┃
+┣━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┫
+┃ adapter generation ┃ taped-packages ┃
+┣━━━━━━━━━━━━━━━━━━━━┻━━━━━━━━━━━━━━━━┫
+┃ adapter framework                   ┃
+┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫
+┃ block framework                     ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+```
 
-- To make custom classes serializable, create `TypeAdapter`s for them (or let a code generator create them) and register them at the `TypeRegistry`. `TypeAdapter`s should be able to serialize and deserialize data given a `BinaryWriter` or `BinaryReader`.
-- To actually serialize and deserialize objects, just call `binary.serialize(…)` or `binary.deserialize(…)`.
+* **Block framework:** Turns `Block`s (declarative low-level primitives like `Uint8Block` or `ListBlock`) into bytes and the other way around.
+* **Adapter framework:** Provides the primitives for writing, registering and looking up adapters.
+* **Adapter generation:** Code generation of adapters based on annotations like `@TapeClass`. Also checks and ensures backwards-compatibility.
+* **Taped-packages:** Ecosystem of packages named `taped_...` for types from pub.dev packages. Maintained by the community.
+* **Tape assist:** Tool helping you annotate classes, as well as looking for and initializing taped-packages.
 
-### Features
+Apart from some community-maintained taped-packages, most of the layers exist within these repository. The top folders represent pub.dev packages:
 
-* Can encode objects of any type, including generics. Types need to be registered before though.
-* Serialization is safe. No single adapter can corrupt the binary format. Misbehaving adapters will be called out during runtime, making the serialization process easily debuggable.
-* Future- and backwards-compatible. Unknown types will just be decoded to `null`.
+* `tape` contains things used during runtime to actually encode the values. That's the block and adapter framework.
+* `tapegen` contains things related to code generation and improving experience during development – adapter generation and tape assist.
 
-### I'm writing a custom `TypeAdapter`. Any guidance?
+### I'm writing a custom adapter. Any guidance?
 
 You should be extending `TypeAdapter`. Then, register it:
 
