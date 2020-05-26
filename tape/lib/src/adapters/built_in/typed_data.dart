@@ -1,8 +1,8 @@
 /// Adapters for types from `dart:typed_data`.
 
-part of 'adapters.dart';
+part of 'built_in.dart';
 
-class AdapterForUint8List extends AdapterFor<Uint8List> {
+class AdapterForUint8List extends TapeAdapter<Uint8List> {
   const AdapterForUint8List();
 
   @override
