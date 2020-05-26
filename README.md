@@ -35,7 +35,7 @@ Most of the time, using the adapter generator is fine. Here are some cases where
 - You want the encoding to be more efficient.
 
 If your type is a class, just extend `TapeClassAdapter<TheType>`.
-In the `toFields(TheType object)` method, return a `Field` class that maps all these fields to unique ids:
+In the `toFields(TheType object)` method, return a `Fields` class that maps all these fields to unique ids:
 
 ```dart
 class AdapterForTheType extends TapeClassAdapter<TheType> {
