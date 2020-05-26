@@ -26,60 +26,66 @@ Apart from some community-maintained taped-packages, most of the layers exist wi
 * `tape` contains things used during runtime to actually encode the values. That's the block and adapter framework.
 * `tapegen` contains things related to code generation and improving experience during development – adapter generation and tape assist.
 
-### I'm writing a custom adapter. Any guidance?
+### Writing custom adapters
 
-You should be extending `TypeAdapter`. Then, register it:
+Most of the time, using the adapter generator is fine. Here are some cases where you might need to create your own:
 
-```dart
-AdapterForMyClass().register(someId); // some id >= 0
-```
+- You're using a package that has a custom type and no taped-package exists for it.
+- You're publishing a package with a custom type and you want users to be able to tape that type without littering your original package with adapters.
+- You want the encoding to be more efficient.
 
-If you created an adapter that can encode any subclass of a class (which means you know all subclasses), you can tell the registry that:
-
-```dart
-AdapterForMyClass().registerAdapter(someId, suppressWarningsForSubtype: true);
-```
-
-No warning is shown to the developer in debug mode.
-
-You'll most certainly need to register multiple adapters. It's recommended to do that in a map, like this:
+If your type is a class, just extend `TapeClassAdapter<TheType>`.
+In the `toFields(TheType object)` method, return a `Field` class that maps all these fields to unique ids:
 
 ```dart
-TypeRegistry.registerAdapters({
-  0: AdapterForSomeType(),
-  1: AdapterForOtherType(),
-  2: AdapterForList<SomeType>(),
-});
+class AdapterForTheType extends TapeClassAdapter<TheType> {
+
+  @override
+  Fields toFields(TheType object) {
+    return Fields({
+      0: object.someString,
+      1: object.dynamicField,
+      2: Int8(object.smallInt),
+    });
+  }
+
+  @override
+  TheType fromFields(Fields fields) {
+    return TheType(
+      someString: fields.get<String>(0, orDefault: ''),
+      dynamicField: fields.get<dynamic>(1, orDefault: null),
+      smallInt: fields.get<Int8>(2, orDefault: Int8.zero).toInt(),
+    );
+  }
+}
 ```
 
-If you want to encode data differently not based on the type but on the value, you can implement multiple `AdapterForSpecificValueOfType<MyType>`.
-In contrast to normal `TypeAdapter`s, they should also implement `bool matches(MyType obj)`.
-You can then register them like this:
+#### Publishing a taped-package
+
+If you want to publish the package to pub.dev, consider naming it `taped_<name of the original package>`.
+For example, if your package is named `sample`, it would be `taped_sample`.  
+Adhering to this naming scheme allows tape assist to automatically find that package and suggest it to users when they add a `@TapeClass` annotation to a class that contains a field of a type from your package.
+
+Also, you should give your adapter a negative type id to not interfere with the adapters created by the end-user. File a PR for reserving a type id in the [table of reserved type ids](table_of_type_ids.md).
+
+Additionally, add a `tape.dart` to your package root (so it can be imported with `import 'package:taped_sample/tape.dart';`) with the following content:
 
 ```dart
-TypeRegistry.registerVirtualNode(AdapterNode<MyType>.virtual());
-TypeRegistry.registerAdapters({
-  0: AdapterForSpecificValuesOfMyType(),
-  1: AdapterForOtherValuesOfMyType(),
-  2: FallbackAdapterForMyType(),
-});
+extension InitializeSample on TapeApi {
+  void initializeSample() {
+    registerAdapters({
+      // Use your reserved type ids here.
+      -4: AdapterForTheType(),
+      -5: AdapterForOtherType(),
+      ...
+    });
+  }
+}
 ```
-
-If you remove an adapter, you shouldn't reuse the type id in the future.
-Data that was serialized with the removed adapter deserializes to `null`.
-To make sure that the type id doesn't get reused, you can also tell the type registry to throw an error if an adapter with the same id is registered:
-
-```dart
-TypeRegistry.registerLegacyTypes({4, 9, 10});
-```
-
-#### If you're writing an adapter for a package (library):
-
-If you're using code generation to create the adapter, make sure to include the generated file in the package. You don't want to force users to run `pub run build_runner build`.
-
-You should give your adapter a negative type id to not interfere with the adapters created by the end-user. File a PR for reserving a type id in the [table of reserved type ids](table_of_type_ids.md).
 
 ### Behind the scenes: Searching for the right adapter
+
+> Note: This is not up-to-date.
 
 Adapters are stored in a tree, like the following:
 
@@ -112,6 +118,8 @@ You can always get such a tree visualization of the adapter tree by calling `Typ
 Additionally, the `TypeRegistry` contains a map of shortcuts from types to nodes in the tree.
 
 ### Behind the scenes: How is data encoded
+
+> Note: This is definitely not up-to-date.
 
 When encoding a value with a fitting adapter, three steps happen:
 
