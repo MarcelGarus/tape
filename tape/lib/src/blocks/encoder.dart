@@ -15,6 +15,32 @@ part of 'blocks.dart';
 // rather than string-level, each primitive type has a one-byte
 // The encoding format is as follows:
 
+const blocks = _BlocksCodec();
+
+class _BlocksCodec extends Codec<Object, List<int>> {
+  const _BlocksCodec();
+
+  @override
+  get encoder => const _BlocksEncoder();
+
+  @override
+  get decoder => const _BlocksDecoder();
+}
+
+class _BlocksEncoder extends Converter<Block, List<int>> {
+  const _BlocksEncoder();
+
+  @override
+  List<int> convert(Block input) => (Writer()..writeBlock(input)).buffer;
+}
+
+class _BlocksDecoder extends Converter<List<int>, Block> {
+  const _BlocksDecoder();
+
+  @override
+  Block convert(List<int> input) => Reader(input).readBlock();
+}
+
 // An encoded generic [Block] looks like this:
 // | block id | block |
 // The block id is saved as a uint8.
@@ -39,23 +65,34 @@ extension _BlockWriter on Writer {
   void writeBlock(Block block) {
     final type = block.runtimeType;
     final id = _blockIds[type] ?? (throw UnsupportedBlockError(block));
-    final writer = {
-      TypedBlock: writeTypedBlock,
-      FieldsBlock: writeFieldsBlock,
-      BytesBlock: writeBytesBlock,
-      ListBlock: writeListBlock,
-      IntBlock: writeIntBlock,
-      Uint8Block: writeUint8Block,
-      Uint16Block: writeUint16Block,
-      Uint32Block: writeUint32Block,
-      Int8Block: writeInt8Block,
-      Int16Block: writeInt16Block,
-      Int32Block: writeInt32Block,
-      DoubleBlock: writeDoubleBlock,
-      Float32Block: writeFloat32Block,
-    }[type];
     writeUint8(id);
-    writer(block);
+    if (block is TypedBlock) {
+      writeTypedBlock(block);
+    } else if (block is FieldsBlock) {
+      writeFieldsBlock(block);
+    } else if (block is BytesBlock) {
+      writeBytesBlock(block);
+    } else if (block is ListBlock) {
+      writeListBlock(block);
+    } else if (block is IntBlock) {
+      writeIntBlock(block);
+    } else if (block is Uint8Block) {
+      writeUint8Block(block);
+    } else if (block is Uint16Block) {
+      writeUint16Block(block);
+    } else if (block is Uint32Block) {
+      writeUint32Block(block);
+    } else if (block is Int8Block) {
+      writeInt8Block(block);
+    } else if (block is Int16Block) {
+      writeInt16Block(block);
+    } else if (block is Int32Block) {
+      writeInt32Block(block);
+    } else if (block is DoubleBlock) {
+      writeDoubleBlock(block);
+    } else if (block is Float32Block) {
+      writeFloat32Block(block);
+    }
   }
 }
 
