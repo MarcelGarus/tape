@@ -13,7 +13,7 @@ class Writer {
     _data = ByteData.view(_buffer.buffer);
   }
 
-  Uint8List get buffer => _buffer;
+  Uint8List get buffer => Uint8List.view(_buffer.buffer, 0, _cursor);
   Uint8List _buffer = Uint8List(256);
 
   /// A [ByteData] view of the [buffer].
