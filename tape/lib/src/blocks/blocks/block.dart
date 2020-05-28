@@ -29,7 +29,10 @@ const _blockIds = {
 extension _BlockWriter on _Writer {
   void writeBlock(Block block) {
     final type = block.runtimeType;
-    final id = _blockIds[type] ?? (throw UnsupportedBlockError(block));
+    final id = _blockIds[type] ??
+        (block is UnsupportedBlock
+            ? throw UsedTheUnsupportedBlockError()
+            : throw UnsupportedBlockError(block));
     writeUint8(id);
     if (block is TypedBlock) {
       writeTypedBlock(block);
@@ -59,11 +62,12 @@ extension _BlockWriter on _Writer {
       writeFloat32Block(block);
     } else if (block is SafeBlock) {
       writeSafeBlock(block);
-    } else if (block is UnsupportedBlock) {
-      // TODO: Throw more descriptive error
-      throw UnsupportedBlockError(block);
     } else {
-      throw UnsupportedBlockError(block);
+      assert(
+        false,
+        "This shouldn't happen because unsupported shouldn't have an id. "
+        "So, we should have failed above.",
+      );
     }
   }
 }

@@ -3,8 +3,11 @@ import 'dart:math';
 import 'package:tape/blocks.dart';
 import 'package:test/test.dart';
 
+void expectThrows<E>(void Function() callback) =>
+    expect(callback, throwsA(isA<E>()));
+
 void expectAssertFailed(void Function() callback) =>
-    expect(callback, throwsA(isA<AssertionError>()));
+    expectThrows<AssertionError>(callback);
 
 void expectEncoding(Block block, List<int> correctBytes) {
   final bytes = blocks.encode(block);
@@ -12,6 +15,8 @@ void expectEncoding(Block block, List<int> correctBytes) {
   final replica = blocks.decode(bytes);
   expect(replica, equals(block));
 }
+
+class CustomBlock implements Block {}
 
 void main() {
   group('BytesBlock', () {
@@ -247,5 +252,42 @@ void main() {
           ListBlock([Uint8Block(42), UnsupportedBlock(255), Uint8Block(3)]);
       expect(retrieved, equals(correct));
     });
+  });
+
+  test('Throws an error if encoding a custom block', () {
+    expectThrows<UnsupportedBlockError>(() => blocks.encode(CustomBlock()));
+  });
+
+  test('Throws an error if encoding the UnsupportedBlock', () {
+    expectThrows<UsedTheUnsupportedBlockError>(
+      () => blocks.encode(UnsupportedBlock(2)),
+    );
+  });
+
+  test('Throws an exception if decoding a block with an unknown id', () {
+    expectThrows<UnsupportedBlockException>(() => blocks.decode([190]));
+    expectThrows<UnsupportedBlockException>(() => blocks.decode([21]));
+  });
+
+  test('Throws an exception if decoding bytes that stop abruptly', () {
+    expectThrows<BlockEncodingEndedAbruptlyException>(() => blocks.decode([]));
+  });
+
+  test('Throws an exception if there are more bytes than expected', () {
+    expectThrows<BlockEncodingHasExtraBytesException>(
+      () => blocks.decode([5, 4, 1]),
+    );
+  });
+
+  test('Throws an exception if a SafeBlock has a length of zero', () {
+    expectThrows<SafeBlockWithZeroLengthException>(
+      () => blocks.decode([13, 0, 0, 0, 0]),
+    );
+  });
+
+  test("Throws an exception if a SafeBlock length doesn't match", () {
+    expectThrows<SafeBlockLengthDoesNotMatchException>(
+      () => blocks.decode([13, 0, 0, 0, 1, 5, 3]),
+    );
   });
 }

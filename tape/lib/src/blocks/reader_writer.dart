@@ -14,6 +14,9 @@ class _Reader {
   int _reserve(int bytes) {
     final cursorBefore = _cursor;
     _cursor += bytes;
+    if (_cursor > _data.buffer.lengthInBytes) {
+      throw BlockEncodingEndedAbruptlyException();
+    }
     return cursorBefore;
   }
 

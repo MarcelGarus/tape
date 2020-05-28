@@ -51,5 +51,12 @@ class _BlocksDecoder extends Converter<List<int>, Block> {
   const _BlocksDecoder();
 
   @override
-  Block convert(List<int> input) => _Reader(input).readBlock();
+  Block convert(List<int> input) {
+    final reader = _Reader(input);
+    final block = reader.readBlock();
+    if (reader.cursor < input.length) {
+      throw BlockEncodingHasExtraBytesException();
+    }
+    return block;
+  }
 }

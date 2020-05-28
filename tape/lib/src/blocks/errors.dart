@@ -22,8 +22,9 @@ class UnsupportedBlockError extends BlockEncodingError {
 }
 
 /// An [UnsupportedBlock] was passed in during encoding. This should never
-/// happen as we
-class UsedUnsupportedBlockItselfError extends BlockEncodingError {}
+/// happen as it doesn't have a block id. Instead, it only get created during
+/// decoding if we encounter an unknown block id.
+class UsedTheUnsupportedBlockError extends BlockEncodingError {}
 
 /// Tried to decode a [Block], but found a block id that we don't know. If new
 /// block ids get added, those blocks should be wrapped in [SafeBlock] so that
