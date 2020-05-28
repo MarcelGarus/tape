@@ -33,6 +33,35 @@ class TypedBlock implements Block {
   int get hashCode => runtimeType.hashCode ^ typeId.hashCode ^ child.hashCode;
 }
 
+/// Saves the length of the [child] block so that if a block-level parsing error
+/// occurs, we can skip the block. This is not intended to be used by consumers.
+/// Instead, the `blocks` codec will automatically insert this block when it
+/// encodes newly supported blocks. Similarly, it will also remove the
+/// [SafeBlock] during decoding, replacing it either with its child or an
+/// [UnsupportedBlock].
+class SafeBlock implements Block {
+  SafeBlock({@required this.child}) : assert(child != null);
+
+  final Block child;
+
+  bool operator ==(Object other) =>
+      identical(this, other) || other is SafeBlock && child == other.child;
+  int get hashCode => runtimeType.hashCode ^ child.hashCode;
+}
+
+/// Is produced during decoding if a [SafeBlock] contained an unsupported block.
+/// Cannot be explicitly encoded.
+class UnsupportedBlock implements Block {
+  UnsupportedBlock(this.blockId);
+
+  final int blockId;
+
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is UnsupportedBlock && blockId == other.blockId;
+}
+
+/// Block that contains multiple other blocks.
 class ListBlock implements Block {
   ListBlock(this.items) : assert(items != null);
 

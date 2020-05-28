@@ -1,7 +1,10 @@
 ## Tape
 
-Welcome to the tape repository! Tape is a type-safe serialization framework for Dart objects. For more information about what tape is, see [this readme](tape/README.md).  
-Tape divided into the following layers:
+Welcome to the tape repository!
+This readme will focus on how tape is architectured and on how it works internally.
+For more general information about what tape is, see [this other readme](tape/README.md).
+
+Tape is divided into the following layers:
 
 ```
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓

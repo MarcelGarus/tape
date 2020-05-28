@@ -59,6 +59,7 @@ const _blockIds = {
   Int32Block: 0x0a,
   DoubleBlock: 0x0b,
   Float32Block: 0x0c,
+  SafeBlock: 0x0d,
 };
 
 extension _BlockWriter on Writer {

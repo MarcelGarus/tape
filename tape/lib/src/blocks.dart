@@ -4,6 +4,7 @@ export 'blocks/blocks.dart'
         Block,
         TypedBlock,
         FieldsBlock,
+        SafeBlock,
         BytesBlock,
         ListBlock,
         IntBlock,
