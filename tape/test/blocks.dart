@@ -221,6 +221,14 @@ void main() {
         [1, 0, 0, 0, 3, 0, 0, 0, 0, 5, 123, 0, 0, 0, 1, 5, 5, 0, 0, 0, 9, 5, 3],
       );
     });
+
+    test('throws when given a negative field id', () {
+      expectAssertFailed(
+        () => FieldsBlock({0: Uint8Block(1), -2: Uint8Block(2)}),
+      );
+    });
+  });
+
   group('SafeBlock', () {
     test('encodes and decodes properly', () {
       expectEncoding(SafeBlock(child: Uint8Block(42)), [13, 0, 0, 0, 2, 5, 42]);
