@@ -6,10 +6,25 @@ import 'package:meta/meta.dart';
 
 import '../errors.dart';
 
-part 'encoder.dart';
 part 'errors.dart';
 part 'reader_writer.dart';
 
+part 'blocks/typed_block.dart';
+part 'blocks/safe_block.dart';
+part 'blocks/fields_block.dart';
+part 'blocks/bytes_block.dart';
+part 'blocks/list_block.dart';
+part 'blocks/double_block.dart';
+part 'blocks/float32_block.dart';
+part 'blocks/int_block.dart';
+part 'blocks/int8_block.dart';
+part 'blocks/int16_block.dart';
+part 'blocks/int32_block.dart';
+part 'blocks/uint8_block.dart';
+part 'blocks/uint16_block.dart';
+part 'blocks/uint32_block.dart';
+
+// Used throughout the blocks/... files to generate hashCodes and check equality.
 const _dce = DeepCollectionEquality();
 
 @sealed
@@ -17,196 +32,117 @@ abstract class Block {
   const Block._();
 }
 
-/// Annotates the subtree with a [typeId] that indicates which [TapeAdapter] can
-/// interpret the blocks.
-class TypedBlock implements Block {
-  TypedBlock({@required this.typeId, @required this.child})
-      : assert(typeId != null),
-        assert(child != null);
+const blocks = _BlocksCodec();
 
-  final int typeId;
-  final Block child;
+class _BlocksCodec extends Codec<Object, List<int>> {
+  const _BlocksCodec();
 
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is TypedBlock && typeId == other.typeId && child == other.child;
-  int get hashCode => runtimeType.hashCode ^ typeId.hashCode ^ child.hashCode;
+  @override
+  get encoder => const _BlocksEncoder();
+
+  @override
+  get decoder => const _BlocksDecoder();
 }
 
-/// Saves the length of the [child] block so that if a block-level parsing error
-/// occurs, we can skip the block. This is not intended to be used by consumers.
-/// Instead, the `blocks` codec will automatically insert this block when it
-/// encodes newly supported blocks. Similarly, it will also remove the
-/// [SafeBlock] during decoding, replacing it either with its child or an
-/// [UnsupportedBlock].
-class SafeBlock implements Block {
-  SafeBlock({@required this.child}) : assert(child != null);
+class _BlocksEncoder extends Converter<Block, List<int>> {
+  const _BlocksEncoder();
 
-  final Block child;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is SafeBlock && child == other.child;
-  int get hashCode => runtimeType.hashCode ^ child.hashCode;
+  @override
+  List<int> convert(Block input) => (_Writer()..writeBlock(input)).buffer;
 }
 
-/// Is produced during decoding if a [SafeBlock] contained an unsupported block.
-/// Cannot be explicitly encoded.
-class UnsupportedBlock implements Block {
-  UnsupportedBlock(this.blockId);
+class _BlocksDecoder extends Converter<List<int>, Block> {
+  const _BlocksDecoder();
 
-  final int blockId;
-
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is UnsupportedBlock && blockId == other.blockId;
+  @override
+  Block convert(List<int> input) => _Reader(input).readBlock();
 }
 
-/// Block that contains multiple other blocks.
-class ListBlock implements Block {
-  ListBlock(this.children) : assert(children != null);
+// An encoded generic [Block] looks like this:
+// | block id | block |
+// The block id is saved as a uint8.
 
-  final List<Block> children;
+const _blockIds = {
+  TypedBlock: 0x00,
+  FieldsBlock: 0x01,
+  BytesBlock: 0x02,
+  ListBlock: 0x03,
+  IntBlock: 0x04,
+  Uint8Block: 0x05,
+  Uint16Block: 0x06,
+  Uint32Block: 0x07,
+  Int8Block: 0x08,
+  Int16Block: 0x09,
+  Int32Block: 0x0a,
+  DoubleBlock: 0x0b,
+  Float32Block: 0x0c,
+  SafeBlock: 0x0d,
+};
 
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is ListBlock && _dce.equals(children, other.children);
-  int get hashCode => runtimeType.hashCode ^ _dce.hash(children);
+extension _BlockWriter on _Writer {
+  void writeBlock(Block block) {
+    final type = block.runtimeType;
+    final id = _blockIds[type] ?? (throw UnsupportedBlockError(block));
+    writeUint8(id);
+    if (block is TypedBlock) {
+      writeTypedBlock(block);
+    } else if (block is FieldsBlock) {
+      writeFieldsBlock(block);
+    } else if (block is BytesBlock) {
+      writeBytesBlock(block);
+    } else if (block is ListBlock) {
+      writeListBlock(block);
+    } else if (block is IntBlock) {
+      writeIntBlock(block);
+    } else if (block is Uint8Block) {
+      writeUint8Block(block);
+    } else if (block is Uint16Block) {
+      writeUint16Block(block);
+    } else if (block is Uint32Block) {
+      writeUint32Block(block);
+    } else if (block is Int8Block) {
+      writeInt8Block(block);
+    } else if (block is Int16Block) {
+      writeInt16Block(block);
+    } else if (block is Int32Block) {
+      writeInt32Block(block);
+    } else if (block is DoubleBlock) {
+      writeDoubleBlock(block);
+    } else if (block is Float32Block) {
+      writeFloat32Block(block);
+    } else if (block is SafeBlock) {
+      writeSafeBlock(block);
+    } else if (block is UnsupportedBlock) {
+      // TODO: Throw more descriptive error
+      throw UnsupportedBlockError(block);
+    } else {
+      throw UnsupportedBlockError(block);
+    }
+  }
 }
 
-/// A block that contains multiple other blocks, each references by an id.
-class FieldsBlock implements Block {
-  FieldsBlock(this.fields)
-      : assert(fields != null),
-        assert(fields.keys.every((fieldId) => fieldId >= 0));
-
-  final Map<int, Block> fields;
-
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is FieldsBlock && _dce.equals(fields, other.fields);
-  int get hashCode => runtimeType.hashCode ^ _dce.hash(fields);
-}
-
-class BytesBlock implements Block {
-  BytesBlock(this.bytes)
-      : assert(bytes != null),
-        assert(bytes.every((byte) => byte >= 0 && byte < 256),
-            'All bytes need to be between 0 and 256 (0 <= bytes < 256).');
-
-  final List<int> bytes;
-
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is BytesBlock && _dce.equals(bytes, other.bytes);
-  int get hashCode => runtimeType.hashCode ^ _dce.hash(bytes);
-}
-
-class IntBlock implements Block {
-  IntBlock(this.value) : assert(value != null);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is IntBlock && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class DoubleBlock implements Block {
-  DoubleBlock(this.value) : assert(value != null);
-
-  final double value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is DoubleBlock && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-// More efficient types.
-
-class Uint8Block implements Block {
-  Uint8Block(this.value)
-      : assert(value != null),
-        assert(value >= 0),
-        assert(value < 256);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Uint8Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class Uint16Block implements Block {
-  Uint16Block(this.value)
-      : assert(value != null),
-        assert(value >= 0),
-        assert(value < 65536);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Uint16Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class Uint32Block implements Block {
-  Uint32Block(this.value)
-      : assert(value != null),
-        assert(value >= 0),
-        assert(value < 4294967296);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Uint32Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class Int8Block implements Block {
-  Int8Block(this.value)
-      : assert(value != null),
-        assert(value >= -128),
-        assert(value < 128);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Int8Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class Int16Block implements Block {
-  Int16Block(this.value)
-      : assert(value != null),
-        assert(value >= -32768),
-        assert(value < 32767);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Int16Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class Int32Block implements Block {
-  Int32Block(this.value)
-      : assert(value != null),
-        assert(value >= -2147483648),
-        assert(value < 2147483647);
-
-  final int value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Int32Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
-}
-
-class Float32Block implements Block {
-  Float32Block(this.value) : assert(value != null);
-
-  final double value;
-
-  bool operator ==(Object other) =>
-      identical(this, other) || other is Float32Block && value == other.value;
-  int get hashCode => runtimeType.hashCode ^ value.hashCode;
+extension _BlockReader on _Reader {
+  Block readBlock() {
+    final id = readUint8();
+    final reader = {
+      _blockIds[TypedBlock]: readTypedBlock,
+      _blockIds[FieldsBlock]: readFieldsBlock,
+      _blockIds[BytesBlock]: readBytesBlock,
+      _blockIds[ListBlock]: readListBlock,
+      _blockIds[IntBlock]: readIntBlock,
+      _blockIds[Uint8Block]: readUint8Block,
+      _blockIds[Uint16Block]: readUint16Block,
+      _blockIds[Uint32Block]: readUint32Block,
+      _blockIds[Int8Block]: readInt8Block,
+      _blockIds[Int16Block]: readInt16Block,
+      _blockIds[Int32Block]: readInt32Block,
+      _blockIds[DoubleBlock]: readDoubleBlock,
+      _blockIds[Float32Block]: readFloat32Block,
+      _blockIds[SafeBlock]: readSafeBlock,
+    }[id];
+    if (reader == null) {
+      throw UnsupportedBlockException(id);
+    }
+    return reader();
+  }
 }

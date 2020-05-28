@@ -1,5 +1,36 @@
 part of 'blocks.dart';
 
+/// A simple sequential reader for bytes that maintains a cursor position and
+/// allows for jumping to arbitrary places.
+class _Reader {
+  _Reader(List<int> data)
+      : _data = ByteData.view(Uint8List.fromList(data).buffer);
+
+  final ByteData _data;
+
+  int get cursor => _cursor;
+  int _cursor = 0;
+
+  int _reserve(int bytes) {
+    final cursorBefore = _cursor;
+    _cursor += bytes;
+    return cursorBefore;
+  }
+
+  void jumpTo(int offset) => _cursor = offset;
+
+  int readUint8() => _data.getUint8(_reserve(1));
+  int readInt8() => _data.getInt8(_reserve(1));
+  int readUint16() => _data.getUint16(_reserve(2));
+  int readInt16() => _data.getInt16(_reserve(2));
+  int readUint32() => _data.getUint32(_reserve(4));
+  int readInt32() => _data.getInt32(_reserve(4));
+  int readUint64() => _data.getUint64(_reserve(8));
+  int readInt64() => _data.getInt64(_reserve(8));
+  double readFloat32() => _data.getFloat32(_reserve(4));
+  double readFloat64() => _data.getFloat64(_reserve(8));
+}
+
 /// A more advanced writer for bytes that supports the following two modes:
 /// - If you just call the write methods without an offset, it takes care of
 ///   allocating memory if necessary. It also internally maintains a cursor
@@ -8,8 +39,8 @@ part of 'blocks.dart';
 /// - If you pass an offset to a write method, it assumes you know what you're
 ///   doing. That means, no memory is allocated (the offset should be valid)
 ///   and the cursor is not advanced.
-class Writer {
-  Writer() {
+class _Writer {
+  _Writer() {
     _data = ByteData.view(_buffer.buffer);
   }
 
@@ -40,7 +71,7 @@ class Writer {
     return cursorBefore;
   }
 
-  int leaveSpace(int numBytes) => _reserve(numBytes);
+  void jumpTo(int offset) => _cursor = offset;
 
   void writeUint8(int value, {int offset}) {
     offset ??= _reserve(1);
@@ -91,37 +122,6 @@ class Writer {
     offset ??= _reserve(8);
     _data.setFloat64(offset, value);
   }
-}
-
-/// A simple reader for bytes that also maintains a cursor position and allows
-/// for jumping to arbitrary places.
-class Reader {
-  Reader(List<int> data)
-      : _data = ByteData.view(Uint8List.fromList(data).buffer);
-
-  final ByteData _data;
-
-  int get cursor => _cursor;
-  int _cursor = 0;
-
-  int _reserve(int bytes) {
-    final cursorBefore = _cursor;
-    _cursor += bytes;
-    return cursorBefore;
-  }
-
-  void jumpTo(int offset) => _cursor = offset;
-
-  int readUint8() => _data.getUint8(_reserve(1));
-  int readInt8() => _data.getInt8(_reserve(1));
-  int readUint16() => _data.getUint16(_reserve(2));
-  int readInt16() => _data.getInt16(_reserve(2));
-  int readUint32() => _data.getUint32(_reserve(4));
-  int readInt32() => _data.getInt32(_reserve(4));
-  int readUint64() => _data.getUint64(_reserve(8));
-  int readInt64() => _data.getInt64(_reserve(8));
-  double readFloat32() => _data.getFloat32(_reserve(4));
-  double readFloat64() => _data.getFloat64(_reserve(8));
 }
 
 int _pow2roundup(int x) {

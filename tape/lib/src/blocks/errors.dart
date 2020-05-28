@@ -15,7 +15,11 @@ class UnsupportedBlockError extends BlockError {
 /// Tried to decode a [Block], but found a block id that we don't know. New
 /// blocks ids shouldn't be added in the future because they corrupt the message
 /// for us. Or there should be a transition path that's working.
-class UnknownBlockException extends BlockException {}
+class UnsupportedBlockException extends BlockException {
+  UnsupportedBlockException(this.id);
+
+  final int id;
+}
 
 /// Tried to decode some bytes that are not a valid block format. The
 /// format probably ended abruptly or was too long.

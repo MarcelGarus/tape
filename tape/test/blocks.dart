@@ -244,8 +244,8 @@ void main() {
       ];
       final retrieved = blocks.decode(bytes);
       final correct =
-          ListBlock([Uint8Block(42), UnknownBlock(), Uint8Block(3)]);
-      expect(retrieved, equals(ListBlock([])));
+          ListBlock([Uint8Block(42), UnsupportedBlock(255), Uint8Block(3)]);
+      expect(retrieved, equals(correct));
     });
   });
 }
