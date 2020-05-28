@@ -73,8 +73,11 @@ class ListBlock implements Block {
   int get hashCode => runtimeType.hashCode ^ _dce.hash(children);
 }
 
+/// A block that contains multiple other blocks, each references by an id.
 class FieldsBlock implements Block {
-  FieldsBlock(this.fields) : assert(fields != null);
+  FieldsBlock(this.fields)
+      : assert(fields != null),
+        assert(fields.keys.every((fieldId) => fieldId >= 0));
 
   final Map<int, Block> fields;
 
