@@ -36,13 +36,13 @@ extension _SafeBlockWriter on _Writer {
   void writeSafeBlock(SafeBlock block) {
     final lengthCursor = cursor;
     writeUint32(0);
-    final cursorBefore = cursor;
+    final childStart = cursor;
     writeBlock(block.child);
-    final cursorAfter = cursor;
-    final length = cursorAfter - cursorBefore;
+    final childEnd = cursor;
+    final length = childEnd - childStart;
     jumpTo(lengthCursor);
     writeUint32(length);
-    jumpTo(cursorAfter);
+    jumpTo(childEnd);
   }
 }
 
@@ -50,14 +50,18 @@ extension _SafeBlockReader on _Reader {
   Block readSafeBlock() {
     final length = readUint32();
     if (length == 0) {
-      // TODO: Throw exception – this is an invalid format
-      return null;
+      throw SafeBlockWithZeroLengthException();
     }
-    final cursorBefore = cursor;
+    final childStart = cursor;
+    final childEnd = childStart + length;
     try {
-      return SafeBlock(child: readBlock());
+      final child = readBlock();
+      if (cursor != childEnd) {
+        throw SafeBlockLengthDoesNotMatchException();
+      }
+      return SafeBlock(child: child);
     } on UnsupportedBlockException catch (e) {
-      jumpTo(cursorBefore + length); // Jump after the block.
+      jumpTo(childEnd);
       return UnsupportedBlock(e.id);
     }
   }

@@ -1,26 +1,51 @@
 part of 'blocks.dart';
 
-class BlockError extends TapeError {}
+/// During encoding, we should be given a valid tree of blocks. If that's not
+/// the case, that's the programmers fault. This shouldn't ever happen during
+/// runtime, so it's an [Error].
+class BlockEncodingError extends TapeError {}
 
-class BlockException extends TapeException {}
+/// During decoding, we're given some bytes that possibly stem from somewhere
+/// else. We don't assume anything about the validity of these bytes. Because
+/// they might come from external sources, it's okay if we fail – we just tell
+/// our caller that the bytes they received were no valid block encoding.
+/// Because it's okay that this happens during runtime, we throw an [Exception].
+class BlockDecodingException extends TapeException {}
 
 /// Tried to encode a [Block] that doesn't match any of the existing, known
-/// blocks. This indicates that a user implemented their own [Block], which we
-/// don't know how to encode.
-class UnsupportedBlockError extends BlockError {
+/// blocks. This indicates that a user implemented or subclassed their own
+/// [Block], which we don't know how to encode.
+class UnsupportedBlockError extends BlockEncodingError {
   UnsupportedBlockError(this.block);
+
   final Block block;
 }
 
-/// Tried to decode a [Block], but found a block id that we don't know. New
-/// blocks ids shouldn't be added in the future because they corrupt the message
-/// for us. Or there should be a transition path that's working.
-class UnsupportedBlockException extends BlockException {
+/// An [UnsupportedBlock] was passed in during encoding. This should never
+/// happen as we
+class UsedUnsupportedBlockItselfError extends BlockEncodingError {}
+
+/// Tried to decode a [Block], but found a block id that we don't know. If new
+/// block ids get added, those blocks should be wrapped in [SafeBlock] so that
+/// previous decoders still work. [SafeBlock] catches this exception and returns
+/// an [UnsupportedBlock] instead.
+class UnsupportedBlockException extends BlockDecodingException {
   UnsupportedBlockException(this.id);
 
   final int id;
 }
 
-/// Tried to decode some bytes that are not a valid block format. The
-/// format probably ended abruptly or was too long.
-class InvalidBlockEncodingException extends BlockException {}
+/// Tried to decode some bytes that are not a valid block encoding, even in
+/// future versions.
+class InvalidBlockEncodingException extends BlockDecodingException {}
+
+class BlockEncodingEndedAbruptlyException
+    extends InvalidBlockEncodingException {}
+
+class BlockEncodingHasExtraBytesException
+    extends InvalidBlockEncodingException {}
+
+class SafeBlockWithZeroLengthException extends InvalidBlockEncodingException {}
+
+class SafeBlockLengthDoesNotMatchException
+    extends InvalidBlockEncodingException {}
