@@ -63,14 +63,14 @@ class UnsupportedBlock implements Block {
 
 /// Block that contains multiple other blocks.
 class ListBlock implements Block {
-  ListBlock(this.items) : assert(items != null);
+  ListBlock(this.children) : assert(children != null);
 
-  final List<Block> items;
+  final List<Block> children;
 
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ListBlock && _dce.equals(items, other.items);
-  int get hashCode => runtimeType.hashCode ^ _dce.hash(items);
+      other is ListBlock && _dce.equals(children, other.children);
+  int get hashCode => runtimeType.hashCode ^ _dce.hash(children);
 }
 
 class FieldsBlock implements Block {

@@ -191,8 +191,8 @@ extension _BytesBlockReader on Reader {
 
 extension _ListBlockWriter on Writer {
   void writeListBlock(ListBlock block) {
-    writeUint32(block.items.length);
-    block.items.forEach(writeBlock);
+    writeUint32(block.children.length);
+    block.children.forEach(writeBlock);
   }
 }
 
