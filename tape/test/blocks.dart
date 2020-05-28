@@ -221,5 +221,23 @@ void main() {
         [1, 0, 0, 0, 3, 0, 0, 0, 0, 5, 123, 0, 0, 0, 1, 5, 5, 0, 0, 0, 9, 5, 3],
       );
     });
+  group('SafeBlock', () {
+    test('encodes and decodes properly', () {
+      expectEncoding(SafeBlock(child: Uint8Block(42)), [13, 0, 0, 0, 2, 5, 42]);
+    });
+
+    test('skips unparseable blocks when decoded', () {
+      // ListBlock([Uint8Block(42), SafeBlock(garbage), Uint8Block(3)])
+      final bytes = [
+        ...[3, 0, 0, 0, 3], // List header
+        ...[5, 42], // First element
+        ...[13, 0, 0, 0, 4, 255, 255, 255, 255], // SafeBlock with garbage
+        ...[5, 3] // Third element
+      ];
+      final retrieved = blocks.decode(bytes);
+      final correct =
+          ListBlock([Uint8Block(42), UnknownBlock(), Uint8Block(3)]);
+      expect(retrieved, equals(ListBlock([])));
+    });
   });
 }
