@@ -4,6 +4,7 @@ dependencies:
   meta: any
   tape:
     path: ../tape
+  freezed_annotation: any
 
 dev_dependencies:
   build_runner: any
