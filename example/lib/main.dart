@@ -25,12 +25,13 @@ class Fruit {
   int hey;
 }
 
-// @freezed
-// abstract class Foo {
-//   factory Foo({
-//     String name,
-//     int value,
-//   }) = _Foo;
-// }
+@TapeClass(nextFieldId: 0)
+@freezed
+abstract class Foo {
+  factory Foo({
+    @TapeField(0) String name,
+    @TapeField(1) int value,
+  }) = _Foo;
+}
 
 void main() {}

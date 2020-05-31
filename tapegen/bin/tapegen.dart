@@ -9,6 +9,7 @@ import 'package:build_config/build_config.dart';
 import 'package:meta/meta.dart';
 import 'package:watcher/watcher.dart';
 import 'package:dartx/dartx.dart';
+import 'package:dartx/dartx_io.dart';
 
 import 'utils.dart';
 
@@ -46,10 +47,14 @@ Future<void> _updateFile(String path) async {
   }
 
   // Read the source from the file and parse it into an AST.
-  final oldSource = await File(path).readAsString();
+  final file = File(path);
+  final oldSource = await file.readAsString();
   String newSource;
   try {
-    newSource = _enhanceSourceCode(oldSource);
+    newSource = _enhanceSourceCode(
+      fileName: file.name,
+      sourceCode: oldSource,
+    );
   } on SourceCodeHasErrorsException {
     print('Doing nothing, because file contains syntax errors.');
     return;
@@ -77,7 +82,10 @@ Future<void> _updateFile(String path) async {
 
 class SourceCodeHasErrorsException implements Exception {}
 
-String _enhanceSourceCode(String sourceCode) {
+String _enhanceSourceCode({
+  @required String fileName,
+  @required String sourceCode,
+}) {
   // Parse the source code.
   CompilationUnit compilationUnit;
   try {
@@ -134,20 +142,23 @@ String _enhanceSourceCode(String sourceCode) {
   }
 
   if (containsTapeAnnotations) {
+    assert(fileName.endsWith('.dart'));
+    final extensionlessFileName =
+        fileName.substring(0, fileName.length - '.dart'.length);
+    final generatedFileName = '$extensionlessFileName.g.dart';
+
     // Make sure a `part 'some_file.g.dart';` directive exists.
     final hasDirective = compilationUnit.directives
         .whereType<PartDirective>()
-        .any((part) => part.uri.stringValue.endsWith('.g.dart'));
+        .any((part) => part.uri.stringValue == generatedFileName);
     if (!hasDirective) {
-      // final offset = compilationUnit.declarations.first.offset;
-      // final fileName = path.substring(path.lastIndexOf('/') + 1);
-      // final extensionlessFileName =
-      //     fileName.substring(0, path.lastIndexOf('.'));
-      // replacements.add(Replacement(
-      //   offset: offset,
-      //   length: 0,
-      //   replaceWith: "part '$extensionlessFileName.g.dart';\n\n",
-      // ));
+      final offset = compilationUnit.declarations.first.offset;
+
+      replacements.add(Replacement(
+        offset: offset,
+        length: 0,
+        replaceWith: "part '$generatedFileName';\n\n",
+      ));
     }
   }
 
