@@ -2,9 +2,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:tape/tape.dart';
 
-import 'user.dart';
-
 part 'main.g.dart';
+part 'main.freezed.dart';
 
 const dynamic TODO = Object();
 
@@ -25,13 +24,23 @@ class Fruit {
   int hey;
 }
 
-@TapeClass(nextFieldId: 0)
+// @FreezedTape()
 @freezed
-abstract class Foo {
-  factory Foo({
-    @TapeField(0) String name,
-    @TapeField(1) int value,
-  }) = _Foo;
+abstract class Foo with _$Foo {
+  @TapeClass(nextFieldId: 1)
+  factory Foo.first(
+    @TapeField(0) String a,
+  ) = First;
+
+  @TapeClass(nextFieldId: 2)
+  factory Foo.second(
+    @TapeField(0) int b,
+    @TapeField(1) bool c,
+  ) = Second;
 }
 
-void main() {}
+void main() {
+  final First foo = Foo.first('bar');
+  foo.a;
+  // foo.value;
+}
