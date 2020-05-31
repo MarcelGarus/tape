@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:tape/blocks.dart';
+import 'package:tape/custom.dart';
 import 'package:test/test.dart';
 
 void expectThrows<E>(void Function() callback) =>
