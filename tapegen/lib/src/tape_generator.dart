@@ -7,6 +7,7 @@ import 'package:build/src/builder/build_step.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:tape/tape.dart';
+import 'package:dartx/dartx.dart';
 
 import 'concrete_data.dart';
 import 'utils.dart';
@@ -51,8 +52,8 @@ String _generateAdapter(ClassElement element) {
   final code = StringBuffer();
   code
     ..writeln(
-        'class AdapterFor$nameWithGenerics extends TapeClassAdapter<$nameWithGenerics> {')
-    ..writeln('  const AdapterFor$nameWithoutGenerics();')
+        'class AdapterFor${nameWithGenerics.withoutCruft} extends TapeClassAdapter<$nameWithGenerics> {')
+    ..writeln('  const AdapterFor${nameWithoutGenerics.withoutCruft}();')
     ..writeln();
 
   // The fromFields method.
@@ -66,9 +67,16 @@ String _generateAdapter(ClassElement element) {
     orElse: () => throw 'Provide an unnamed constructor', // TODO: better error
   );
 
-  var fields = List<FieldElement>.from(element.fields);
+  final fieldsToTape =
+      element.fields.where((field) => field.isTapeField).toList();
+  var fields = List<FieldElement>.from(fieldsToTape);
+  // TODO: ensure that all fields also have a fieldId
   for (final parameter in constructor.initializingFormalParameters) {
-    final field = fields.firstWhere((field) => field.name == parameter.name);
+    final field =
+        fields.firstOrNullWhere((field) => field.name == parameter.name);
+    if (field == null) {
+      continue;
+    }
     fields.remove(field);
     if (parameter.isNamed) {
       code.write('${parameter.name}: ');
@@ -93,10 +101,17 @@ String _generateAdapter(ClassElement element) {
     ..writeln('  @override')
     ..writeln('  Fields toFields($nameWithGenerics object) {')
     ..writeln('    return Fields({');
-  for (final field in element.fields) {
+  for (final field in fieldsToTape) {
     code.writeln('${field.fieldId}: object.${field.name},');
   }
   code..writeln('});')..writeln('  }')..writeln('}');
 
   return code.toString();
+}
+
+extension _CruftRemover on String {
+  /// Some code generation libraries add some cruft to class names to make a
+  /// name collision less likely. This leads to ugly names like `_$Name` though.
+  /// So here we remove that cruft.
+  String get withoutCruft => replaceAll(RegExp(r'_|\$'), '');
 }
