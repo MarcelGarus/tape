@@ -1,24 +1,23 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'type_registry.dart';
-
-part 'tape_reader.dart';
-part 'tape_writer.dart';
-part 'reader_writer_utils.dart';
+import 'adapters/adapters.dart';
+import 'blocks/blocks.dart';
+import 'built_in/built_in.dart';
 
 /// Adapters get registered here and packages provide initializing extension
 /// methods on this object.
-const Tape = TapeApi();
+final Tape = TapeApi._();
 
 class TapeApi {
-  const TapeApi();
+  TapeApi._() {
+    registerBuiltInAdapters();
+  }
 
   void registerAdapters(
-    Map<int, AdapterFor<dynamic>> adaptersById, {
+    Map<int, TapeAdapter<dynamic>> adaptersById, {
     bool showWarningForSubtypes = true,
   }) =>
-      TypeRegistry.registerAdapters(adaptersById,
+      TapeRegistry.registerAdapters(adaptersById,
           showWarningForSubtypes: showWarningForSubtypes);
 }
 
@@ -38,13 +37,20 @@ class _TapeEncoder extends Converter<Object, List<int>> {
   const _TapeEncoder();
 
   @override
-  List<int> convert(Object input) =>
-      (TapeWriter()..write(input))._dataAsUint8List;
+  List<int> convert(Object input) {
+    final block = adapters.encode(input);
+    final bytes = blocks.encode(block);
+    return bytes;
+  }
 }
 
 class _TapeDecoder extends Converter<List<int>, Object> {
   const _TapeDecoder();
 
   @override
-  Object convert(List<int> input) => TapeReader(input).read<Object>();
+  Object convert(List<int> input) {
+    final block = blocks.decode(input);
+    final object = adapters.decode(block);
+    return object;
+  }
 }

@@ -1,29 +1,23 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import '../adapters/adapters.dart';
 
-import 'package:meta/meta.dart';
-import 'package:tape/src/blocks/blocks.dart';
+import 'core.dart';
+import 'typed_data.dart';
 
-import '../encoder.dart';
-import '../tape_adapter.dart';
+export 'core.dart';
+export 'custom.dart';
+export 'granular_types.dart';
+export 'typed_data.dart';
 
-part 'core.dart';
-part 'custom.dart';
-part 'typed_data.dart';
-
-Block _encode(Object object) => const ObjectToBlockEncoder().convert(object);
-Object _decode(Block block) => const BlockToObjectDecoder().convert(block);
-
-void registerBuiltInAdapters(TypeRegistryImpl registry) {
-  _registerCoreAdapters(registry); // dart:core adapters
-  _registerTypedDataAdapters(registry); // dart:typed_data adapters
+void registerBuiltInAdapters() {
+  _registerCoreAdapters(); // dart:core adapters
+  _registerTypedDataAdapters(); // dart:typed_data adapters
 }
 
-void _registerCoreAdapters(TypeRegistryImpl registry) {
+void _registerCoreAdapters() {
   // Commonly used nodes should be registered first for more efficiency.
-  registry
-    ..registerVirtualNode(AdapterNode<Iterable<dynamic>>.virtual())
-    ..registerVirtualNode(AdapterNode<num>.virtual())
+  TapeRegistry
+    ..registerVirtualNode<Iterable<dynamic>>()
+    ..registerVirtualNode<num>()
     ..registerAdapters({
       // Primitive non-collection types.
       -1: AdapterForNull(),
@@ -102,8 +96,8 @@ void _registerCoreAdapters(TypeRegistryImpl registry) {
     });
 }
 
-void _registerTypedDataAdapters(TypeRegistryImpl registry) {
-  registry.registerAdapters({
-    -110: AdapterForUint8List(),
+void _registerTypedDataAdapters() {
+  TapeRegistry.registerAdapters({
+    -70: AdapterForUint8List(),
   });
 }

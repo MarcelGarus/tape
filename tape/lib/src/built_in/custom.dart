@@ -1,4 +1,7 @@
-part of 'built_in.dart';
+import 'package:meta/meta.dart';
+
+import '../adapters/adapters.dart';
+import '../blocks/blocks.dart';
 
 /// A snapshot of a class's field values.
 class Fields {
@@ -12,6 +15,8 @@ class Fields {
   T get<T>(int fieldId, {@required T orDefault}) {
     return _fields.containsKey(fieldId) ? _fields[fieldId] : orDefault;
   }
+
+  bool contains(int fieldId) => _fields.containsKey(fieldId);
 }
 
 class Field<T> {
@@ -24,26 +29,25 @@ class Field<T> {
 /// [TapeClassAdapter]s can be extended to support serializing and
 /// deserializing Dart objects of type [T].
 @immutable
-abstract class TapeClassAdapter<T> extends TapeAdapter<T, ClassBlock> {
+abstract class TapeClassAdapter<T> extends TapeAdapter<T> {
   const TapeClassAdapter();
 
   Fields toFields(T object);
   T fromFields(Fields fields);
 
-  T fromBlock(ClassBlock block) {
+  T fromBlock(Block block) {
     final fields = Fields({
-      for (final field in block.fields.entries)
-        field.key: const BlockToObjectDecoder().convert(field.value),
+      for (final field in block.as<FieldsBlock>().fields.entries)
+        field.key: adapters.decode(field.value),
     });
     return fromFields(fields);
   }
 
-  ClassBlock toBlock(T object) {
-    return ClassBlock(
-      typeId: id,
-      fields: {
+  Block toBlock(T object) {
+    return FieldsBlock(
+      {
         for (final field in toFields(object)._fields.entries)
-          field.key: const ObjectToBlockEncoder().convert(field.value),
+          field.key: adapters.encode(field.value),
       },
     );
   }

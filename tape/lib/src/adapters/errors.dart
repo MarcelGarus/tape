@@ -1,18 +1,21 @@
 import 'package:meta/meta.dart';
 
+import '../blocks/blocks.dart';
 import '../errors.dart';
-import 'tape_adapter.dart';
+import 'adapter.dart';
 
-class AdapterError {}
+class RegistryError extends TapeError {}
 
-class AdapterAlreadyRegisteredError extends AdapterError {
+class AdapterError extends TapeError {}
+
+class AdapterAlreadyRegisteredError extends RegistryError {
   AdapterAlreadyRegisteredError({@required this.adapter, @required this.id});
 
   final TapeAdapter<dynamic> adapter;
   final int id;
 }
 
-class AdapterAlreadyRegisteredForDifferentIdError extends TapeError {
+class AdapterAlreadyRegisteredForDifferentIdError extends RegistryError {
   AdapterAlreadyRegisteredForDifferentIdError({
     @required this.adapter,
     @required this.firstId,
@@ -24,7 +27,7 @@ class AdapterAlreadyRegisteredForDifferentIdError extends TapeError {
   final int secondId;
 }
 
-class IdAlreadyInUseError extends TapeError {
+class IdAlreadyInUseError extends RegistryError {
   IdAlreadyInUseError({
     @required this.adapter,
     @required this.id,
@@ -34,4 +37,16 @@ class IdAlreadyInUseError extends TapeError {
   final TapeAdapter<dynamic> adapter;
   final int id;
   final TapeAdapter<dynamic> adapterForId;
+}
+
+class UnexpectedBlockError extends AdapterError {
+  UnexpectedBlockError(this.block, this.expectedType);
+
+  final Block block;
+  final Type expectedType;
+}
+
+extension BlockCast on Block {
+  B as<B extends Block>() =>
+      this is B ? this : (throw UnexpectedBlockError(this, B));
 }

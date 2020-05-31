@@ -30,7 +30,7 @@ const _dce = DeepCollectionEquality();
 
 const blocks = _BlocksCodec();
 
-class _BlocksCodec extends Codec<Object, List<int>> {
+class _BlocksCodec extends Codec<Block, List<int>> {
   const _BlocksCodec();
 
   @override

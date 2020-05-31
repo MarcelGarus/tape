@@ -1,7 +1,3 @@
-/// If [unknown] gets returned, this indicates that we don't know how to decode
-/// some bytes.
-const unknown = Object();
-
 class Uint8 {
   Uint8(this._value);
 

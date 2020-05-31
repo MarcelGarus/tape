@@ -2,12 +2,13 @@ import 'dart:math';
 
 import 'package:meta/meta.dart';
 
-import 'built_in/built_in.dart';
+import '../blocks/blocks.dart';
 import 'errors.dart';
 
-part 'tape_registry.dart';
+part 'registry.dart';
 
-abstract class TapeAdapter<T, CorrespondingBlock> {
+@immutable
+abstract class TapeAdapter<T> {
   const TapeAdapter();
 
   Type get type => T;
@@ -15,13 +16,13 @@ abstract class TapeAdapter<T, CorrespondingBlock> {
   /// Registers this adapter for the given [typeId] on the given [registry].
   void _registerForId(
     int typeId, {
-    TapeRegistryImpl registry,
+    _TapeRegistryImpl registry,
     bool showWarningForSubtypes = true,
   }) {
     (registry ?? TapeRegistry).registerAdapter<T>(typeId, this,
         showWarningForSubtypes: showWarningForSubtypes);
   }
 
-  CorrespondingBlock toBlock(T object);
-  T fromBlock(CorrespondingBlock block);
+  Block toBlock(T object);
+  T fromBlock(Block block);
 }

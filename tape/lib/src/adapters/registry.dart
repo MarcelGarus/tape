@@ -1,4 +1,4 @@
-part of 'tape_adapter.dart';
+part of 'adapter.dart';
 
 void debugPrint(Object object) => print(object);
 
@@ -7,12 +7,10 @@ void debugPrint(Object object) => print(object);
 /// - get an adapter for a specific object,
 /// - get an adapter by its id, and
 /// - get the id of an adapter.
-final TapeRegistry = TapeRegistryImpl._();
+final TapeRegistry = _TapeRegistryImpl._();
 
-class TapeRegistryImpl {
-  TapeRegistryImpl._() {
-    registerBuiltInAdapters(this);
-  }
+class _TapeRegistryImpl {
+  _TapeRegistryImpl._();
 
   // For greater efficiency, there are several data structures that hold
   // references to adapters. These allow us to:
@@ -33,19 +31,18 @@ class TapeRegistryImpl {
   final _suggestedAdapters = <String, int>{};
 
   /// Registers a virtual [_AdapterNode].
-  void registerVirtualNode<T>(_AdapterNode<T> node) {
-    assert(node != null);
-    assert(node.isVirtual);
+  void registerVirtualNode<T>() {
+    final node = _AdapterNode<T>.virtual();
 
-    _nodesByTypes[node.type] ??= node;
+    _nodesByTypes[T] ??= node;
     _adapterTree.insert(node);
   }
 
   /// Registers a [AdapterFor<T>] to make it available for serializing and
   /// deserializing.
-  void registerAdapter<T, B>(
+  void registerAdapter<T>(
     int typeId,
-    TapeAdapter<T, B> adapter, {
+    TapeAdapter<T> adapter, {
     bool showWarningForSubtypes = true,
   }) {
     assert(typeId != null);
