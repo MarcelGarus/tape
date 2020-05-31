@@ -6,27 +6,31 @@ import 'user.dart';
 
 part 'main.g.dart';
 
-@TapeClass(nextFieldId: 3)
+const dynamic TODO = Object();
+
+@TapeClass(nextFieldId: 13)
 class Fruit {
   Fruit({@required this.color, @required this.blub, @required this.amount});
 
-  @TapeField(0, 'red')
+  @TapeField(4, defaultValue: TODO)
   final String color;
 
-  @TapeField(1, true)
+  @doNotTape
   final bool blub;
 
-  @doNotTape
+  @TapeField(9, defaultValue: TODO)
   final int amount;
+
+  @TapeField(12, defaultValue: TODO)
+  int hey;
 }
 
-@TapeClass(nextFieldId: 1)
-class FruitBowl {
-  FruitBowl({@required this.fruits});
-
-  @TapeField(0, [])
-  @Default([Fruit(color: 'yellow', blub: ture, amount: 2)])
-  final List<Fruit> fruits;
-}
+// @freezed
+// abstract class Foo {
+//   factory Foo({
+//     String name,
+//     int value,
+//   }) = _Foo;
+// }
 
 void main() {}

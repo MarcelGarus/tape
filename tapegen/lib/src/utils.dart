@@ -5,6 +5,7 @@ import 'package:tape/tape.dart';
 final tapeTypeChecker = TypeChecker.fromRuntime(TapeType);
 final tapeClassChecker = TypeChecker.fromRuntime(TapeClass);
 final tapeFieldChecker = TypeChecker.fromRuntime(TapeField);
+final doNotTapeChecker = TypeChecker.fromRuntime(DoNotTapeImpl);
 
 extension IsTapeType on Element {
   bool get isTapeType {

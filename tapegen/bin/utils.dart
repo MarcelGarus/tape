@@ -22,7 +22,7 @@ extension AnnotationOfField on FieldDeclaration {
   Annotation get tapeFieldAnnotation =>
       metadata.withName('TapeField').firstOrNull;
   Annotation get doNotTapeAnnotation =>
-      metadata.withName('DoNotTape').firstOrNull;
+      metadata.withName('doNotTape').firstOrNull;
   bool get isTapeField => tapeFieldAnnotation != null;
   bool get doNotTape => doNotTapeAnnotation != null;
   int get fieldId => tapeFieldAnnotation?.firstArgAsInt;
@@ -38,6 +38,14 @@ extension FieldsWithAnnotation on Iterable<FieldDeclaration> {
       where((declaration) => declaration.metadata.withName(name).isNotEmpty);
 }
 
-extension HasArgument on Annotation {
+extension FancyArgument on Annotation {
   bool get hasArgument => (arguments?.length ?? 0) > 0;
+  int get nextFieldId => (arguments?.arguments ?? [])
+      .whereType<NamedExpression>()
+      .singleWhere((arg) => arg.name.label.toSource() == 'nextFieldId',
+          orElse: () => null)
+      ?.expression
+      ?.unParenthesized
+      ?.toSource()
+      ?.toIntOrNull();
 }

@@ -51,41 +51,21 @@ String _generateAdapter(ClassElement element) {
   final code = StringBuffer();
   code
     ..writeln(
-        'class AdapterFor$nameWithGenerics extends AdapterFor<$nameWithGenerics> {')
+        'class AdapterFor$nameWithGenerics extends TapeClassAdapter<$nameWithGenerics> {')
     ..writeln('  const AdapterFor$nameWithoutGenerics();')
     ..writeln();
 
-  // The write method.
+  // The fromFields method.
   code
     ..writeln('  @override')
-    ..writeln('  void write(TapeWriter writer, $nameWithGenerics obj) {')
-    ..writeln('    writer');
-
-  for (final field in element.fields) {
-    code
-      ..write('..writeFieldId(${field.fieldId})')
-      ..write('..write(obj.${field.name})');
-  }
-  code..writeln(';')..writeln('  }')..writeln('');
-
-  // The read method.
-  code
-    ..writeln('  @override')
-    ..writeln('  $nameWithGenerics read(TapeReader reader) {')
-    ..writeln('    final fields = <int, dynamic>{')
-    ..writeln(
-        '      for (; reader.hasAvailableBytes;) reader.readFieldId(): reader.read(),')
-    ..writeln('    };')
-    ..writeln('');
+    ..writeln('  $nameWithGenerics fromFields(Fields fields) {')
+    ..writeln('    return $nameWithGenerics(');
 
   final constructor = element.constructors.firstWhere(
     (constructor) => constructor.name.isEmpty,
-    orElse: () => throw 'Provide an unnamed constructor',
+    orElse: () => throw 'Provide an unnamed constructor', // TODO: better error
   );
 
-  code.writeln('    return $nameWithoutGenerics(');
-
-  // The remaining fields to initialize.
   var fields = List<FieldElement>.from(element.fields);
   for (final parameter in constructor.initializingFormalParameters) {
     final field = fields.firstWhere((field) => field.name == parameter.name);
@@ -94,7 +74,7 @@ String _generateAdapter(ClassElement element) {
       code.write('${parameter.name}: ');
     }
     code.writeln(
-        'fields[${field.fieldId}] as ${field.type.getDisplayString()},');
+        'fields.get<${field.type.getDisplayString()}>(${field.fieldId}, orDefault: null),');
   }
   code.writeln(')');
 
@@ -103,10 +83,20 @@ String _generateAdapter(ClassElement element) {
   // cascades.
   for (var field in fields) {
     code.write(
-        '..${field.name} = fields[${field.fieldId}] as ${field.type.getDisplayString()}');
+        '..${field.name} = fields.get<${field.type.getDisplayString()}>(${field.fieldId}, orDefault: null)');
   }
 
-  code..writeln(';')..writeln('  }')..writeln('}');
+  code..writeln(';')..writeln('  }')..writeln('');
+
+  // The toFields method.
+  code
+    ..writeln('  @override')
+    ..writeln('  Fields toFields($nameWithGenerics object) {')
+    ..writeln('    return Fields({');
+  for (final field in element.fields) {
+    code.writeln('${field.fieldId}: object.${field.name},');
+  }
+  code..writeln('});')..writeln('  }')..writeln('}');
 
   return code.toString();
 }
