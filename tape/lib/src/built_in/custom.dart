@@ -44,11 +44,9 @@ abstract class TapeClassAdapter<T> extends TapeAdapter<T> {
   }
 
   Block toBlock(T object) {
-    return FieldsBlock(
-      {
-        for (final field in toFields(object)._fields.entries)
-          field.key: adapters.encode(field.value),
-      },
-    );
+    return FieldsBlock({
+      for (final field in toFields(object)._fields.entries)
+        field.key: adapters.encode(field.value),
+    });
   }
 }
