@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:math';
 
 import 'package:analyzer/dart/element/element.dart';
 import 'package:build/src/builder/build_step.dart';
@@ -45,31 +44,35 @@ class TapeGenerator extends Generator {
 }
 
 String _generateAdapter(ClassElement element) {
-  final nameWithGenerics =
-      element.thisType.getDisplayString(withNullability: false);
-  final nameWithoutGenerics = element.name;
-
   final code = StringBuffer();
   code
     ..writeln(
-        'class AdapterFor${nameWithGenerics.withoutCruft} extends TapeClassAdapter<$nameWithGenerics> {')
-    ..writeln('  const AdapterFor${nameWithoutGenerics.withoutCruft}();')
-    ..writeln();
+        'class AdapterFor${element.nameWithGenerics.withoutCruft} extends TapeClassAdapter<${element.nameWithGenerics}> {')
+    ..writeln(
+        '  const AdapterFor${element.nameWithoutGenerics.withoutCruft}();')
+    ..writeln()
+    ..write(_generateFromFieldsMethod(element))
+    ..writeln()
+    ..write(_generateToFieldsMethod(element))
+    ..writeln('}');
 
-  // The fromFields method.
+  return code.toString();
+}
+
+String _generateFromFieldsMethod(ClassElement element) {
+  final code = StringBuffer();
+
   code
-    ..writeln('  @override')
-    ..writeln('  $nameWithGenerics fromFields(Fields fields) {')
-    ..writeln('    return $nameWithGenerics(');
+    ..writeln('@override')
+    ..writeln('${element.nameWithGenerics} fromFields(Fields fields) {')
+    ..writeln('  return ${element.nameWithGenerics}(');
 
   final constructor = element.constructors.firstWhere(
     (constructor) => constructor.name.isEmpty,
     orElse: () => throw 'Provide an unnamed constructor', // TODO: better error
   );
 
-  final fieldsToTape =
-      element.fields.where((field) => field.isTapeField).toList();
-  var fields = List<FieldElement>.from(fieldsToTape);
+  var fields = element.fieldsToTape;
   // TODO: ensure that all fields also have a fieldId
   for (final parameter in constructor.initializingFormalParameters) {
     final field =
@@ -94,24 +97,22 @@ String _generateAdapter(ClassElement element) {
         '..${field.name} = fields.get<${field.type.getDisplayString()}>(${field.fieldId}, orDefault: null)');
   }
 
-  code..writeln(';')..writeln('  }')..writeln('');
-
-  // The toFields method.
-  code
-    ..writeln('  @override')
-    ..writeln('  Fields toFields($nameWithGenerics object) {')
-    ..writeln('    return Fields({');
-  for (final field in fieldsToTape) {
-    code.writeln('${field.fieldId}: object.${field.name},');
-  }
-  code..writeln('});')..writeln('  }')..writeln('}');
+  code..writeln(';')..writeln('}');
 
   return code.toString();
 }
 
-extension _CruftRemover on String {
-  /// Some code generation libraries add some cruft to class names to make a
-  /// name collision less likely. This leads to ugly names like `_$Name` though.
-  /// So here we remove that cruft.
-  String get withoutCruft => replaceAll(RegExp(r'_|\$'), '');
+String _generateToFieldsMethod(ClassElement element) {
+  final code = StringBuffer();
+
+  code
+    ..writeln('@override')
+    ..writeln('Fields toFields(${element.nameWithGenerics} object) {')
+    ..writeln('  return Fields({');
+  for (final field in element.fieldsToTape) {
+    code.writeln('${field.fieldId}: object.${field.name},');
+  }
+  code..writeln('});')..writeln('}');
+
+  return code.toString();
 }

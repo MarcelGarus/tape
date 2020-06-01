@@ -44,3 +44,19 @@ extension InitializingFormalParameters on ConstructorElement {
   Iterable<ParameterElement> get initializingFormalParameters =>
       parameters.where((param) => param.isInitializingFormal);
 }
+
+extension FancyClass on ClassElement {
+  String get nameWithGenerics =>
+      thisType.getDisplayString(withNullability: false);
+  String get nameWithoutGenerics => name;
+
+  List<FieldElement> get fieldsToTape =>
+      fields.where((field) => field.isTapeField).toList();
+}
+
+extension CruftRemover on String {
+  /// Some code generation libraries add some cruft to class names to make a
+  /// name collision less likely. This leads to ugly names like `_$Name` though.
+  /// So here we remove that cruft.
+  String get withoutCruft => replaceAll(RegExp(r'_|\$'), '');
+}
