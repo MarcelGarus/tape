@@ -30,25 +30,25 @@ class UnsupportedBlock implements Block {
 
 // An encoded [BytesBlock] looks like this:
 // | num bytes | child |
-// The number of bytes is encoded as a uint32.
+// The number of bytes is encoded as an int64.
 
 extension _SafeBlockWriter on _Writer {
   void writeSafeBlock(SafeBlock block) {
     final lengthCursor = cursor;
-    writeUint32(0);
+    writeInt64(0);
     final childStart = cursor;
     writeBlock(block.child);
     final childEnd = cursor;
     final length = childEnd - childStart;
     jumpTo(lengthCursor);
-    writeUint32(length);
+    writeInt64(length);
     jumpTo(childEnd);
   }
 }
 
 extension _SafeBlockReader on _Reader {
   Block readSafeBlock() {
-    final length = readUint32();
+    final length = readInt64();
     if (length == 0) {
       throw SafeBlockWithZeroLengthException();
     }
