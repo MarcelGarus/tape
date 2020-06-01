@@ -16,15 +16,15 @@ class FieldsBlock implements Block {
 
 // An encoded [FieldBlock] looks like this:
 // | num fields | field id | field value | field id | field value | ... |
-// The number of fields and the field ids are encoded as uint32.
+// The number of fields and the field ids are encoded as an int64.
 
 extension _FieldsBlockWriter on _Writer {
   void writeFieldsBlock(FieldsBlock block) {
     final fields = block.fields.entries.toList();
-    writeUint32(fields.length);
+    writeInt64(fields.length);
 
     for (final field in fields) {
-      writeUint32(field.key);
+      writeInt64(field.key);
       writeBlock(field.value);
     }
   }
@@ -32,9 +32,9 @@ extension _FieldsBlockWriter on _Writer {
 
 extension _FieldsBlockReader on _Reader {
   FieldsBlock readFieldsBlock() {
-    final numFields = readUint32();
+    final numFields = readInt64();
     return FieldsBlock({
-      for (var i = 0; i < numFields; i++) readUint32(): readBlock(),
+      for (var i = 0; i < numFields; i++) readInt64(): readBlock(),
     });
   }
 }
