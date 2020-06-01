@@ -12,17 +12,18 @@ class AdapterForFruit extends TapeClassAdapter<Fruit> {
   @override
   Fruit fromFields(Fields fields) {
     return Fruit(
-      color: fields.get<String>(4, orDefault: null),
-      amount: fields.get<int>(9, orDefault: null),
-    )..hey = fields.get<int>(12, orDefault: null);
+      name: fields.get<String>(0, orDefault: null),
+      amount: fields.get<int>(1, orDefault: null),
+      isRipe: fields.get<bool>(2, orDefault: null),
+    );
   }
 
   @override
   Fields toFields(Fruit object) {
     return Fields({
-      4: object.color,
-      9: object.amount,
-      12: object.hey,
+      0: object.name,
+      1: object.amount,
+      2: object.isRipe,
     });
   }
 }

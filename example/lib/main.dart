@@ -7,21 +7,16 @@ part 'main.freezed.dart';
 
 const dynamic TODO = Object();
 
-@TapeClass(nextFieldId: 13)
+@TapeClass(nextFieldId: 3)
 class Fruit {
-  Fruit({@required this.color, @required this.blub, @required this.amount});
+  Fruit({this.name, this.amount, this.isRipe});
 
-  @TapeField(4, defaultValue: TODO)
-  final String color;
-
-  @doNotTape
-  final bool blub;
-
-  @TapeField(9, defaultValue: TODO)
-  final int amount;
-
-  @TapeField(12, defaultValue: TODO)
-  int hey;
+  @TapeField(0, defaultValue: TODO)
+  String name;
+  @TapeField(1, defaultValue: TODO)
+  int amount;
+  @TapeField(2, defaultValue: TODO)
+  bool isRipe;
 }
 
 // @FreezedTape()
@@ -42,5 +37,10 @@ abstract class Foo with _$Foo {
 void main() {
   final First foo = Foo.first('bar');
   foo.a;
+  Tape.registerAdapters({
+    0: AdapterForFruit(),
+  });
+  final apple = Fruit(name: 'apple', amount: 42, isRipe: true);
+  print(tape.encode(apple));
   // foo.value;
 }
