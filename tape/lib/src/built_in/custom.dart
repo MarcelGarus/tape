@@ -3,6 +3,8 @@ import 'package:meta/meta.dart';
 import '../adapters/adapters.dart';
 import '../blocks/blocks.dart';
 
+const throwIfMissing = Object();
+
 /// A snapshot of a class's field values.
 class Fields {
   const Fields(this._fields);
@@ -12,8 +14,16 @@ class Fields {
   List<Field> get fields =>
       _fields.entries.map((entry) => Field(entry.key, entry.value)).toList();
 
-  T get<T>(int fieldId, {@required T orDefault}) {
-    return _fields.containsKey(fieldId) ? _fields[fieldId] : orDefault;
+  T get<T>(int fieldId, {dynamic orDefault = throwIfMissing}) {
+    if (_fields.containsKey(fieldId)) {
+      return _fields[fieldId];
+    }
+    if (orDefault == throwIfMissing) {
+      throw 'Missing field!';
+      // TODO: throw exception
+      // throw MissingFieldException();
+    }
+    return orDefault;
   }
 
   bool contains(int fieldId) => _fields.containsKey(fieldId);

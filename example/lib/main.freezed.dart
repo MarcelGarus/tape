@@ -12,9 +12,9 @@ T _$identity<T>(T value) => value;
 class _$FooTearOff {
   const _$FooTearOff();
 
-  First first(@TapeField(0) String a) {
+  First first({@TapeField(0) String a = 'sample'}) {
     return First(
-      a,
+      a: a,
     );
   }
 
@@ -86,15 +86,16 @@ class _$FirstCopyWithImpl<$Res> extends _$FooCopyWithImpl<$Res>
     Object a = freezed,
   }) {
     return _then(First(
-      a == freezed ? _value.a : a as String,
+      a: a == freezed ? _value.a : a as String,
     ));
   }
 }
 
 @TapeClass(nextFieldId: 1)
 class _$First implements First {
-  _$First(@TapeField(0) this.a) : assert(a != null);
+  _$First({@TapeField(0) this.a = 'sample'}) : assert(a != null);
 
+  @JsonKey(defaultValue: 'sample')
   @override
   @TapeField(0)
   final String a;
@@ -172,7 +173,7 @@ class _$First implements First {
 }
 
 abstract class First implements Foo {
-  factory First(@TapeField(0) String a) = _$First;
+  factory First({@TapeField(0) String a}) = _$First;
 
   @TapeField(0)
   String get a;

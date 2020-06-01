@@ -12,9 +12,9 @@ class AdapterForFruit extends TapeClassAdapter<Fruit> {
   @override
   Fruit fromFields(Fields fields) {
     return Fruit(
-      name: fields.get<String>(0, orDefault: null),
-      amount: fields.get<int>(1, orDefault: null),
-      isRipe: fields.get<bool>(2, orDefault: null),
+      name: fields.get<String>(0, orDefault: TODO),
+      amount: fields.get<int>(1, orDefault: TODO),
+      isRipe: fields.get<bool>(2, orDefault: TODO),
     );
   }
 
@@ -34,7 +34,7 @@ class AdapterForFirst extends TapeClassAdapter<_$First> {
   @override
   _$First fromFields(Fields fields) {
     return _$First(
-      fields.get<String>(0, orDefault: null),
+      a: fields.get<String>(0),
     );
   }
 
@@ -52,8 +52,8 @@ class AdapterForSecond extends TapeClassAdapter<_$Second> {
   @override
   _$Second fromFields(Fields fields) {
     return _$Second(
-      fields.get<int>(0, orDefault: null),
-      fields.get<bool>(1, orDefault: null),
+      fields.get<int>(0),
+      fields.get<bool>(1),
     );
   }
 

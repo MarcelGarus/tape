@@ -23,9 +23,9 @@ class Fruit {
 @freezed
 abstract class Foo with _$Foo {
   @TapeClass(nextFieldId: 1)
-  factory Foo.first(
-    @TapeField(0) String a,
-  ) = First;
+  factory Foo.first({
+    @TapeField(0) @Default('sample') String a,
+  }) = First;
 
   @TapeClass(nextFieldId: 2)
   factory Foo.second(

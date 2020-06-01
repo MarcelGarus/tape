@@ -14,16 +14,6 @@ extension IsTapeType on Element {
 
   bool get isNotTapeType => !isTapeType;
 
-  String get trackingCode {
-    final field = tapeTypeChecker
-        .firstAnnotationOf(this, throwOnUnresolved: false)
-        ?.getField('trackingCode');
-    return (field?.isNull ?? true) ? null : field.toStringValue();
-  }
-
-  bool get hasTrackingCode => trackingCode != null;
-  bool get hasNoTrackingCode => !hasTrackingCode;
-
   bool get isTapeClass {
     return tapeClassChecker.hasAnnotationOf(this, throwOnUnresolved: false);
   }
@@ -37,6 +27,26 @@ extension IsTapeType on Element {
         .firstAnnotationOf(this, throwOnUnresolved: false)
         .getField('id');
     return field.isNull ? null : field.toIntValue();
+  }
+
+  /// Returns the sources of the default value associated with a `@Default`,
+  /// or `null` if no `@Default` are specified.
+  String get defaultValue {
+    for (final annotation in metadata) {
+      if (tapeFieldChecker
+          .isExactlyType(annotation.computeConstantValue().type)) {
+        // Get the source, i.e. '@TapeField(123, defaultValue: 2)'.
+        final source = annotation.toSource();
+        final defaultStart =
+            source.indexOf('defaultValue:') + 'defaultValue:'.length;
+        final defaultEnd = source.lastIndexOf(')');
+        if (defaultStart < 0 || defaultEnd < 0 || defaultStart >= defaultEnd) {
+          return null;
+        }
+        return source.substring(defaultStart, defaultEnd).trim();
+      }
+    }
+    return null;
   }
 }
 

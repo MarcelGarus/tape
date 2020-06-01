@@ -22,22 +22,22 @@ class TapeGenerator extends Generator {
     // Load lock file.
     final lockFile = Object();
 
-    final foundClasses = <ConcreteTapeClass>[];
+    // final foundClasses = <ConcreteTapeClass>[];
     final adapters = <String>[];
 
     for (final element in library.allElements) {
       // @TapeClass
       if (element is ClassElement && element.isTapeClass) {
-        if (element.isEnum) throw 'Enum is annotated with @TapeClass.';
+        if (element.isEnum) throw 'Enum is annotated with @TapeClass.'; // TODO:
 
-        foundClasses.add(ConcreteTapeClass.fromElement(element));
+        // foundClasses.add(ConcreteTapeClass.fromElement(element));
         adapters.add(_generateAdapter(element));
       }
     }
 
-    for (final foundClass in foundClasses) {
-      log(JsonEncoder.withIndent('  ').convert(foundClass));
-    }
+    // for (final foundClass in foundClasses) {
+    //   log(JsonEncoder.withIndent('  ').convert(foundClass));
+    // }
     await logSink.close();
     return adapters.join('\n');
   }
@@ -84,8 +84,7 @@ String _generateFromFieldsMethod(ClassElement element) {
     if (parameter.isNamed) {
       code.write('${parameter.name}: ');
     }
-    code.writeln(
-        'fields.get<${field.type.getDisplayString()}>(${field.fieldId}, orDefault: null),');
+    code.writeln('${_generateFieldGetter(field)},');
   }
   code.writeln(')');
 
@@ -93,11 +92,22 @@ String _generateFromFieldsMethod(ClassElement element) {
   // as initializing formals. We hope these are mutable fields, so we using
   // cascades.
   for (var field in fields) {
-    code.write(
-        '..${field.name} = fields.get<${field.type.getDisplayString()}>(${field.fieldId}, orDefault: null)');
+    code.write('..${field.name} = ${_generateFieldGetter(field)}');
   }
 
   code..writeln(';')..writeln('}');
+
+  return code.toString();
+}
+
+String _generateFieldGetter(FieldElement field) {
+  final code = StringBuffer();
+
+  code.write('fields.get<${field.type.getDisplayString()}>(${field.fieldId}');
+  if (field.defaultValue != null) {
+    code.write(', orDefault: ${field.defaultValue}');
+  }
+  code.writeln(')');
 
   return code.toString();
 }
