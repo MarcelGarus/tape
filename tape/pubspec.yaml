@@ -17,6 +17,7 @@ dependencies:
   string_similarity: any
   args: any
   pubspec_parse: any
+  console: any
 
 dev_dependencies:
   build_runner: any
