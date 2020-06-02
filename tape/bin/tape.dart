@@ -2,13 +2,13 @@ import 'dart:io';
 
 import 'package:dartx/dartx.dart';
 import 'package:meta/meta.dart';
-import 'package:string_similarity/string_similarity.dart';
 
 import 'assist.dart';
 import 'doctor.dart';
 import 'help.dart';
 import 'init.dart';
 import 'errors.dart';
+import 'console.dart';
 
 // Maybe useful emojis: 🧼, 🔭, 🌱, 💉, 🧱, 🕸️
 
