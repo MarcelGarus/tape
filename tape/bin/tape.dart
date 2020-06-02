@@ -50,9 +50,6 @@ final commands = <Command>[
   doctor,
 ];
 
-/// Whether the use rich output, e.g. ansi colors, emojis and loading spinners.
-bool useRichOutput = true;
-
 void main(List<String> args) async {
   try {
     await _dispatch(args);
