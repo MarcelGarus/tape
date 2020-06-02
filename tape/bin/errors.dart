@@ -6,13 +6,22 @@ class CliError implements Exception {
   CliError(this.exitCode);
 
   final int exitCode;
-  String get id => 'te$exitCode'; // "te" stands for "tape error"
+  String get id => 'tce$exitCode'; // "tce" stands for "tape CLI error"
+}
+
+class NoPubspecFoundError extends CliError {
+  NoPubspecFoundError() : super(2);
+
+  String toString() {
+    return "Couldn't find a pubspec.yaml file. Make sure you're in the root "
+        'directory of your project.';
+  }
 }
 
 class UnknownCommandError extends CliError {
   UnknownCommandError(this.commandName)
       : assert(commandName != null),
-        super(2);
+        super(3);
 
   final String commandName;
 
