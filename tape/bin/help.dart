@@ -1,4 +1,5 @@
 import 'tape.dart';
+import 'console.dart';
 
 final help = Command(
   names: ['help', 'h', '--help', '-h', '-?', '?'],
@@ -8,20 +9,20 @@ final help = Command(
 
 Future<int> _help(List<String> args) async {
   print('Welcome to tape!');
-  print('For information about what tape is and how to use it, consult '
-      'https://pub.dev/packages/tape');
+  print('For information about what tape is and how to use it, consult');
+  print('https://pub.dev/packages/tape.');
   print('This help page will only focus on the command line tool.');
   print('');
-  print('Usage:');
+  printTitle('Usage:');
   print('  pub run tape <command> [<options>]');
   print('');
-  print('Commands:');
+  printTitle('Commands:');
   for (final command in commands) {
-    print('  ${command.name.padRight(10)} ${command.description}');
+    print('  ${command.name.padRight(8)} ${command.description}');
   }
   print('');
-  print('Global options:');
-  print('  --simple-ouptut   for output without ansi colors or replacement');
+  printTitle('Global options:');
+  print('  --simple-output   for output without colors or replacement');
   print('');
   print('More help: tape help <command>'); // TODO: implement more help
   print('Questions? Issues? https://github.com/marcelgarus/tape/issues/new');
