@@ -1,19 +1,27 @@
 import 'dart:io';
-import 'dart:math';
 
+import 'package:args/args.dart';
 import 'package:dart_style/dart_style.dart';
-import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
-import 'package:build_config/build_config.dart';
 import 'package:meta/meta.dart';
 import 'package:watcher/watcher.dart';
 import 'package:dartx/dartx.dart';
 import 'package:dartx/dartx_io.dart';
 
-import 'utils.dart';
+import 'code_replacement.dart';
+import 'assist_utils.dart';
+import 'tape.dart';
 
-void main(List<String> args) async {
+/// Assists the developer by autocompleting annotations.
+final assist = Command(
+  names: ['assist'],
+  description: 'assists you while writing code',
+  action: _assist,
+);
+
+Future<int> _assist(List<String> args) async {
+  print('Running assist...');
   await _updateFile('lib/main.dart');
 
   Watcher('.').events.listen((event) {
@@ -21,21 +29,6 @@ void main(List<String> args) async {
       _updateFile(event.path);
     }
   });
-}
-
-class Replacement {
-  Replacement({
-    @required this.offset,
-    @required this.length,
-    @required this.replaceWith,
-  });
-  Replacement.forNode(AstNode node, this.replaceWith)
-      : offset = node.offset,
-        length = node.length;
-
-  final int offset;
-  final int length;
-  final String replaceWith;
 }
 
 Future<void> _updateFile(String path) async {
@@ -162,16 +155,5 @@ String _enhanceSourceCode({
     }
   }
 
-  // We now got a list of replacements. The order in which we apply them is
-  // important so that we don't mess up the offsets.
-  replacements = replacements.sortedBy((replacement) => replacement.offset);
-  var cursor = 0;
-  var buffer = StringBuffer();
-  for (final replacement in replacements) {
-    buffer.write(sourceCode.substring(cursor, replacement.offset));
-    buffer.write(replacement.replaceWith);
-    cursor = replacement.offset + replacement.length;
-  }
-  buffer.write(sourceCode.substring(cursor));
-  return buffer.toString();
+  return sourceCode.apply(replacements);
 }

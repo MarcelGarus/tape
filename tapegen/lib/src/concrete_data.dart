@@ -3,6 +3,15 @@ import 'package:meta/meta.dart';
 
 import 'utils.dart';
 
+// /// Every tape type should have an adapter named `AdapterFor<TypeName>` that is
+// /// registered in the `tape.dart` file using `Tape.registerAdapters` or in a
+// /// third-party package using `Tape.registerReservedAdapters`.
+// class LockedTapeType {
+//   LockedTapeType({@required this.id});
+
+//   final int id;
+// }
+
 // /// A concrete class that has been annotated with `@TapeType()` and that wants
 // /// a generated adapter.
 // class ConcreteTapeClass {
@@ -59,7 +68,7 @@ import 'utils.dart';
 
 //   final int id;
 //   final String type;
-//   final String typeTrackingCode;
+//   final int typeId;
 //   final String name;
 
 //   factory ConcreteTapeField.fromElement(FieldElement element) {
