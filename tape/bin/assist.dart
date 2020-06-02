@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:args/args.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -12,6 +11,7 @@ import 'package:dartx/dartx_io.dart';
 import 'code_replacement.dart';
 import 'assist_utils.dart';
 import 'tape.dart';
+import 'console.dart';
 
 /// Assists the developer by autocompleting annotations.
 final assist = Command(
@@ -22,55 +22,84 @@ final assist = Command(
 
 Future<int> _assist(List<String> args) async {
   print('Running assist...');
-  await _updateFile('lib/main.dart');
+  await assistWithFile('lib/main.dart');
 
-  Watcher('.').events.listen((event) {
+  Watcher('.').events.listen((event) async {
     if (event.type == ChangeType.ADD || event.type == ChangeType.MODIFY) {
-      _updateFile(event.path);
+      await assistWithFile(event.path);
     }
   });
+
+  return 0;
 }
 
-Future<void> _updateFile(String path) async {
-  print('Updating $path…');
+Future<void> assistWithFile(String path) async {
+  final task = Task('Assisting with file $path...');
 
+  // Check it's a file we're interested in.
   if (!path.endsWith('.dart')) {
-    print("Ignoring, since it's not a Dart file.");
+    task.success("Ignored $path, since it's not a Dart file.");
+    return;
+  }
+  // TODO: Maybe support more general generated files here?
+  if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {
+    task.success("Ignored $path, since it's a generated file.");
     return;
   }
 
-  // Read the source from the file and parse it into an AST.
+  // Read the source from the file.
   final file = File(path);
-  final oldSource = await file.readAsString();
+  String oldSource;
+  task.message = 'Reading $path...';
+  try {
+    oldSource = await file.readAsString();
+  } catch (e) {
+    task.error("Couldn't read from $path.");
+    return;
+  }
+
+  // Enhance it.
   String newSource;
+  task.message = 'Enhancing the code of $path...';
   try {
     newSource = _enhanceSourceCode(
       fileName: file.name,
       sourceCode: oldSource,
     );
   } on SourceCodeHasErrorsException {
-    print('Doing nothing, because file contains syntax errors.');
+    task.warning('Ignored $path, since it contained syntax errors.');
     return;
   } catch (e, st) {
-    print("This shouldn't happen. Please file an issue.\n");
+    task.error(
+        'An internal error occurred while enhancing $path. Please file an issue:');
+    // TODO: print error in red
     print(e);
     print(st);
     return;
   }
 
   if (oldSource.length == newSource.length) {
-    print('Nothing to be done.');
-  } else {
-    try {
-      newSource = DartFormatter().format(newSource);
-    } on FormatterException {
-      print('The formatter threw an exception, which should not happen.');
-      return;
-    }
-
-    await File(path).writeAsString(newSource);
-    print('Done.');
+    task.success("$path already looks great.");
+    return;
   }
+
+  task.message = 'Formatting the new code for $path...';
+  try {
+    newSource = DartFormatter().format(newSource);
+  } on FormatterException {
+    task.error(
+        "An error occurred while formatting the new code for $path. This shouldn't happen.");
+    return;
+  }
+
+  task.message = 'Saving the new code for $path...';
+  try {
+    await File(path).writeAsString(newSource);
+  } catch (e) {
+    task.error("Couldn't write to $path.");
+  }
+
+  task.success('Assisted with $path.');
 }
 
 class SourceCodeHasErrorsException implements Exception {}
@@ -112,14 +141,14 @@ String _enhanceSourceCode({
         replacements.add(Replacement(
           offset: field.offset,
           length: 0,
-          replaceWith: '@TapeField($nextFieldId, defaultValue: TODO)\n',
+          replaceWith: '\n\n@TapeField($nextFieldId, defaultValue: TODO)\n',
         ));
         nextFieldId++;
       } else if (field.isTapeField && field.fieldId == null) {
         // Finish the @TapeField annotation.
         replacements.add(Replacement.forNode(
           field.tapeFieldAnnotation,
-          '@TapeField($nextFieldId, defaultValue: TODO)',
+          '\n\n@TapeField($nextFieldId, defaultValue: TODO)',
         ));
         nextFieldId++;
       }
