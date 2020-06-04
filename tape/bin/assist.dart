@@ -66,66 +66,119 @@ void assistWithDartFile(Task task, File file) {
     onDone: 'Assisted with $path.',
     modify: (unit) async* {
       var containsTapeAnnotations = false;
-      final classDeclarations =
-          unit?.declarations?.whereType<ClassDeclaration>() ?? [];
+      final classes = unit?.declarations?.whereType<ClassDeclaration>() ?? [];
 
-      for (final declaration in classDeclarations.where((c) => c.isTapeClass)) {
+      for (final declaration in classes.where((cls) => cls.isTapeClass)) {
         containsTapeAnnotations = true;
-        final fields = declaration.members.whereType<FieldDeclaration>();
-        var nextFieldId = declaration.tapeClassAnnotation.nextFieldId ??
-            fields.map((field) => (field.fieldId ?? -1) + 1).max() ??
-            0;
+        yield* autocompleteAnnotations(
+          declaration,
+          declaration.members.whereType<FieldDeclaration>().toList(),
+        );
+      }
 
-        for (final field in fields) {
-          if (!field.isTapeField && !field.doNotTape) {
-            // This field has no annotation although it is inside a @TapeClass.
-            // Add a @TapeField annotation.
-            yield Replacement(
-              offset: field.offset,
-              length: 0,
-              replaceWith: '\n\n@TapeField($nextFieldId, defaultValue: TODO)\n',
-            );
-            nextFieldId++;
-          } else if (field.isTapeField && field.fieldId == null) {
-            // Finish the @TapeField annotation.
-            yield Replacement.forNode(
-              field.tapeFieldAnnotation,
-              '\n\n@TapeField($nextFieldId, defaultValue: TODO)',
-            );
-            nextFieldId++;
-          }
-        }
-
-        if (declaration.nextFieldId == null) {
-          // Finish the @TapeClass annotation.
-          yield Replacement.forNode(
-            declaration.tapeClassAnnotation,
-            '@TapeClass(nextFieldId: $nextFieldId)',
+      for (final declaration in classes.where((cls) => cls.isFreezed)) {
+        final freezedTapeFactories = declaration.members
+            .whereType<ConstructorDeclaration>()
+            .where((constructor) => constructor.factoryKeyword != null)
+            .where((c) => c.isTapeClass);
+        for (final constructor in freezedTapeFactories) {
+          yield* autocompleteAnnotations(
+            constructor,
+            constructor.parameters.parameters,
+            insertNewlineBeforeNewFieldAnnotations: false,
           );
         }
       }
 
       if (containsTapeAnnotations) {
-        final fileName = file.name;
-        assert(fileName.endsWith('.dart'));
-        final extensionlessFileName =
-            fileName.substring(0, fileName.length - '.dart'.length);
-        final generatedFileName = '$extensionlessFileName.g.dart';
-
-        // Make sure a `part 'some_file.g.dart';` directive exists.
-        final hasDirective = unit.directives
-            .whereType<PartDirective>()
-            .any((part) => part.uri.stringValue == generatedFileName);
-        if (!hasDirective) {
-          final offset = unit.declarations.first.offset;
-
-          yield Replacement(
-            offset: offset,
-            length: 0,
-            replaceWith: "part '$generatedFileName';\n\n",
-          );
-        }
+        yield* ensurePartOfDirectiveExists(unit, file);
+        // TODO: ensure `import 'package:tape/tape.dart';` directive exists
       }
     },
   );
+}
+
+/// Annotates a structure annotated with `@TapeClass`.
+Stream<Replacement> autocompleteAnnotations(
+  AstNode parentStructure,
+  List<AstNode> fields, {
+  bool insertNewlineBeforeNewFieldAnnotations = true,
+}) async* {
+  /// A quick rundown of how this will work:
+  /// - First, we find the [nextFieldId].
+  /// - Then, we iterate over the fields and add annotations and/or field ids
+  ///   where necessary. Everytime we need to insert a field id, we use
+  ///   [nextFieldId] and then increase it by one.
+  /// - After we annotated all the fields, we update the `@TapeClass` annotation
+  ///   to contain the new, correct [nextFieldId].
+
+  final tapeClassAnnotation = parentStructure.tapeClassAnnotation;
+  assert(tapeClassAnnotation != null);
+
+  /// Determine the next field id as
+  /// - The `nextFieldId` parameter of the `@TapeClass` annotation.
+  /// - If it doesn't have one, as the maximum field id of fields + 1.
+  /// - If there are no `@TapeField`s with field ids, then default to 0.
+  var nextFieldId = tapeClassAnnotation.nextFieldId;
+  nextFieldId ??= fields
+      .map((field) {
+        final fieldId = field.tapeFieldAnnotation?.fieldId;
+        return fieldId == null ? null : (fieldId + 1);
+      })
+      .whereNotNull()
+      .max();
+  nextFieldId ??= 0;
+
+  for (final field in fields.where((field) => !field.doNotTape)) {
+    if (!field.isTapeField) {
+      /// This field has no annotation although it is inside a `@TapeClass`.
+      /// Add a `@TapeField` annotation.
+      final prefix = insertNewlineBeforeNewFieldAnnotations ? '\n\n' : '';
+      yield Replacement.insert(
+        offset: field.offset,
+        replaceWith: '$prefix@TapeField($nextFieldId, defaultValue: TODO)\n',
+      );
+      nextFieldId++;
+    } else if (field.tapeFieldAnnotation.fieldId == null) {
+      /// This field is already annotated with a `@TapeField` annotation, but it
+      /// doesn't contain a field id yet. Finish the @TapeField annotation.
+      /// TODO: Maybe a defaultValue already exists, we would overwrite that.
+      yield Replacement.forNode(
+        field.tapeFieldAnnotation,
+        '@TapeField($nextFieldId, defaultValue: TODO)',
+      );
+      nextFieldId++;
+    }
+  }
+
+  /// Update the `@TapeClass` annotation.
+  if (tapeClassAnnotation.nextFieldId == null) {
+    /// It doesn't contain a `nextFieldId` field yet.
+    /// Finish the @TapeClass annotation.
+    yield Replacement.forNode(
+      tapeClassAnnotation,
+      '@TapeClass(nextFieldId: $nextFieldId)',
+    );
+  }
+}
+
+Stream<Replacement> ensurePartOfDirectiveExists(
+  CompilationUnit unit,
+  File file,
+) async* {
+  final generatedFileName = '${file.nameWithoutExtension}.g.dart';
+
+  // Make sure a `part 'some_file.g.dart';` directive exists.
+  final hasDirective = unit.directives
+      .whereType<PartDirective>()
+      .any((part) => part.uri.stringValue == generatedFileName);
+  if (!hasDirective) {
+    final offset = unit.declarations.first.offset;
+
+    yield Replacement(
+      offset: offset,
+      length: 0,
+      replaceWith: "part '$generatedFileName';\n\n",
+    );
+  }
 }
