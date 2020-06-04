@@ -12,6 +12,7 @@ import 'code_replacement.dart';
 import 'assist_utils.dart';
 import 'tape.dart';
 import 'console.dart';
+import 'utils.dart';
 
 /// Assists the developer by autocompleting annotations.
 final assist = Command(
@@ -35,154 +36,96 @@ Future<int> _assist(List<String> args) async {
 
 Future<void> assistWithFile(String path) async {
   final task = Task('Assisting with file $path...');
+  final file = File(path);
 
   // Check it's a file we're interested in.
-  if (!path.endsWith('.dart')) {
+  if (file.extension != '.dart') {
     task.success("Ignored $path, since it's not a Dart file.");
     return;
   }
-  // TODO: Maybe support more general generated files here?
+  // TODO: Maybe support more generated files here?
   if (path.endsWith('.g.dart') || path.endsWith('.freezed.dart')) {
     task.success("Ignored $path, since it's a generated file.");
     return;
   }
 
-  // Read the source from the file.
-  final file = File(path);
-  String oldSource;
-  task.message = 'Reading $path...';
-  try {
-    oldSource = await file.readAsString();
-  } catch (e) {
-    task.error("Couldn't read from $path.");
-    return;
-  }
-
-  // Enhance it.
-  String newSource;
-  task.message = 'Enhancing the code of $path...';
-  try {
-    newSource = _enhanceSourceCode(
-      fileName: file.name,
-      sourceCode: oldSource,
-    );
-  } on SourceCodeHasErrorsException {
-    task.warning('Ignored $path, since it contained syntax errors.');
-    return;
-  } catch (e, st) {
-    task.error(
-        'An internal error occurred while enhancing $path. Please file an issue:');
-    // TODO: print error in red
-    print(e);
-    print(st);
-    return;
-  }
-
-  if (oldSource.length == newSource.length) {
-    task.success("$path already looks great.");
-    return;
-  }
-
-  task.message = 'Formatting the new code for $path...';
-  try {
-    newSource = DartFormatter().format(newSource);
-  } on FormatterException {
-    task.error(
-        "An error occurred while formatting the new code for $path. This shouldn't happen.");
-    return;
-  }
-
-  task.message = 'Saving the new code for $path...';
-  try {
-    await File(path).writeAsString(newSource);
-  } catch (e) {
-    task.error("Couldn't write to $path.");
-  }
-
-  task.success('Assisted with $path.');
+  assistWithDartFile(task, file);
 }
 
-class SourceCodeHasErrorsException implements Exception {}
+void assistWithDartFile(Task task, File file) {
+  final path = file.path;
+  task.modifyFile(
+    file: file,
+    onFileNotFound: "Can't find file $path",
+    onCannotReadFromFile: "Can't read from $path.",
+    onFileContainsSyntaxErrors: "File $path contains syntax errors.",
+    onNothingModified: "$path already looks great.",
+    onCannotFormatModifiedCode: "An error occurred while formatting the new "
+        "code for $path. This shouldn't happen.",
+    onCannotWriteToFile: "Couldn't write updated code to $path.",
+    onDone: 'Assisted with $path.',
+    modify: (unit) async* {
+      var containsTapeAnnotations = false;
+      final classDeclarations =
+          unit?.declarations?.whereType<ClassDeclaration>() ?? [];
 
-String _enhanceSourceCode({
-  @required String fileName,
-  @required String sourceCode,
-}) {
-  // Parse the source code.
-  CompilationUnit compilationUnit;
-  try {
-    compilationUnit = parseString(content: sourceCode).unit;
-  } on ArgumentError {
-    throw SourceCodeHasErrorsException();
-  }
+      for (final declaration in classDeclarations.where((c) => c.isTapeClass)) {
+        containsTapeAnnotations = true;
+        final fields = declaration.members.whereType<FieldDeclaration>();
+        var nextFieldId = declaration.tapeClassAnnotation.nextFieldId ??
+            fields.map((field) => (field.fieldId ?? -1) + 1).max() ??
+            0;
 
-  // These will be replacements for certain parts of the file. For example, an
-  // unfinished `@TapeClass` may get replaced with `@TapeClass(nextFieldId: 10)`
-  // or the space before a field inside a @TapeClass that is not annotated yet
-  // will get replaced by `@TapeField(10, orDefault: ...)\n`.
-  var replacements = <Replacement>[];
+        for (final field in fields) {
+          if (!field.isTapeField && !field.doNotTape) {
+            // This field has no annotation although it is inside a @TapeClass.
+            // Add a @TapeField annotation.
+            yield Replacement(
+              offset: field.offset,
+              length: 0,
+              replaceWith: '\n\n@TapeField($nextFieldId, defaultValue: TODO)\n',
+            );
+            nextFieldId++;
+          } else if (field.isTapeField && field.fieldId == null) {
+            // Finish the @TapeField annotation.
+            yield Replacement.forNode(
+              field.tapeFieldAnnotation,
+              '\n\n@TapeField($nextFieldId, defaultValue: TODO)',
+            );
+            nextFieldId++;
+          }
+        }
 
-  var containsTapeAnnotations = false;
-  final classDeclarations =
-      compilationUnit?.declarations?.whereType<ClassDeclaration>() ??
-          <ClassDeclaration>[];
-
-  for (final declaration in classDeclarations.where((c) => c.isTapeClass)) {
-    containsTapeAnnotations = true;
-    final fields = declaration.members.whereType<FieldDeclaration>();
-    var nextFieldId = declaration.tapeClassAnnotation.nextFieldId ??
-        fields.map((field) => (field.fieldId ?? -1) + 1).max() ??
-        0;
-
-    for (final field in fields) {
-      if (!field.isTapeField && !field.doNotTape) {
-        // This field has no annotation although it is inside a @TapeClass.
-        // Add a @TapeField annotation.
-        replacements.add(Replacement(
-          offset: field.offset,
-          length: 0,
-          replaceWith: '\n\n@TapeField($nextFieldId, defaultValue: TODO)\n',
-        ));
-        nextFieldId++;
-      } else if (field.isTapeField && field.fieldId == null) {
-        // Finish the @TapeField annotation.
-        replacements.add(Replacement.forNode(
-          field.tapeFieldAnnotation,
-          '\n\n@TapeField($nextFieldId, defaultValue: TODO)',
-        ));
-        nextFieldId++;
+        if (declaration.nextFieldId == null) {
+          // Finish the @TapeClass annotation.
+          yield Replacement.forNode(
+            declaration.tapeClassAnnotation,
+            '@TapeClass(nextFieldId: $nextFieldId)',
+          );
+        }
       }
-    }
 
-    if (declaration.nextFieldId == null) {
-      // Finish the @TapeClass annotation.
-      replacements.add(Replacement.forNode(
-        declaration.tapeClassAnnotation,
-        '@TapeClass(nextFieldId: $nextFieldId)',
-      ));
-    }
-  }
+      if (containsTapeAnnotations) {
+        final fileName = file.name;
+        assert(fileName.endsWith('.dart'));
+        final extensionlessFileName =
+            fileName.substring(0, fileName.length - '.dart'.length);
+        final generatedFileName = '$extensionlessFileName.g.dart';
 
-  if (containsTapeAnnotations) {
-    assert(fileName.endsWith('.dart'));
-    final extensionlessFileName =
-        fileName.substring(0, fileName.length - '.dart'.length);
-    final generatedFileName = '$extensionlessFileName.g.dart';
+        // Make sure a `part 'some_file.g.dart';` directive exists.
+        final hasDirective = unit.directives
+            .whereType<PartDirective>()
+            .any((part) => part.uri.stringValue == generatedFileName);
+        if (!hasDirective) {
+          final offset = unit.declarations.first.offset;
 
-    // Make sure a `part 'some_file.g.dart';` directive exists.
-    final hasDirective = compilationUnit.directives
-        .whereType<PartDirective>()
-        .any((part) => part.uri.stringValue == generatedFileName);
-    if (!hasDirective) {
-      final offset = compilationUnit.declarations.first.offset;
-
-      replacements.add(Replacement(
-        offset: offset,
-        length: 0,
-        replaceWith: "part '$generatedFileName';\n\n",
-      ));
-    }
-  }
-
-  return sourceCode.apply(replacements);
+          yield Replacement(
+            offset: offset,
+            length: 0,
+            replaceWith: "part '$generatedFileName';\n\n",
+          );
+        }
+      }
+    },
+  );
 }
