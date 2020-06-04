@@ -9,7 +9,7 @@ import 'package:dartx/dartx.dart';
 import 'package:dartx/dartx_io.dart';
 
 import 'code_replacement.dart';
-import 'ast_utils.dart';
+import 'assist_utils.dart';
 import 'tape.dart';
 import 'console.dart';
 import 'utils.dart';
