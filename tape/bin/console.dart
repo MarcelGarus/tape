@@ -20,12 +20,14 @@ void printTitle(String title) {
 ///
 /// Here's a possible sequence of how the line might be updated:
 /// […] Assisting with lib/main.dart...
-/// […] Parsing lib/main.dart...
-/// […] Enhancing lib/main.dart...
-/// […] Formatting enhanced lib/main.dart...
+/// […] Assisting with lib/main.dart, reading...
+/// […] Assisting with lib/main.dart, parsing...
+/// […] Assisting with lib/main.dart, enhancing...
+/// […] Assisting with lib/main.dart, formatting...
 /// [✓] Assisted with lib/main.dart.
 class Task {
-  Task(this._message) {
+  Task(this.baseMessage) {
+    _message = '$baseMessage...';
     _print();
   }
 
@@ -35,12 +37,18 @@ class Task {
     _print();
   }
 
+  final baseMessage;
   String _message = '';
-  set message(String message) {
+
+  void update(String message) {
     // Make the text at least as wide as the existing text, so we overwrite all
     // the characters.
     _message = message.padRight(_message.length);
     _print();
+  }
+
+  void updateSubtask(String subtask) {
+    update('${baseMessage}, $subtask...');
   }
 
   void _print() {
@@ -79,15 +87,15 @@ class Task {
     Console.resetTextColor();
   }
 
-  void finish([Status status, String message]) {
+  void finish(Status status, String message) {
     _status = status;
-    this.message = message;
+    update(message);
     Console.write('\n');
   }
 
-  void success([String message]) => finish(Status.success, message);
-  void warning([String message]) => finish(Status.warning, message);
-  void error([String message]) => finish(Status.error, message);
+  void success(String message) => finish(Status.success, message);
+  void warning(String message) => finish(Status.warning, message);
+  void error(String message) => finish(Status.error, message);
 }
 
 enum Status {
