@@ -1,5 +1,7 @@
 import 'package:tape/tape.dart';
 
+part 'user.g.dart';
+
 @TapeClass(nextFieldId: 2)
 class User<T, S> {
   User(this.name, this.favorite);
