@@ -1,7 +1,8 @@
 name: tapegen
+description: Tool for generating code for tape, a type-safe and future- and backwards-compatible serializer for Dart objects.
 version: 0.0.1
 homepage: https://github.com/marcelgarus/tape
-description: Tool for generating code for tape, a type-safe and future- and backwards-compatible serializer for Dart objects.
+issue_tracker: https://github.com/marcelgarus/tape/issues
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -15,7 +16,11 @@ dependencies:
   watcher: ^0.9.7+15
   pub_semver: ^1.4.4
   dartx: ^0.4.1
-  tape: ^0.0.1
+  args: ^1.6.0
+  glob: any
+  tape:
+    path: ../tape
+  yaml: ^2.2.1
 
 dev_dependencies:
   build_test: ^0.10.11
