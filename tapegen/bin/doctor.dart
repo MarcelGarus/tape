@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:pubspec_parse/pubspec_parse.dart';
 
-import 'tape.dart';
+import 'tapegen.dart';
 import 'console.dart';
 
 final doctor = Command(

@@ -52,7 +52,6 @@ extension FileParser on Task {
     updateSubtask('modifying code');
     final replacements = await modify(compilationUnit).toList();
     String newCode = code.applyAll(replacements);
-    print(newCode);
 
     if (code.length == newCode.length) {
       success(onNothingModified);

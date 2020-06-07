@@ -1,4 +1,4 @@
-import 'tape.dart';
+import 'tapegen.dart';
 import 'console.dart';
 
 final help = Command(

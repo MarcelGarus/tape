@@ -1,6 +1,6 @@
 import 'package:string_similarity/string_similarity.dart';
 
-import 'tape.dart';
+import 'tapegen.dart';
 
 class CliError implements Exception {
   CliError(this.exitCode);

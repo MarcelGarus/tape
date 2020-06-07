@@ -5,7 +5,7 @@ import 'package:dartx/dartx.dart';
 
 import 'code_replacement.dart';
 import 'console.dart';
-import 'tape.dart';
+import 'tapegen.dart';
 import 'utils.dart';
 
 /// Helps the developerw integrate tape into their app.

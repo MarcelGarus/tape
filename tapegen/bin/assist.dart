@@ -10,7 +10,7 @@ import 'package:dartx/dartx_io.dart';
 
 import 'code_replacement.dart';
 import 'assist_utils.dart';
-import 'tape.dart';
+import 'tapegen.dart';
 import 'console.dart';
 import 'utils.dart';
 

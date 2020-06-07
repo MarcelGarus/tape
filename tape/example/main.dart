@@ -11,7 +11,7 @@ class Fruit {
   @TapeField(0, defaultValue: 'red')
   final String color;
 
-  @TapeField(1, true)
+  @TapeField(1, defaultValue: true)
   final bool blub;
 
   @doNotTape
@@ -21,4 +21,5 @@ class Fruit {
 void main() {
   final someFruit = Fruit(color: 'red', blub: true, amount: 1);
   final taped = tape.encode(someFruit);
+  print('Fruit taped to $taped.');
 }
