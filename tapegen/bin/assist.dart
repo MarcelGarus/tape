@@ -141,15 +141,27 @@ Stream<Replacement> autocompleteAnnotations(
         replaceWith: '$prefix@TapeField($nextFieldId, defaultValue: TODO)\n',
       );
       nextFieldId++;
-    } else if (field.tapeFieldAnnotation.fieldId == null) {
-      /// This field is already annotated with a `@TapeField` annotation, but it
-      /// doesn't contain a field id yet. Finish the @TapeField annotation.
-      /// TODO: Maybe a defaultValue already exists, we would overwrite that.
+      continue;
+    }
+
+    /// This field is already annotated with a `@TapeField` annotation. Maybe it
+    /// doesn't contain a field id or default value yet. If so, we finish the
+    /// annotation.
+    final annotation = field.tapeFieldAnnotation;
+    final fieldId = annotation.fieldId;
+    final defaultValue = annotation.defaultValue;
+
+    if (fieldId == null) {
       yield Replacement.forNode(
         field.tapeFieldAnnotation,
-        '@TapeField($nextFieldId, defaultValue: TODO)',
+        '@TapeField($nextFieldId, defaultValue: ${defaultValue ?? 'TODO'})',
       );
       nextFieldId++;
+    } else {
+      yield Replacement.forNode(
+        field.tapeFieldAnnotation,
+        '@TapeField($fieldId, defaultValue: ${defaultValue ?? 'TODO'})',
+      );
     }
   }
 

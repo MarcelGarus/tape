@@ -6,6 +6,7 @@ const tapeClassName = 'TapeClass';
 const tapeFieldName = 'TapeField';
 const doNotTapeName = 'doNotTape';
 const nextFieldIdName = 'nextFieldId';
+const defaultValueName = 'defaultValue';
 
 extension FancyAnnotation on Annotation {
   bool get hasArgument => (arguments?.length ?? 0) > 0;
@@ -20,30 +21,21 @@ extension FancyAnnotation on Annotation {
       ?.toSource()
       ?.toIntOrNull();
 
-  // @TapeField(4)
+  // @TapeField(4, defaultValue: 'foo')
   int get fieldId =>
       arguments?.arguments?.firstOrNull?.toSource()?.toIntOrNull();
-  // TODO: default value
+  String get defaultValue => (arguments?.arguments ?? [])
+      .whereType<NamedExpression>()
+      .singleWhere((arg) => arg.name.label.toSource() == defaultValueName,
+          orElse: () => null)
+      ?.expression
+      ?.unParenthesized
+      ?.toSource();
 }
 
 extension NamedAnnotations on List<Annotation> {
   Iterable<Annotation> withName(String name) =>
       where((annotation) => annotation.name.name == name);
-
-  // @freezed
-  // bool get containsFreezed => withName(freezedName).isNotEmpty;
-
-  // // @TapeClass
-  // Annotation get tapeClass => withName(tapeClassName).firstOrNull;
-  // bool get containsTapeClass => tapeClass != null;
-
-  // // @TapeField
-  // Annotation get tapeField => withName(tapeFieldName).firstOrNull;
-  // bool get containsTapeField => tapeField != null;
-
-  // // @doNotTape
-  // Annotation get doNotTape => withName(doNotTapeName).firstOrNull;
-  // bool get containsDoNotTape => doNotTape != null;
 }
 
 /// We want to be able to get the annotations of [ClassDeclaration]s,
