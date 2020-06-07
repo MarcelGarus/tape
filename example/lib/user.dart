@@ -6,9 +6,9 @@ part 'user.g.dart';
 class User<T, S> {
   User(this.name, this.favorite);
 
-  @TapeField(0, 'Hey')
+  @TapeField(0, defaultValue: TODO)
   final String name;
 
-  @TapeField(1, [])
+  @TapeField(1, defaultValue: TODO)
   final List<List<T>> favorite;
 }
