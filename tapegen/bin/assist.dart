@@ -149,18 +149,20 @@ Stream<Replacement> autocompleteAnnotations(
     /// annotation.
     final annotation = field.tapeFieldAnnotation;
     final fieldId = annotation.fieldId;
-    final defaultValue = annotation.defaultValue;
+    var defaultValue = annotation.defaultValue ??
+        field.freezedDefaultAnnotation.freezedDefaultValue ??
+        'TODO'; // Purposely creates an error in the file.
 
     if (fieldId == null) {
       yield Replacement.forNode(
         field.tapeFieldAnnotation,
-        '@TapeField($nextFieldId, defaultValue: ${defaultValue ?? 'TODO'})',
+        '@TapeField($nextFieldId, defaultValue: $defaultValue)',
       );
       nextFieldId++;
     } else {
       yield Replacement.forNode(
         field.tapeFieldAnnotation,
-        '@TapeField($fieldId, defaultValue: ${defaultValue ?? 'TODO'})',
+        '@TapeField($fieldId, defaultValue: $defaultValue)',
       );
     }
   }

@@ -1,7 +1,11 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dartx/dartx.dart';
 
+// Annotation names from the freezed package.
 const freezedName = 'freezed';
+const freezedDefaultName = 'Default';
+
+// Annotation names from the tape package.
 const tapeClassName = 'TapeClass';
 const tapeFieldName = 'TapeField';
 const doNotTapeName = 'doNotTape';
@@ -10,6 +14,12 @@ const defaultValueName = 'defaultValue';
 
 extension FancyAnnotation on Annotation {
   bool get hasArgument => (arguments?.length ?? 0) > 0;
+
+  // @Default(value)
+  String get freezedDefaultValue => (arguments?.arguments ?? <Expression>[])
+      .firstOrNull
+      ?.unParenthesized
+      ?.toSource();
 
   // @TapeClass(nextFieldId: 2)
   int get nextFieldId => (arguments?.arguments ?? [])
@@ -57,6 +67,11 @@ extension AnnotatedAstNode on AstNode {
 
   // @freezed
   bool get isFreezed => annotations.withName(freezedName).isNotEmpty;
+
+  // @Default(value).
+  Annotation get freezedDefaultAnnotation =>
+      annotations.withName(freezedDefaultName).firstOrNull;
+  bool get hasFreezedDefault => freezedDefaultAnnotation != null;
 
   // @TapeClass
   Annotation get tapeClassAnnotation =>
