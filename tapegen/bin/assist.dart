@@ -23,7 +23,9 @@ final assist = Command(
 
 Future<int> _assist(List<String> args) async {
   print('Running assist...');
-  await assistWithFile('lib/main.dart');
+  await for (final file in Directory('lib').list(recursive: true)) {
+    await assistWithFile(file.path);
+  }
 
   Watcher('.').events.listen((event) async {
     if (event.type == ChangeType.ADD || event.type == ChangeType.MODIFY) {
