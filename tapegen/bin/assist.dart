@@ -84,6 +84,7 @@ void assistWithDartFile(Task task, File file) {
             .where((constructor) => constructor.factoryKeyword != null)
             .where((c) => c.isTapeClass);
         for (final constructor in freezedTapeFactories) {
+          containsTapeAnnotations = true;
           yield* autocompleteAnnotations(
             constructor,
             constructor.parameters.parameters,
@@ -105,6 +106,7 @@ Stream<Replacement> autocompleteAnnotations(
   AstNode parentStructure,
   List<AstNode> fields, {
   bool insertNewlineBeforeNewFieldAnnotations = true,
+  void Function() onNewlyDiscovered,
 }) async* {
   /// A quick rundown of how this will work:
   /// - First, we find the [nextFieldId].
@@ -117,28 +119,34 @@ Stream<Replacement> autocompleteAnnotations(
   final tapeClassAnnotation = parentStructure.tapeClassAnnotation;
   assert(tapeClassAnnotation != null);
 
+  final isNew = !tapeClassAnnotation.toSource().contains('(');
+  // print('\nIs $parentStructure new? $isNew\n');
+
   /// Determine the next field id as
   /// - The `nextFieldId` parameter of the `@TapeClass` annotation.
   /// - If it doesn't have one, as the maximum field id of fields + 1.
   /// - If there are no `@TapeField`s with field ids, then default to 0.
   var nextFieldId = tapeClassAnnotation.nextFieldId;
   nextFieldId ??= fields
-      .map((field) {
-        final fieldId = field.tapeFieldAnnotation?.fieldId;
-        return fieldId == null ? null : (fieldId + 1);
-      })
+      .map((field) => field.tapeFieldAnnotation?.fieldId)
       .whereNotNull()
+      .map((fieldId) => fieldId + 1)
       .max();
   nextFieldId ??= 0;
 
   for (final field in fields.where((field) => !field.doNotTape)) {
+    final defaultValue = field.tapeFieldAnnotation?.defaultValue ??
+        field.freezedDefaultAnnotation?.freezedDefaultValue ??
+        'TODO'; // Purposely creates an error in the file.
+
     if (!field.isTapeField) {
       /// This field has no annotation although it is inside a `@TapeClass`.
       /// Add a `@TapeField` annotation.
       final prefix = insertNewlineBeforeNewFieldAnnotations ? '\n\n' : '';
       yield Replacement.insert(
         offset: field.offset,
-        replaceWith: '$prefix@TapeField($nextFieldId, defaultValue: TODO)\n',
+        replaceWith:
+            '$prefix@TapeField($nextFieldId, defaultValue: $defaultValue)\n',
       );
       nextFieldId++;
       continue;
@@ -149,19 +157,21 @@ Stream<Replacement> autocompleteAnnotations(
     /// annotation.
     final annotation = field.tapeFieldAnnotation;
     final fieldId = annotation.fieldId;
-    var defaultValue = annotation.defaultValue ??
-        field.freezedDefaultAnnotation.freezedDefaultValue ??
-        'TODO'; // Purposely creates an error in the file.
+    // print('Tape default is ${annotation.defaultValue}.');
+    // print('Freezed default annotation is ${field.freezedDefaultAnnotation}');
+    // print('Freezed default value is '
+    //     '${field.freezedDefaultAnnotation?.freezedDefaultValue}');
+    // print('Chosen default value is $defaultValue');
 
     if (fieldId == null) {
       yield Replacement.forNode(
-        field.tapeFieldAnnotation,
+        annotation,
         '@TapeField($nextFieldId, defaultValue: $defaultValue)',
       );
       nextFieldId++;
     } else {
       yield Replacement.forNode(
-        field.tapeFieldAnnotation,
+        annotation,
         '@TapeField($fieldId, defaultValue: $defaultValue)',
       );
     }

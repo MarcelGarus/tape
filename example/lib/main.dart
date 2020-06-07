@@ -30,10 +30,10 @@ abstract class Foo with _$Foo {
     @TapeField(1, defaultValue: TODO) String a,
   }) = First;
 
-  // @TapeClass
+  @TapeClass(nextFieldId: 2)
   factory Foo.second(
-    @Default(1234) int b,
-    @Default(true) bool c,
+    @TapeField(0, defaultValue: TODO) @Default(1234) int b,
+    @TapeField(1, defaultValue: TODO) @Default(true) bool c,
   ) = Second;
 }
 
