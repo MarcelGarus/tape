@@ -14,7 +14,7 @@ Future<int> _help(List<String> args) async {
   print('This help page will only focus on the command line tool.');
   print('');
   printTitle('Usage:');
-  print('  pub run tape <command> [<options>]');
+  print('  pub run tapegen <command> [<options>]');
   print('');
   printTitle('Commands:');
   for (final command in commands) {
@@ -24,7 +24,7 @@ Future<int> _help(List<String> args) async {
   printTitle('Global options:');
   print('  --simple-output   for output without colors or replacement');
   print('');
-  print('More help: tape help <command>'); // TODO: implement more help
+  print('More help: help <command>'); // TODO: implement more help
   print('Questions? Issues? https://github.com/marcelgarus/tape/issues/new');
 
   // print('Advanced functionality:');
