@@ -1,5 +1,5 @@
-import 'tapegen.dart';
-import 'console.dart';
+import '../console.dart';
+import '../tapegen.dart';
 
 final help = Command(
   names: ['help', 'h', '--help', '-h', '-?', '?'],
@@ -11,7 +11,7 @@ Future<int> _help(List<String> args) async {
   print('Welcome to tape!');
   print('For information about what tape is and how to use it, consult');
   print('https://pub.dev/packages/tape.');
-  print('This help page will only focus on the command line tool.');
+  print('This help page will only focus on the command line tool, tapegen.');
   print('');
   printTitle('Usage:');
   print('  pub run tapegen <command> [<options>]');

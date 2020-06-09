@@ -3,77 +3,152 @@ import 'dart:io';
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_style/dart_style.dart';
+import 'package:dartx/dartx.dart';
 import 'package:meta/meta.dart';
 
-import 'code_replacement.dart';
-import 'console.dart';
+import 'errors.dart';
 
-const tapeFilePath = 'lib/tape.dart';
-const mainFilePath = 'lib/main.dart';
+export 'dart:io';
 
-final tapeFile = File(tapeFilePath);
-final mainFile = File(mainFilePath);
+export 'package:dartx/dartx.dart';
+export 'package:dartx/dartx_io.dart';
 
-extension FileParser on Task {
-  Future<void> modifyFile({
-    @required File file,
-    @required String onFileNotFound,
-    @required String onCannotReadFromFile,
-    @required String onFileContainsSyntaxErrors,
-    @required String onNothingModified,
-    @required String onCannotFormatModifiedCode,
-    @required String onCannotWriteToFile,
-    @required String onDone,
-    @required Stream<Replacement> Function(CompilationUnit unit) modify,
-  }) async {
-    if (!file.existsSync()) {
-      error(onFileNotFound);
-      return;
-    }
+typedef VoidCallback = void Function();
 
-    updateSubtask('reading');
-    String code;
-    try {
-      code = await file.readAsString();
-    } catch (e) {
-      error(onCannotReadFromFile);
-      return;
-    }
+extension NullableCast on Object {
+  T as<T>() => this is T ? (this as T) : null;
+}
 
-    updateSubtask('parsing');
-    CompilationUnit compilationUnit;
-    try {
-      compilationUnit = parseString(content: code).unit;
-    } on ArgumentError {
-      error(onFileContainsSyntaxErrors);
-      return;
-    }
+extension SingleOrNull<T> on Iterable<T> {
+  T get singleOrNull => length == 1 ? single : null;
+}
 
-    updateSubtask('modifying code');
-    final replacements = await modify(compilationUnit).toList();
-    String newCode = code.applyAll(replacements);
-
-    if (code.length == newCode.length) {
-      success(onNothingModified);
-      return;
-    }
-
-    updateSubtask('formatting new code');
-    try {
-      newCode = DartFormatter().format(newCode);
-    } on FormatterException {
-      error(onCannotFormatModifiedCode);
-      return;
-    }
-
-    updateSubtask('saving new code');
-    try {
-      await file.writeAsString(newCode);
-    } catch (e) {
-      error(onCannotWriteToFile);
-      return;
-    }
-
-    success(onDone);
+extension StreamyAdd<T> on List<T> {
+  Future<void> addStream(Stream<T> stream) async {
+    await addAll(await stream.toList());
   }
+}
+
+extension SimplePath on File {
+  /// The [path], but without unnecessary leading './' or '.\'.
+  /// For example, "main.dart" instead of "./main.dart".
+  String get simplePath {
+    var path = this.path;
+    if (path.startsWith('./') || path.startsWith('.\\')) {
+      path = path.substring(2);
+    }
+    return path;
+  }
+}
+
+extension ReadCliFile on File {
+  Future<String> read() async {
+    if (!existsSync()) {
+      throw FileNotFoundError(this);
+    }
+
+    try {
+      return await readAsString();
+    } catch (_) {
+      throw CannotReadFromFileError(this);
+    }
+  }
+}
+
+extension WriteCliFile on File {
+  Future<void> write(String content) async {
+    try {
+      await writeAsString(content);
+    } catch (e) {
+      throw CannotWriteToFileError(this);
+    }
+  }
+}
+
+extension CompilableSourceCode on String {
+  CompilationUnit compile() {
+    try {
+      return parseString(content: this).unit;
+    } on ArgumentError {
+      throw FileContainsSyntaxErrors();
+    }
+  }
+}
+
+extension FormattableSourceCode on String {
+  String formatted() {
+    try {
+      return DartFormatter().format(this);
+    } on FormatterException {
+      throw CannotFormatCodeError();
+    }
+  }
+}
+
+class Replacement {
+  Replacement({
+    @required this.offset,
+    @required this.length,
+    @required this.replaceWith,
+  });
+  Replacement.forNode(AstNode node, this.replaceWith)
+      : offset = node.offset,
+        length = node.length;
+  Replacement.insert({@required this.offset, @required this.replaceWith})
+      : length = 0;
+
+  final int offset;
+  final int length;
+  final String replaceWith;
+}
+
+extension ModifyCode on String {
+  String applyAll(List<Replacement> replacements) {
+    // We now got a list of replacements. The order in which we apply them is
+    // important so that we don't mess up the offsets.
+    replacements = replacements.sortedBy((replacement) => replacement.offset);
+    var cursor = 0;
+    var buffer = StringBuffer();
+    for (final replacement in replacements) {
+      buffer.write(substring(cursor, replacement.offset));
+      buffer.write(replacement.replaceWith);
+      cursor = replacement.offset + replacement.length;
+    }
+    buffer.write(substring(cursor));
+    return buffer.toString();
+  }
+
+  String apply(Replacement replacement) => applyAll([replacement]);
+}
+
+extension ModifyableSourceCode on String {
+  String modify(
+    Iterable<Replacement> Function() modify, {
+    VoidCallback onNothingModified,
+  }) {
+    final replacements = modify().toList();
+    if (replacements.isEmpty) {
+      if (onNothingModified != null) {
+        onNothingModified();
+      }
+      return this;
+    } else {
+      return applyAll(replacements);
+    }
+  }
+}
+
+extension FunctionBodyGetter on FunctionDeclaration {
+  FunctionBody get body => functionExpression.body;
+  Block get bodyBlock => body?.as<BlockFunctionBody>()?.block;
+}
+
+extension FancyStatements on Iterable<Statement> {
+  Iterable<Expression> get allExpressions => whereType<ExpressionStatement>()
+      ?.map((statement) => statement.expression);
+}
+
+extension SpecificMethodInvocation on Iterable<MethodInvocation> {
+  Iterable<MethodInvocation> withName(String name) =>
+      where((invocation) => invocation.methodName.toSource() == name);
 }

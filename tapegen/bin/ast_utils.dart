@@ -1,6 +1,8 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dartx/dartx.dart';
 
+export 'package:analyzer/dart/ast/ast.dart';
+
 // Annotation names from the freezed package.
 const freezedName = 'freezed';
 const freezedDefaultName = 'Default';
@@ -87,4 +89,18 @@ extension AnnotatedAstNode on AstNode {
   Annotation get doNotTapeAnnotation =>
       annotations.withName(doNotTapeName).firstOrNull;
   bool get doNotTape => doNotTapeAnnotation != null;
+}
+
+extension FancyCompilationUnit on CompilationUnit {
+  Iterable<ImportDirective> get imports =>
+      directives?.whereType<ImportDirective>() ?? [];
+
+  Iterable<FunctionDeclaration> get topLevelFunctions =>
+      directives?.whereType<FunctionDeclaration>() ?? [];
+}
+
+extension MainFunctionFinder on Iterable<FunctionDeclaration> {
+  FunctionDeclaration withName(String name) =>
+      firstOrNullWhere((function) => function.name.toSource() == name);
+  FunctionDeclaration get mainFunction => withName('main');
 }

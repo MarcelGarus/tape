@@ -3,10 +3,10 @@ import 'dart:io';
 import 'package:dartx/dartx.dart';
 import 'package:meta/meta.dart';
 
-import 'assist.dart';
-import 'doctor.dart';
-import 'help.dart';
-import 'init.dart';
+import 'commands/assist.dart';
+import 'commands/doctor.dart';
+import 'commands/help.dart';
+import 'commands/init.dart';
 import 'errors.dart';
 import 'console.dart';
 

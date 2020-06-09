@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:console/console.dart';
+import 'package:meta/meta.dart';
 
 import 'errors.dart';
+import 'utils.dart';
 
 /// Whether the use rich output, e.g. ansi colors, emojis and loading spinners.
 // May be overridden in `tape.dart`.
@@ -16,7 +18,8 @@ void printTitle(String title) {
   Console.write('\n');
 }
 
-/// A task is a line with a status that can be updated.
+/// A task is a unit of work to be done that can have multiple subtasks and is
+/// always displayed as a line with a status that can be updated.
 ///
 /// Here's a possible sequence of how the line might be updated:
 /// […] Assisting with lib/main.dart...
@@ -25,30 +28,33 @@ void printTitle(String title) {
 /// […] Assisting with lib/main.dart, enhancing...
 /// […] Assisting with lib/main.dart, formatting...
 /// [✓] Assisted with lib/main.dart.
+/// or
+/// [X] Assisting with lib/main.dart failed: Couldn't open file.
 class Task {
-  Task(this.baseMessage) {
-    _message = '$baseMessage...';
+  Task({@required this.descriptionPresent, @required this.descriptionPast}) {
+    _message = '$descriptionPresent...';
     _print();
   }
 
-  var _status = Status.pending;
-  set status(Status status) {
+  final String descriptionPresent;
+  final String descriptionPast;
+
+  var _status = TaskStatus.pending;
+  set _updateStatus(TaskStatus status) {
     _status = status;
     _print();
   }
 
-  final baseMessage;
   String _message = '';
-
-  void update(String message) {
+  void _updateMessage(String message) {
     // Make the text at least as wide as the existing text, so we overwrite all
     // the characters.
     _message = message.padRight(_message.length);
     _print();
   }
 
-  void updateSubtask(String subtask) {
-    update('${baseMessage}, $subtask...');
+  void subtask(String subtask) {
+    _updateMessage('${descriptionPresent}, $subtask...');
   }
 
   void _print() {
@@ -62,18 +68,18 @@ class Task {
     String symbol;
     Color color;
     switch (_status) {
-      case Status.pending:
+      case TaskStatus.pending:
         symbol = '…';
         break;
-      case Status.success:
+      case TaskStatus.success:
         symbol = '✓';
         color = Color.GREEN;
         break;
-      case Status.warning:
+      case TaskStatus.warning:
         symbol = '!';
         color = Color.YELLOW;
         break;
-      case Status.error:
+      case TaskStatus.error:
         symbol = 'X';
         color = Color.RED;
         break;
@@ -87,18 +93,31 @@ class Task {
     Console.resetTextColor();
   }
 
-  void finish(Status status, String message) {
+  void _finish(TaskStatus status, String message) {
     _status = status;
-    update(message);
+    _updateMessage(message);
     Console.write('\n');
   }
 
-  void success(String message) => finish(Status.success, message);
-  void warning(String message) => finish(Status.warning, message);
-  void error(String message) => finish(Status.error, message);
+  void success([String alternateMessage]) =>
+      _finish(TaskStatus.success, alternateMessage ?? '$descriptionPast.');
+  void warning(String message) =>
+      _finish(TaskStatus.warning, '$descriptionPresent failed: $message');
+  void error(String reason) =>
+      _finish(TaskStatus.error, '$descriptionPresent failed: $reason');
+
+  /// Runs the given [callback] and catches and displays errors.
+  Future<T> run<T>(Future<T> Function() callback) async {
+    try {
+      return await callback();
+    } on CliError catch (e) {
+      error(e.toString());
+      return null;
+    }
+  }
 }
 
-enum Status {
+enum TaskStatus {
   pending,
   success,
   warning,
