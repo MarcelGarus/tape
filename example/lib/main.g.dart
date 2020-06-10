@@ -34,14 +34,14 @@ class AdapterForFirst extends TapeClassAdapter<_$First> {
   @override
   _$First fromFields(Fields fields) {
     return _$First(
-      a: fields.get<String>(0),
+      a: fields.get<String>(1, orDefault: TODO),
     );
   }
 
   @override
   Fields toFields(_$First object) {
     return Fields({
-      0: object.a,
+      1: object.a,
     });
   }
 }
@@ -52,8 +52,8 @@ class AdapterForSecond extends TapeClassAdapter<_$Second> {
   @override
   _$Second fromFields(Fields fields) {
     return _$Second(
-      fields.get<int>(0),
-      fields.get<bool>(1),
+      fields.get<int>(0, orDefault: TODO),
+      fields.get<bool>(1, orDefault: TODO),
     );
   }
 

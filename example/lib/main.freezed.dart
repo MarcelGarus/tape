@@ -7,18 +7,21 @@ part of 'main.dart';
 // FreezedGenerator
 // **************************************************************************
 
+part 'main.freezed.g.dart';
+
 T _$identity<T>(T value) => value;
 
 class _$FooTearOff {
   const _$FooTearOff();
 
-  First first({@TapeField(0) String a = 'sample'}) {
+  First first({@TapeField(1, defaultValue: TODO) String a}) {
     return First(
       a: a,
     );
   }
 
-  Second second(@TapeField(0) int b, @TapeField(1) bool c) {
+  Second second(@TapeField(0, defaultValue: TODO) int b,
+      @TapeField(1, defaultValue: TODO) bool c) {
     return Second(
       b,
       c,
@@ -32,13 +35,16 @@ const $Foo = _$FooTearOff();
 mixin _$Foo {
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result first(@TapeField(0) String a),
-    @required Result second(@TapeField(0) int b, @TapeField(1) bool c),
+    @required Result first(@TapeField(1, defaultValue: TODO) String a),
+    @required
+        Result second(@TapeField(0, defaultValue: TODO) int b,
+            @TapeField(1, defaultValue: TODO) bool c),
   });
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result first(@TapeField(0) String a),
-    Result second(@TapeField(0) int b, @TapeField(1) bool c),
+    Result first(@TapeField(1, defaultValue: TODO) String a),
+    Result second(@TapeField(0, defaultValue: TODO) int b,
+        @TapeField(1, defaultValue: TODO) bool c),
     @required Result orElse(),
   });
   @optionalTypeArgs
@@ -70,7 +76,7 @@ class _$FooCopyWithImpl<$Res> implements $FooCopyWith<$Res> {
 abstract class $FirstCopyWith<$Res> {
   factory $FirstCopyWith(First value, $Res Function(First) then) =
       _$FirstCopyWithImpl<$Res>;
-  $Res call({@TapeField(0) String a});
+  $Res call({@TapeField(1, defaultValue: TODO) String a});
 }
 
 class _$FirstCopyWithImpl<$Res> extends _$FooCopyWithImpl<$Res>
@@ -93,11 +99,10 @@ class _$FirstCopyWithImpl<$Res> extends _$FooCopyWithImpl<$Res>
 
 @TapeClass(nextFieldId: 1)
 class _$First implements First {
-  _$First({@TapeField(0) this.a = 'sample'}) : assert(a != null);
+  _$First({@TapeField(1, defaultValue: TODO) this.a});
 
-  @JsonKey(defaultValue: 'sample')
   @override
-  @TapeField(0)
+  @TapeField(1, defaultValue: TODO)
   final String a;
 
   @override
@@ -124,8 +129,10 @@ class _$First implements First {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result first(@TapeField(0) String a),
-    @required Result second(@TapeField(0) int b, @TapeField(1) bool c),
+    @required Result first(@TapeField(1, defaultValue: TODO) String a),
+    @required
+        Result second(@TapeField(0, defaultValue: TODO) int b,
+            @TapeField(1, defaultValue: TODO) bool c),
   }) {
     assert(first != null);
     assert(second != null);
@@ -135,8 +142,9 @@ class _$First implements First {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result first(@TapeField(0) String a),
-    Result second(@TapeField(0) int b, @TapeField(1) bool c),
+    Result first(@TapeField(1, defaultValue: TODO) String a),
+    Result second(@TapeField(0, defaultValue: TODO) int b,
+        @TapeField(1, defaultValue: TODO) bool c),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -173,9 +181,9 @@ class _$First implements First {
 }
 
 abstract class First implements Foo {
-  factory First({@TapeField(0) String a}) = _$First;
+  factory First({@TapeField(1, defaultValue: TODO) String a}) = _$First;
 
-  @TapeField(0)
+  @TapeField(1, defaultValue: TODO)
   String get a;
   $FirstCopyWith<First> get copyWith;
 }
@@ -183,7 +191,9 @@ abstract class First implements Foo {
 abstract class $SecondCopyWith<$Res> {
   factory $SecondCopyWith(Second value, $Res Function(Second) then) =
       _$SecondCopyWithImpl<$Res>;
-  $Res call({@TapeField(0) int b, @TapeField(1) bool c});
+  $Res call(
+      {@TapeField(0, defaultValue: TODO) int b,
+      @TapeField(1, defaultValue: TODO) bool c});
 }
 
 class _$SecondCopyWithImpl<$Res> extends _$FooCopyWithImpl<$Res>
@@ -208,15 +218,16 @@ class _$SecondCopyWithImpl<$Res> extends _$FooCopyWithImpl<$Res>
 
 @TapeClass(nextFieldId: 2)
 class _$Second implements Second {
-  _$Second(@TapeField(0) this.b, @TapeField(1) this.c)
+  _$Second(@TapeField(0, defaultValue: TODO) this.b,
+      @TapeField(1, defaultValue: TODO) this.c)
       : assert(b != null),
         assert(c != null);
 
   @override
-  @TapeField(0)
+  @TapeField(0, defaultValue: TODO)
   final int b;
   @override
-  @TapeField(1)
+  @TapeField(1, defaultValue: TODO)
   final bool c;
 
   @override
@@ -247,8 +258,10 @@ class _$Second implements Second {
   @override
   @optionalTypeArgs
   Result when<Result extends Object>({
-    @required Result first(@TapeField(0) String a),
-    @required Result second(@TapeField(0) int b, @TapeField(1) bool c),
+    @required Result first(@TapeField(1, defaultValue: TODO) String a),
+    @required
+        Result second(@TapeField(0, defaultValue: TODO) int b,
+            @TapeField(1, defaultValue: TODO) bool c),
   }) {
     assert(first != null);
     assert(second != null);
@@ -258,8 +271,9 @@ class _$Second implements Second {
   @override
   @optionalTypeArgs
   Result maybeWhen<Result extends Object>({
-    Result first(@TapeField(0) String a),
-    Result second(@TapeField(0) int b, @TapeField(1) bool c),
+    Result first(@TapeField(1, defaultValue: TODO) String a),
+    Result second(@TapeField(0, defaultValue: TODO) int b,
+        @TapeField(1, defaultValue: TODO) bool c),
     @required Result orElse(),
   }) {
     assert(orElse != null);
@@ -296,11 +310,12 @@ class _$Second implements Second {
 }
 
 abstract class Second implements Foo {
-  factory Second(@TapeField(0) int b, @TapeField(1) bool c) = _$Second;
+  factory Second(@TapeField(0, defaultValue: TODO) int b,
+      @TapeField(1, defaultValue: TODO) bool c) = _$Second;
 
-  @TapeField(0)
+  @TapeField(0, defaultValue: TODO)
   int get b;
-  @TapeField(1)
+  @TapeField(1, defaultValue: TODO)
   bool get c;
   $SecondCopyWith<Second> get copyWith;
 }
