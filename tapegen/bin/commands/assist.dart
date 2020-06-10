@@ -1,16 +1,11 @@
 import 'dart:io';
 
-import 'package:dart_style/dart_style.dart';
-import 'package:analyzer/dart/analysis/utilities.dart';
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:meta/meta.dart';
+import 'package:path/path.dart';
 import 'package:watcher/watcher.dart';
-import 'package:dartx/dartx.dart';
-import 'package:dartx/dartx_io.dart';
 
-import '../ast_utils.dart';
 import '../console.dart';
 import '../files/any_dart.dart';
+import '../files/tape_dart.dart';
 import '../utils.dart';
 import '../tapegen.dart';
 
@@ -46,7 +41,7 @@ Future<void> _assistWithFile(String path) async {
     task.success("Ignored $path, since it's not a Dart file.");
     return;
   }
-  if (path.allMatches('.').length > 1) {
+  if ('.'.allMatches(basename(path)).length > 1) {
     task.success("Ignored $path, since it's a generated file.");
     return;
   } else {
@@ -57,7 +52,10 @@ Future<void> _assistWithFile(String path) async {
   if (result == null) return;
 
   if (result.tapeTypes.isNotEmpty) {
-    // TODO: register adapters
-    print(result.tapeTypes);
+    final adapters = result.tapeTypes
+        .where((type) => !type.contains('<'))
+        .map((type) => AdapterToRegister('AdapterFor$type'))
+        .toList();
+    tapeDartFile.registerAdapters(adapters);
   }
 }
