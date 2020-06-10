@@ -14,11 +14,11 @@ extension TapeDartFile on File {
   Future<void> createAndInitialize() async {
     assert(this == tapeDartFile);
     final task = Task(
-      descriptionPresent: 'Creating $simplePath...',
-      descriptionPast: 'Created $simplePath.',
+      descriptionPresent: 'Creating $normalizedPath...',
+      descriptionPast: 'Created $normalizedPath.',
     );
     if (existsSync()) {
-      task.success('Tape file already exists at $simplePath.');
+      task.success('Tape file already exists at $normalizedPath.');
       return;
     }
 

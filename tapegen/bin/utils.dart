@@ -5,6 +5,7 @@ import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dart_style/dart_style.dart';
 import 'package:dartx/dartx.dart';
 import 'package:meta/meta.dart';
+import 'package:path/path.dart';
 
 import 'errors.dart';
 
@@ -29,16 +30,10 @@ extension StreamyAdd<T> on List<T> {
   }
 }
 
-extension SimplePath on File {
-  /// The [path], but without unnecessary leading './' or '.\'.
-  /// For example, "main.dart" instead of "./main.dart".
-  String get simplePath {
-    var path = this.path;
-    if (path.startsWith('./') || path.startsWith('.\\')) {
-      path = path.substring(2);
-    }
-    return path;
-  }
+extension NormalizedPath on File {
+  /// The [path], but without unnecessary './' or '.\' or '..'.
+  /// For example, "main.dart" instead of "./lib/../main.dart".
+  String get normalizedPath => normalize(path);
 }
 
 extension ReadCliFile on File {

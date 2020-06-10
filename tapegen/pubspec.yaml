@@ -18,6 +18,7 @@ dependencies:
   dartx: ^0.4.1
   args: ^1.6.0
   glob: any
+  path: any
   tape:
     path: ../tape
   yaml: ^2.2.1

@@ -41,7 +41,7 @@ class FileNotFoundError extends CliError {
 
   final File file;
 
-  String toString() => "Couldn't find ${file.simplePath}.";
+  String toString() => "Couldn't find ${file.normalizedPath}.";
 }
 
 class CannotReadFromFileError extends CliError {
@@ -49,7 +49,7 @@ class CannotReadFromFileError extends CliError {
 
   final File file;
 
-  String toString() => "Couldn't read from ${file.simplePath}.";
+  String toString() => "Couldn't read from ${file.normalizedPath}.";
 }
 
 class CannotWriteToFileError extends CliError {
@@ -57,7 +57,7 @@ class CannotWriteToFileError extends CliError {
 
   final File file;
 
-  String toString() => "Couldn't write to ${file.simplePath}.";
+  String toString() => "Couldn't write to ${file.normalizedPath}.";
 }
 
 class FileContainsSyntaxErrors extends CliError {
