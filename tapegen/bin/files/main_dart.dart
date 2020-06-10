@@ -52,8 +52,7 @@ extension MainDartFile on File {
     // TODO: Check if the call to initializeTape() is already made.
 
     // Insert `initializeTape();` at the beginning of the main method.
-    final mainFunctionBody =
-        unit.topLevelFunctions.mainFunction?.functionExpression?.body;
+    final mainFunctionBody = unit.topLevelFunctions.mainFunction?.body;
     if (mainFunctionBody != null) {
       if (mainFunctionBody is BlockFunctionBody) {
         // The main method has the form `void main() { some stuff }`. Insert the
