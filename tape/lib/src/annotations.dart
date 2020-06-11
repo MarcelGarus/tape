@@ -1,13 +1,13 @@
 import 'package:meta/meta.dart';
 
-/// Annotating the call to `Tape.registerAdapters` with `@TapeRegistry`
+/// Annotating the call to `Tape.registerAdapters` with `@TapeInitialization`
 /// indicates that `tapegen` should insert new tape adapters into the call.
-class TapeRegistry {
-  const TapeRegistry({@required this.nextId})
-      : assert(nextId != null),
-        assert(nextId >= 0);
+class TapeInitialization {
+  const TapeInitialization({@required this.nextTypeId})
+      : assert(nextTypeId != null),
+        assert(nextTypeId >= 0);
 
-  final int nextId;
+  final int nextTypeId;
 }
 
 /// Annotating a class with `@TapeClass` indicates that a [TapeAdapter] should
