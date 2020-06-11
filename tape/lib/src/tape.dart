@@ -17,7 +17,7 @@ class TapeApi {
     Map<int, TapeAdapter<dynamic>> adaptersById, {
     bool showWarningForSubtypes = true,
   }) =>
-      TapeRegistry.registerAdapters(adaptersById,
+      defaultTapeRegistry.registerAdapters(adaptersById,
           showWarningForSubtypes: showWarningForSubtypes);
 }
 

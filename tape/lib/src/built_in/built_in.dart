@@ -15,7 +15,7 @@ void registerBuiltInAdapters() {
 
 void _registerCoreAdapters() {
   // Commonly used nodes should be registered first for more efficiency.
-  TapeRegistry
+  defaultTapeRegistry
     ..registerVirtualNode<Iterable<dynamic>>()
     ..registerVirtualNode<num>()
     ..registerAdapters({
@@ -97,7 +97,7 @@ void _registerCoreAdapters() {
 }
 
 void _registerTypedDataAdapters() {
-  TapeRegistry.registerAdapters({
+  defaultTapeRegistry.registerAdapters({
     -70: AdapterForUint8List(),
   });
 }

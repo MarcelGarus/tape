@@ -19,7 +19,7 @@ abstract class TapeAdapter<T> {
     _TapeRegistryImpl registry,
     bool showWarningForSubtypes = true,
   }) {
-    (registry ?? TapeRegistry).registerAdapter<T>(typeId, this,
+    (registry ?? defaultTapeRegistry).registerAdapter<T>(typeId, this,
         showWarningForSubtypes: showWarningForSubtypes);
   }
 

@@ -24,9 +24,9 @@ class _AdaptersEncoder extends Converter<Object, Block> {
 
   @override
   Block convert(Object object) {
-    final adapter = TapeRegistry.adapterByValue(object);
+    final adapter = defaultTapeRegistry.adapterByValue(object);
     return TypedBlock(
-      typeId: TapeRegistry.idOfAdapter(adapter),
+      typeId: defaultTapeRegistry.idOfAdapter(adapter),
       child: adapter.toBlock(object),
     );
   }
@@ -37,7 +37,8 @@ class _AdaptersDecoder extends Converter<Block, Object> {
 
   @override
   Object convert(Block block) {
-    return TapeRegistry.adapterForId(block.as<TypedBlock>().typeId)
+    return defaultTapeRegistry
+        .adapterForId(block.as<TypedBlock>().typeId)
         .fromBlock(block);
   }
 }

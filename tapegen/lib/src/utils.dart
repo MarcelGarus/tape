@@ -2,18 +2,11 @@ import 'package:analyzer/dart/element/element.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:tape/tape.dart';
 
-final tapeTypeChecker = TypeChecker.fromRuntime(TapeType);
 final tapeClassChecker = TypeChecker.fromRuntime(TapeClass);
 final tapeFieldChecker = TypeChecker.fromRuntime(TapeField);
 final doNotTapeChecker = TypeChecker.fromRuntime(DoNotTapeImpl);
 
 extension IsTapeType on Element {
-  bool get isTapeType {
-    return tapeTypeChecker.hasAnnotationOf(this, throwOnUnresolved: false);
-  }
-
-  bool get isNotTapeType => !isTapeType;
-
   bool get isTapeClass {
     return tapeClassChecker.hasAnnotationOf(this, throwOnUnresolved: false);
   }

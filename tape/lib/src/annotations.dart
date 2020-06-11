@@ -1,15 +1,21 @@
 import 'package:meta/meta.dart';
 
-class TapeType {
-  const TapeType(this.trackingCode) : assert(trackingCode != null);
+/// Annotating the call to `Tape.registerAdapters` with `@TapeRegistry`
+/// indicates that `tapegen` should insert new tape adapters into the call.
+class TapeRegistry {
+  const TapeRegistry({@required this.nextId})
+      : assert(nextId != null),
+        assert(nextId >= 0);
 
-  final String trackingCode;
+  final int nextId;
 }
 
 /// Annotating a class with `@TapeClass` indicates that a [TapeAdapter] should
 /// get generated for it when running `tapegen`.
 class TapeClass {
-  const TapeClass({this.nextFieldId});
+  const TapeClass({@required this.nextFieldId})
+      : assert(nextFieldId != null),
+        assert(nextFieldId >= 0);
 
   /// The id of the next field to be inserted.
   final int nextFieldId;
@@ -29,6 +35,8 @@ class TapeField {
   final dynamic defaultValue;
 }
 
+/// Annotating a field of a `@TapeClass` with `@doNotTape` indicates that the
+/// generated shouldn't serialize it.
 const doNotTape = DoNotTapeImpl();
 
 class DoNotTapeImpl {

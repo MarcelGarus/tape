@@ -2,12 +2,12 @@ part of 'adapter.dart';
 
 void debugPrint(Object object) => print(object);
 
-/// The [TapeRegistry] holds references to all [TapeAdapter]s used to
+/// The [defaultTapeRegistry] holds references to all [TapeAdapter]s used to
 /// serialize and deserialize classes. It the registry makes it possible to
 /// - get an adapter for a specific object,
 /// - get an adapter by its id, and
 /// - get the id of an adapter.
-final TapeRegistry = _TapeRegistryImpl._();
+final defaultTapeRegistry = _TapeRegistryImpl._();
 
 class _TapeRegistryImpl {
   _TapeRegistryImpl._();
