@@ -96,7 +96,7 @@ extension FancyCompilationUnit on CompilationUnit {
       directives?.whereType<ImportDirective>() ?? [];
 
   Iterable<FunctionDeclaration> get topLevelFunctions =>
-      directives?.whereType<FunctionDeclaration>() ?? [];
+      declarations?.whereType<FunctionDeclaration>() ?? [];
 }
 
 extension MainFunctionFinder on Iterable<FunctionDeclaration> {
