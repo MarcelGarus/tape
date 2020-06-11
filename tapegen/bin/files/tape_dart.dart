@@ -20,18 +20,20 @@ class AdapterRegistration {
   final AdapterToRegister adapter;
 }
 
-extension _AdapterRegistration on CompilationUnit {
+extension _InitializationFunction on CompilationUnit {
+  FunctionDeclaration get initializationFunction => topLevelFunctions
+      ?.where((function) => function.isTapeInitialization)
+      ?.firstOrNull;
+}
+
+extension _RegistrationMap on FunctionDeclaration {
   SetOrMapLiteral get registrationMap {
-    return topLevelFunctions
-        .withName('initializeTape')
-        ?.bodyBlock
-        ?.statements
-        ?.allExpressions
-        ?.whereType<MethodInvocation>()
-        ?.withName('registerAdapters')
-        ?.map((invocation) => invocation.argumentList.arguments.singleOrNull)
-        ?.whereType<SetOrMapLiteral>()
-        ?.singleOrNull;
+    return bodyBlock.statements.allExpressions
+        .whereType<MethodInvocation>()
+        .withName('registerAdapters')
+        .map((invocation) => invocation.argumentList.arguments.singleOrNull)
+        .whereType<SetOrMapLiteral>()
+        .singleOrNull;
   }
 }
 
@@ -98,6 +100,7 @@ extension TapeDartFile on File {
         [
           "import 'package:tape/tape.dart';",
           "",
+          "@TapeInitialization(nextTypeId: 0)",
           "void initializeTape() {",
           "  // 📦 Register adapters from taped-packages.",
           "  //Tape",
@@ -123,33 +126,47 @@ extension TapeDartFile on File {
 
   Future<List<AdapterRegistration>> getRegisteredAdapters() async {
     final sourceCode = await read();
-    return sourceCode.compile().registrationMap.allEntries.adapterRegistrations;
+    return sourceCode
+        .compile()
+        .initializationFunction
+        .registrationMap
+        .allEntries
+        .adapterRegistrations;
   }
 
   Future<void> registerAdapters(List<AdapterToRegister> adapters) async {
     final sourceCode = await read();
     final unit = sourceCode.compile();
-    final map = unit.registrationMap;
+    final function = unit.initializationFunction;
+    final map = function?.registrationMap;
 
     if (map == null) {
       throw NoRegistrationMapError();
     }
 
-    final maxId = map.allEntries.adapterRegistrations
-        .map((registration) => registration.id)
-        .max();
-    var nextId = maxId == null ? 0 : (maxId + 1);
+    var nextTypeId = [
+      function.tapeInitializationAnnotation.nextTypeId,
+      map.allEntries.adapterRegistrations
+          .map((registration) => registration.id)
+          .map((id) => id + 1)
+          .max(),
+      0
+    ].withoutNulls().max();
 
     final offset = map.rightBracket.offset;
     final newCode = sourceCode.modify(() sync* {
       for (final adapter in adapters) {
-        print('Registering adapter $adapter');
         yield Replacement.insert(
           offset: offset,
-          replaceWith: '$nextId: ${adapter.name},',
+          replaceWith: '$nextTypeId: ${adapter.name},',
         );
-        nextId++;
+        nextTypeId++;
       }
+
+      yield Replacement.forNode(
+        function.tapeInitializationAnnotation,
+        '@TapeInitialization(nextTypeId: $nextTypeId)',
+      );
     });
 
     await write(newCode.formatted());
