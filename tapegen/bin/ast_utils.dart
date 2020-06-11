@@ -1,6 +1,8 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:dartx/dartx.dart';
 
+import 'utils.dart';
+
 export 'package:analyzer/dart/ast/ast.dart';
 
 // Annotation names from the freezed package.
@@ -8,6 +10,8 @@ const freezedName = 'freezed';
 const freezedDefaultName = 'Default';
 
 // Annotation names from the tape package.
+const tapeInitializationName = 'TapeInitialization';
+const nextTypeIdName = 'nextTypeId';
 const tapeClassName = 'TapeClass';
 const tapeFieldName = 'TapeField';
 const doNotTapeName = 'doNotTape';
@@ -23,11 +27,21 @@ extension FancyAnnotation on Annotation {
       ?.unParenthesized
       ?.toSource();
 
+  // @TapeInitialization(nextTypeId: 2)
+  int get nextTypeId => (arguments?.arguments ?? [])
+      .whereType<NamedExpression>()
+      .where((arg) => arg.name.label.toSource() == nextTypeIdName)
+      .singleOrNull
+      ?.expression
+      ?.unParenthesized
+      ?.toSource()
+      ?.toIntOrNull();
+
   // @TapeClass(nextFieldId: 2)
   int get nextFieldId => (arguments?.arguments ?? [])
       .whereType<NamedExpression>()
-      .singleWhere((arg) => arg.name.label.toSource() == nextFieldIdName,
-          orElse: () => null)
+      .where((arg) => arg.name.label.toSource() == nextFieldIdName)
+      .singleOrNull
       ?.expression
       ?.unParenthesized
       ?.toSource()
@@ -74,6 +88,11 @@ extension AnnotatedAstNode on AstNode {
   Annotation get freezedDefaultAnnotation =>
       annotations.withName(freezedDefaultName).firstOrNull;
   bool get hasFreezedDefault => freezedDefaultAnnotation != null;
+
+  // @TapeInitialization
+  Annotation get tapeInitializationAnnotation =>
+      annotations.withName(tapeInitializationName).firstOrNull;
+  bool get isTapeInitialization => tapeInitializationAnnotation != null;
 
   // @TapeClass
   Annotation get tapeClassAnnotation =>
