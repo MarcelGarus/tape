@@ -69,3 +69,15 @@ class FileContainsSyntaxErrors extends CliError {
 class CannotFormatCodeError extends CliError {
   CannotFormatCodeError() : super(7);
 }
+
+class UsedCollectionIfOrForError extends CliError {
+  UsedCollectionIfOrForError() : super(8);
+}
+
+class ComplicatedExpressionInMapError extends CliError {
+  ComplicatedExpressionInMapError() : super(8);
+}
+
+class NoRegistrationMapError extends CliError {
+  NoRegistrationMapError() : super(8);
+}
