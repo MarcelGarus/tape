@@ -1,13 +1,6 @@
-import 'dart:io';
-
-import 'package:analyzer/dart/ast/ast.dart';
-import 'package:dartx/dartx.dart';
-
-import '../console.dart';
 import '../files/main_dart.dart';
 import '../files/tape_dart.dart';
 import '../tapegen.dart';
-import '../utils.dart';
 
 /// Helps the developers integrate tape into their app.
 final init = Command(
