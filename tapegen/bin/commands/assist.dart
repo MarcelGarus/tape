@@ -54,7 +54,7 @@ Future<void> _assistWithFile(String path) async {
   if (result.tapeTypes.isNotEmpty) {
     final adapters = result.tapeTypes
         .where((type) => !type.contains('<'))
-        .map((type) => AdapterToRegister('AdapterFor$type'))
+        .map((type) => AdapterToRegister('AdapterFor$type()'))
         .toList();
     tapeDartFile.registerAdapters(adapters);
   }
