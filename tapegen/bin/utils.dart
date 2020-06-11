@@ -22,6 +22,7 @@ extension NullableCast on Object {
 
 extension SingleOrNull<T> on Iterable<T> {
   T get singleOrNull => length == 1 ? single : null;
+  Iterable<T> withoutNulls() => where((val) => val != null);
 }
 
 extension StreamyAdd<T> on List<T> {
