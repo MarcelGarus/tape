@@ -2,11 +2,12 @@ import 'dart:convert';
 
 import '../blocks/blocks.dart';
 import 'registry.dart';
-import 'errors.dart';
+import 'utils.dart';
 
 export 'adapter.dart';
 export 'errors.dart';
 export 'registry.dart';
+export 'utils.dart';
 
 const adapters = _AdaptersCodec();
 
@@ -42,9 +43,4 @@ class _AdaptersDecoder extends Converter<Block, Object> {
         .adapterForId(block.as<TypedBlock>().typeId)
         .fromBlock(block);
   }
-}
-
-extension BlockCast on Block {
-  B as<B extends Block>() =>
-      this is B ? this : (throw UnexpectedBlockError(this, B));
 }
