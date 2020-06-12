@@ -1,5 +1,6 @@
 import 'package:tape/tape.dart';
 
+@TapeInitialization(nextTypeId: 12)
 void initializeTape() {
   // 📦 Register adapters from taped-packages.
   //Tape
