@@ -2,7 +2,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
 import 'package:tape/tape.dart';
 import 'tape.dart';
-import 'tape.dart';
 
 part 'main.g.dart';
 part 'main.freezed.dart';
