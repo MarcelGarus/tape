@@ -1,4 +1,9 @@
-part of 'adapter.dart';
+import 'dart:math';
+
+import 'package:meta/meta.dart';
+
+import 'adapter.dart';
+import 'errors.dart';
 
 void debugPrint(Object object) => print(object);
 
@@ -7,10 +12,10 @@ void debugPrint(Object object) => print(object);
 /// - get an adapter for a specific object,
 /// - get an adapter by its id, and
 /// - get the id of an adapter.
-final defaultTapeRegistry = _TapeRegistryImpl._();
+final defaultTapeRegistry = TapeRegistry();
 
-class _TapeRegistryImpl {
-  _TapeRegistryImpl._();
+class TapeRegistry {
+  TapeRegistry();
 
   // For greater efficiency, there are several data structures that hold
   // references to adapters. These allow us to:
@@ -96,8 +101,11 @@ class _TapeRegistryImpl {
     // call that method, because otherwise we would lose type information (the
     // static type of the adapters inside the map is `TypeAdapter<dynamic>`).
     adaptersById.forEach((typeId, adapter) {
-      adapter._registerForId(typeId,
-          registry: this, showWarningForSubtypes: showWarningForSubtypes);
+      adapter.registerForId(
+        typeId: typeId,
+        registry: this,
+        showWarningForSubtypes: showWarningForSubtypes,
+      );
     });
   }
 

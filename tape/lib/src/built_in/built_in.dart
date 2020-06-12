@@ -1,4 +1,4 @@
-import '../adapters/adapters.dart';
+import '../adapters/registry.dart';
 
 import 'core.dart';
 import 'typed_data.dart';
@@ -8,12 +8,12 @@ export 'custom.dart';
 export 'granular_types.dart';
 export 'typed_data.dart';
 
-void registerBuiltInAdapters() {
-  _registerCoreAdapters(); // dart:core adapters
-  _registerTypedDataAdapters(); // dart:typed_data adapters
+void registerBuiltInAdapters(TapeRegistry registry) {
+  _registerCoreAdapters(registry); // dart:core adapters
+  _registerTypedDataAdapters(registry); // dart:typed_data adapters
 }
 
-void _registerCoreAdapters() {
+void _registerCoreAdapters(TapeRegistry registry) {
   // Commonly used nodes should be registered first for more efficiency.
   defaultTapeRegistry
     ..registerVirtualNode<Iterable<dynamic>>()
@@ -96,7 +96,7 @@ void _registerCoreAdapters() {
     });
 }
 
-void _registerTypedDataAdapters() {
+void _registerTypedDataAdapters(TapeRegistry registry) {
   defaultTapeRegistry.registerAdapters({
     -70: AdapterForUint8List(),
   });

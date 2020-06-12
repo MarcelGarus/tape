@@ -14,9 +14,9 @@ abstract class TapeAdapter<T> {
   Type get type => T;
 
   /// Registers this adapter for the given [typeId] on the given [registry].
-  void _registerForId(
-    int typeId, {
-    _TapeRegistryImpl registry,
+  void registerForId({
+    @required int typeId,
+    @required TapeRegistry registry,
     bool showWarningForSubtypes = true,
   }) {
     (registry ?? defaultTapeRegistry).registerAdapter<T>(typeId, this,
