@@ -1,10 +1,16 @@
+/// Adapters for types from `dart:typed_data`.
+
 import 'dart:typed_data';
 
-import 'package:tape/src/blocks/blocks.dart';
+import '../../package.dart';
 
-import '../adapters/adapters.dart';
-
-/// Adapters for types from `dart:typed_data`.
+extension DartTypedDataTaped on TapeApi {
+  void registerDartTypedDataAdapters() {
+    registerAdapters({
+      -80: AdapterForUint8List(),
+    });
+  }
+}
 
 class AdapterForUint8List extends TapeAdapter<Uint8List> {
   const AdapterForUint8List();

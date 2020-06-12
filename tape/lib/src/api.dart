@@ -1,9 +1,8 @@
 import 'adapters/adapters.dart';
-import 'built_in/built_in.dart';
 
 /// Adapters get registered here and packages provide initializing extension
 /// methods on this object.
-final Tape = TapeApi._default();
+final Tape = TapeApi._(defaultTapeRegistry);
 
 /// Next to the [tape] codec, the [TapeApi] is the main way to interact with
 /// tape. For now, that's only registering adapters.
@@ -14,19 +13,16 @@ final Tape = TapeApi._default();
 /// of which is exported in `tape.dart`, and the other in `package.dart`,
 /// respectively.
 class TapeApi {
-  TapeApi._default() : this._withRegistry(defaultTapeRegistry);
-  TapeApi._withRegistry(this._registry) {
-    registerBuiltInAdapters(_registry);
-  }
+  TapeApi._(this._registry);
 
   final TapeRegistry _registry;
 
-  TapeApi get instance => TapeApi._withRegistry(TapeRegistry());
+  TapeApi get instance => TapeApi._(TapeRegistry());
 
   void registerVirtualNode<T>() => _registry.registerVirtualNode<T>();
 }
 
-extension RegisterAdapters on TapeApi {
+extension RegisterUserAdapters on TapeApi {
   void registerAdapters(
     Map<int, TapeAdapter<dynamic>> adaptersById, {
     bool showWarningForSubtypes = true,

@@ -26,7 +26,5 @@ Type id reservations are done in batches of 10. The x stands for any digit.
 | -5x      | `dart:core`       |
 | -6x      | `dart:core`       |
 | -7x      | `dart:core`       |
-| -8x      | `dart:core`       |
-| -9x      | `dart:core`       |
-| -10x     | `dart:core`       |
-| -11x     | `dart:typed_data` |
+| -8x      | `dart:typed_data` |
+| -9x      | `dart:math`       |
