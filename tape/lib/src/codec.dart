@@ -2,24 +2,6 @@ import 'dart:convert';
 
 import 'adapters/adapters.dart';
 import 'blocks/blocks.dart';
-import 'built_in/built_in.dart';
-
-/// Adapters get registered here and packages provide initializing extension
-/// methods on this object.
-final Tape = TapeApi._();
-
-class TapeApi {
-  TapeApi._() {
-    registerBuiltInAdapters();
-  }
-
-  void registerAdapters(
-    Map<int, TapeAdapter<dynamic>> adaptersById, {
-    bool showWarningForSubtypes = true,
-  }) =>
-      defaultTapeRegistry.registerAdapters(adaptersById,
-          showWarningForSubtypes: showWarningForSubtypes);
-}
 
 const tape = _TapeCodec();
 
