@@ -1,11 +1,7 @@
-import 'dart:math';
-
 import 'package:meta/meta.dart';
 
 import '../blocks/blocks.dart';
-import 'errors.dart';
-
-part 'registry.dart';
+import 'registry.dart';
 
 @immutable
 abstract class TapeAdapter<T> {
