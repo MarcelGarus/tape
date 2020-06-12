@@ -1,4 +1,4 @@
-# Table of reserved type ids
+# The Holy Table of Type IDs
 
 If you are creating a Dart package that needs to register custom type adapters and that's intended to be published on [pub.dev](https://pub.dev), don't hesitate to file a pull request adding type ids to this table.
 
