@@ -9,11 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  tape:
-    path: ../../tape
+  tape: ^0.0.3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  tapegen:
-    path: ../../tapegen
+  tapegen: ^0.0.2

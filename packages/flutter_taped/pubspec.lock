@@ -397,17 +397,17 @@ packages:
   tape:
     dependency: "direct main"
     description:
-      path: "../../tape"
-      relative: true
-    source: path
-    version: "0.0.2"
+      name: tape
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.3"
   tapegen:
     dependency: "direct dev"
     description:
-      path: "../../tapegen"
-      relative: true
-    source: path
-    version: "0.0.1"
+      name: tapegen
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   term_glyph:
     dependency: transitive
     description:
