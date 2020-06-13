@@ -133,3 +133,9 @@ extension ModifyableSourceCode on String {
     }
   }
 }
+
+void makeSureNoMoreArguments(List<String> args) {
+  if (args.isNotEmpty) {
+    throw UnexpectedArgumentError(args.first);
+  }
+}

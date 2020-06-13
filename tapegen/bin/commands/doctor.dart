@@ -4,11 +4,14 @@ import 'package:pubspec_parse/pubspec_parse.dart';
 
 import '../console.dart';
 import '../tapegen.dart';
+import '../utils.dart';
 
 final doctor = Command(
   names: ['doctor', 'doc', 'dr'],
   description: 'information about the usage of tape in your project',
   action: (List<String> args) async {
+    makeSureNoMoreArguments(args);
+
     print('Running tape doctor. Allons-y!'); // Doctor Who reference.
     print('');
 

@@ -36,6 +36,12 @@ class UnknownCommandError extends CliError {
   }
 }
 
+class UnexpectedArgumentError extends CliError {
+  UnexpectedArgumentError(this.argument) : super(11);
+
+  final String argument;
+}
+
 class FileNotFoundError extends CliError {
   FileNotFoundError(this.file) : super(3);
 
@@ -75,9 +81,9 @@ class UsedCollectionIfOrForError extends CliError {
 }
 
 class ComplicatedExpressionInMapError extends CliError {
-  ComplicatedExpressionInMapError() : super(8);
+  ComplicatedExpressionInMapError() : super(9);
 }
 
 class NoRegistrationMapError extends CliError {
-  NoRegistrationMapError() : super(8);
+  NoRegistrationMapError() : super(10);
 }

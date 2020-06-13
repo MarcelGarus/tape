@@ -14,6 +14,8 @@ final assist = Command(
   names: ['assist'],
   description: 'assists you while writing code',
   action: (List<String> args) async {
+    makeSureNoMoreArguments(args);
+
     print('Running assist...');
     await for (final file in Directory('lib').list(recursive: true)) {
       await _assistWithFile(file.path);

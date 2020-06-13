@@ -1,13 +1,19 @@
 import '../console.dart';
 import '../tapegen.dart';
+import '../utils.dart';
 
 final help = Command(
   names: ['help', 'h', '--help', '-h', '-?', '?'],
   description: 'displays help',
-  action: _help,
+  action: (args) async {
+    makeSureNoMoreArguments(args);
+
+    _printHelp();
+    return 0;
+  },
 );
 
-Future<int> _help(List<String> args) async {
+void _printHelp() async {
   print('Welcome to tape!');
   print('For information about what tape is and how to use it, consult');
   print('https://pub.dev/packages/tape.');
@@ -41,5 +47,4 @@ Future<int> _help(List<String> args) async {
   // print('');
   // print('EXAMPLES');
   // print('  tape ');
-  return 0;
 }
