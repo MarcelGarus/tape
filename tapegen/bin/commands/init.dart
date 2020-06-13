@@ -9,6 +9,10 @@ final init = Command(
   action: (List<String> args) async {
     await tapeDartFile.createAndInitialize();
     await mainDartFile.addCallToInitializeTape();
+    // await tapeDartFile.registerAdapters([
+    //   AdapterToRegister('AdapterForFruit()'),
+    //   AdapterToRegister('AdapterForFoo()'),
+    // ]);
 
     return 0;
   },
