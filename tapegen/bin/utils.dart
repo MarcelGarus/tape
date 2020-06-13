@@ -133,18 +133,3 @@ extension ModifyableSourceCode on String {
     }
   }
 }
-
-extension FunctionBodyGetter on FunctionDeclaration {
-  FunctionBody get body => functionExpression.body;
-  Block get bodyBlock => body?.as<BlockFunctionBody>()?.block;
-}
-
-extension FancyStatements on Iterable<Statement> {
-  Iterable<Expression> get allExpressions => whereType<ExpressionStatement>()
-      ?.map((statement) => statement.expression);
-}
-
-extension SpecificMethodInvocation on Iterable<MethodInvocation> {
-  Iterable<MethodInvocation> withName(String name) =>
-      where((invocation) => invocation.methodName.toSource() == name);
-}
