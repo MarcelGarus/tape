@@ -28,3 +28,4 @@ Type id reservations are done in batches of 10. The x stands for any digit.
 | -7x      | `dart:core`       |
 | -8x      | `dart:typed_data` |
 | -9x      | `dart:math`       |
+| -10x     | `flutter`         |
