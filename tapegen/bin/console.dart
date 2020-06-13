@@ -18,6 +18,11 @@ void printTitle(String title) {
   Console.write('\n');
 }
 
+Future<bool> confirm(String question) async {
+  final input = await readInput('$question (Y/n): ');
+  return {'', 'y', 'yes'}.contains(input.toLowerCase());
+}
+
 /// A task is a unit of work to be done that can have multiple subtasks and is
 /// always displayed as a line with a status that can be updated.
 ///
