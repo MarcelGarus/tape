@@ -62,5 +62,6 @@ String _getDependencyInfos(Dependency dependency) {
     return dependency.version.toString();
   }
 
-  assert(false, 'Unknown dependency type ${dependency.runtimeType}');
+  // TODO:
+  throw 'Unknown dependency type ${dependency.runtimeType}';
 }
