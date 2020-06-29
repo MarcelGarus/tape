@@ -45,10 +45,6 @@ class Task {
   final String descriptionPast;
 
   var _status = TaskStatus.pending;
-  set _updateStatus(TaskStatus status) {
-    _status = status;
-    _print();
-  }
 
   String _message = '';
   void _updateMessage(String message) {
