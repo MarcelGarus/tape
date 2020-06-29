@@ -11,10 +11,12 @@ class AssistResult {
 
 extension AnyDartFile on File {
   /// Assists with a single dart file.
-  Future<AssistResult> assist(Task task) async {
-    final content = await read();
-    final unit = content.compile();
+  Future<AssistResult> assist([Task task]) async {
+    final content = await read(task);
+    final unit = content.compile(task);
     final tapeTypes = <String>[];
+
+    task?.subtask('autocompleting');
     final newContent = content.modify(() sync* {
       final classes = unit.declarations?.whereType<ClassDeclaration>() ?? [];
 
@@ -45,7 +47,7 @@ extension AnyDartFile on File {
         yield* _ensurePartOfDirectiveExists(unit);
       }
     });
-    write(newContent);
+    write(newContent, task);
 
     task.success();
     return AssistResult(tapeTypes);
