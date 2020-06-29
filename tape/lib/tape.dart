@@ -6,6 +6,6 @@ export 'dart:typed_data';
 export 'src/adapters/adapters.dart' show adapters;
 export 'src/annotations.dart';
 export 'src/api.dart' hide RegisterPackageAdapters;
-export 'src/built_in/built_in.dart' hide registerBuiltInAdapters;
+export 'src/built_in/built_in.dart';
 export 'src/codec.dart';
 export 'src/errors.dart';
