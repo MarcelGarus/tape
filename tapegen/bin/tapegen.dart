@@ -70,6 +70,7 @@ Future<void> _dispatch(List<String> args) async {
       !(args.remove('--simple-output') || args.remove('--no-color'));
 
   if (command != null) {
+    args.removeAt(0); // Remove the command itself.
     exitCode = await command.action(args);
     return;
   }
