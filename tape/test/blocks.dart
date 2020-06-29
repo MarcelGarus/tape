@@ -21,13 +21,16 @@ class CustomBlock implements Block {}
 void main() {
   group('BytesBlock', () {
     test('encodes and decodes short byte sequence correctly', () {
-      expectEncoding(BytesBlock([1, 2, 3]), [2, 0, 0, 0, 3, 1, 2, 3]);
+      expectEncoding(
+        BytesBlock([1, 2, 3]),
+        [2, 0, 0, 0, 0, 0, 0, 0, 3, 1, 2, 3],
+      );
     });
 
     test('encodes and decodes longer bytes sequence correctly', () {
       expectEncoding(
         BytesBlock([1, 2, 3, 0, 0, 6, 7, 8, 9]),
-        [2, 0, 0, 0, 9, 1, 2, 3, 0, 0, 6, 7, 8, 9],
+        [2, 0, 0, 0, 0, 0, 0, 0, 9, 1, 2, 3, 0, 0, 6, 7, 8, 9],
       );
     });
 
@@ -223,7 +226,12 @@ void main() {
     test('encodes and decodes correctly', () {
       expectEncoding(
         FieldsBlock({0: Uint8Block(123), 1: Uint8Block(5), 9: Uint8Block(3)}),
-        [1, 0, 0, 0, 3, 0, 0, 0, 0, 5, 123, 0, 0, 0, 1, 5, 5, 0, 0, 0, 9, 5, 3],
+        [
+          ...[1, 0, 0, 0, 0, 0, 0, 0, 3], // Number of fields.
+          ...[0, 0, 0, 0, 0, 0, 0, 0, 5, 123],
+          ...[0, 0, 0, 0, 0, 0, 0, 1, 5, 5],
+          ...[0, 0, 0, 0, 0, 0, 0, 9, 5, 3]
+        ],
       );
     });
 
@@ -236,15 +244,18 @@ void main() {
 
   group('SafeBlock', () {
     test('encodes and decodes properly', () {
-      expectEncoding(SafeBlock(child: Uint8Block(42)), [13, 0, 0, 0, 2, 5, 42]);
+      expectEncoding(
+        SafeBlock(child: Uint8Block(42)),
+        [13, 0, 0, 0, 0, 0, 0, 0, 2, 5, 42],
+      );
     });
 
     test('skips unparseable blocks when decoded', () {
       // ListBlock([Uint8Block(42), SafeBlock(garbage), Uint8Block(3)])
       final bytes = [
-        ...[3, 0, 0, 0, 3], // List header
+        ...[3, 0, 0, 0, 0, 0, 0, 0, 3], // List header
         ...[5, 42], // First element
-        ...[13, 0, 0, 0, 4, 255, 255, 255, 255], // SafeBlock with garbage
+        ...[13, 0, 0, 0, 0, 0, 0, 0, 2, 255, 255], // SafeBlock with garbage
         ...[5, 3] // Third element
       ];
       final retrieved = blocks.decode(bytes);
@@ -281,13 +292,15 @@ void main() {
 
   test('Throws an exception if a SafeBlock has a length of zero', () {
     expectThrows<SafeBlockWithZeroLengthException>(
-      () => blocks.decode([13, 0, 0, 0, 0]),
+      () => blocks.decode([13, 0, 0, 0, 0, 0, 0, 0, 0]),
     );
   });
 
   test("Throws an exception if a SafeBlock length doesn't match", () {
     expectThrows<SafeBlockLengthDoesNotMatchException>(
-      () => blocks.decode([13, 0, 0, 0, 1, 5, 3]),
+      () => blocks.decode([13, 0, 0, 0, 0, 0, 0, 0, 1, 5, 3]),
     );
   });
+
+  // TODO: Test encoding ending abruptly.
 }
