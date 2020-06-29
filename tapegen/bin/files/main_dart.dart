@@ -8,6 +8,7 @@ final mainDartFile = File('lib/main.dart');
 extension MainDartFile on File {
   Future<void> addCallToInitializeTape() async {
     assert(this == mainDartFile);
+
     final task = Task(
       descriptionPresent: 'Adding call to initializeTape() in $path',
       descriptionPast: 'Added call to initializeTape() in $path',
@@ -19,14 +20,14 @@ extension MainDartFile on File {
         yield* _addDependencyToTapeDartFile(unit);
         yield* _addCallInMainMethod(unit);
       }, onNothingModified: () {
-        task.success("You already call initializeTape() in your main method "
-            "in $path.");
+        task.success('You already call initializeTape() in your main method '
+            'in $path.');
       });
       mainDartFile.write(content);
       task.success();
     } on CliError catch (e) {
       task.error("$e. You'll have to manually insert the call to "
-          "initializeTape() at the beginning of the main method.");
+          'initializeTape() at the beginning of the main method.');
     }
   }
 
