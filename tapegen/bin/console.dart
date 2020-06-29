@@ -20,7 +20,7 @@ void printTitle(String title) {
 
 Future<bool> confirm(String question) async {
   final input = await readInput('$question (Y/n): ');
-  return {'', 'y', 'yes'}.contains(input.toLowerCase());
+  return {'', 'y', 'yes'}.contains(input.trim().toLowerCase());
 }
 
 /// A task is a unit of work to be done that can have multiple subtasks and is
