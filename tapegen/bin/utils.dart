@@ -7,6 +7,7 @@ import 'package:dartx/dartx.dart';
 import 'package:meta/meta.dart';
 import 'package:path/path.dart';
 
+import 'console.dart';
 import 'errors.dart';
 
 export 'dart:io';
@@ -38,7 +39,8 @@ extension NormalizedPath on File {
 }
 
 extension ReadCliFile on File {
-  Future<String> read() async {
+  Future<String> read([Task task]) async {
+    task?.subtask('reading');
     if (!existsSync()) {
       throw FileNotFoundError(this);
     }
@@ -52,7 +54,8 @@ extension ReadCliFile on File {
 }
 
 extension WriteCliFile on File {
-  Future<void> write(String content) async {
+  Future<void> write(String content, [Task task]) async {
+    task?.subtask('writing to file');
     try {
       await writeAsString(content);
     } catch (e) {
@@ -62,7 +65,8 @@ extension WriteCliFile on File {
 }
 
 extension CompilableSourceCode on String {
-  CompilationUnit compile() {
+  CompilationUnit compile([Task task]) {
+    task?.subtask('compiling');
     try {
       return parseString(content: this).unit;
     } on ArgumentError {
