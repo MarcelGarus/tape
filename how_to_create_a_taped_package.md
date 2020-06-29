@@ -31,7 +31,7 @@ Navigate into the project folder and generate the taped-package boilerplate:
 
 ```bash
 cd sample_taped
-pub run tapegen package init // TODO: make this work
+pub run tapegen init --package // TODO: make this work
 ```
 
 Now, it's time to actually write adapters!

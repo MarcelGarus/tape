@@ -1,5 +1,5 @@
 name: flutter_taped
-description: A new Flutter package project.
+description: A package containing tape adapters for flutter. Intended to be used with flutter and tape.
 version: 0.0.1
 homepage: https://github.com/marcelgarus/tape
 
@@ -9,9 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  tape: ^0.0.3
+  tape:
+    path: ../../tape
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  tapegen: ^0.0.2
+  tapegen:
+    path: ../../tapegen
