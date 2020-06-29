@@ -16,7 +16,9 @@ void expectEncoding(Block block, List<int> correctBytes) {
   expect(replica, equals(block));
 }
 
-class CustomBlock implements Block {}
+class CustomBlock implements Block {
+  String toString([int _]) => 'CustomBlock()';
+}
 
 void main() {
   group('BytesBlock', () {
