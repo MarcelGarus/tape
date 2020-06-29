@@ -40,6 +40,8 @@ class UnexpectedArgumentError extends CliError {
   UnexpectedArgumentError(this.argument) : super(11);
 
   final String argument;
+
+  String toString() => 'Unknown argument "$argument".';
 }
 
 class FileNotFoundError extends CliError {
