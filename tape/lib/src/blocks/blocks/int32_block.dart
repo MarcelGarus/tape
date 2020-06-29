@@ -11,6 +11,8 @@ class Int32Block implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is Int32Block && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'Int32Block($value)';
 }
 
 extension _Int32BlocksWriter on _Writer {

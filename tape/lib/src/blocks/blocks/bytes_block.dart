@@ -13,6 +13,9 @@ class BytesBlock implements Block {
       identical(this, other) ||
       other is BytesBlock && _dce.equals(bytes, other.bytes);
   int get hashCode => runtimeType.hashCode ^ _dce.hash(bytes);
+
+  String toString([int _]) =>
+      'BytesBlock([${bytes.map((byte) => byte.toString()).join(', ')}])';
 }
 
 // An encoded [BytesBlock] looks like this:

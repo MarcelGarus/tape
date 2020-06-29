@@ -14,6 +14,9 @@ class SafeBlock implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is SafeBlock && child == other.child;
   int get hashCode => runtimeType.hashCode ^ child.hashCode;
+
+  String toString([int indention = 0]) =>
+      'SafeBlock(\n${' ' * indention}${child.toString(indention + 1)}\n)';
 }
 
 /// Is produced during decoding if a [SafeBlock] contained an unsupported block.
@@ -26,6 +29,8 @@ class UnsupportedBlock implements Block {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UnsupportedBlock && blockId == other.blockId;
+
+  String toString([int _]) => 'UnsupportedBlock($blockId)';
 }
 
 // An encoded [BytesBlock] looks like this:

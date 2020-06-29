@@ -11,6 +11,8 @@ class Uint32Block implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is Uint32Block && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'Uint32Block($value)';
 }
 
 extension _Uint32BlocksWriter on _Writer {

@@ -8,6 +8,8 @@ class IntBlock implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is IntBlock && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'IntBlock($value)';
 }
 
 // The int values are encoded as their direct binary representation:

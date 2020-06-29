@@ -8,6 +8,8 @@ class DoubleBlock implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is DoubleBlock && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'DoubleBlock($value)';
 }
 
 // The double values are encoded as their direct binary representation:

@@ -10,6 +10,15 @@ class ListBlock implements Block {
       identical(this, other) ||
       other is ListBlock && _dce.equals(children, other.children);
   int get hashCode => runtimeType.hashCode ^ _dce.hash(children);
+
+  String toString([int indention = 0]) {
+    final buffer = StringBuffer()..write('ListBlock([');
+    for (final child in children) {
+      buffer.writeln('${' ' * indention}${child.toString(indention + 1)}');
+    }
+    buffer.write('])');
+    return buffer.toString();
+  }
 }
 
 // An encoded [ListBlock] looks like this:

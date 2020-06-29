@@ -11,6 +11,8 @@ class Uint8Block implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is Uint8Block && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'Uint8Block($value)';
 }
 
 extension _Uint8BlocksWriter on _Writer {

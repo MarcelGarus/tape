@@ -11,6 +11,8 @@ class Int8Block implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is Int8Block && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'Int8Block($value)';
 }
 
 extension _Int8BlocksWriter on _Writer {

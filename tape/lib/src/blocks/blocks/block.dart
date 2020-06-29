@@ -3,6 +3,8 @@ part of '../blocks.dart';
 @sealed
 abstract class Block {
   const Block._();
+
+  String toString([int indention]);
 }
 
 // An encoded generic [Block] looks like this:

@@ -12,6 +12,16 @@ class FieldsBlock implements Block {
       identical(this, other) ||
       other is FieldsBlock && _dce.equals(fields, other.fields);
   int get hashCode => runtimeType.hashCode ^ _dce.hash(fields);
+
+  String toString([int indention = 0]) {
+    final buffer = StringBuffer()..write('FieldsBlock({');
+    for (final field in fields.entries) {
+      buffer.writeln(
+          '${' ' * indention}${field.key}: ${field.value.toString(indention + 1)}');
+    }
+    buffer.write('})');
+    return buffer.toString();
+  }
 }
 
 // An encoded [FieldBlock] looks like this:

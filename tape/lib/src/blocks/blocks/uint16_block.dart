@@ -11,6 +11,8 @@ class Uint16Block implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is Uint16Block && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'Uint16Block($value)';
 }
 
 extension _Uint16BlocksWriter on _Writer {

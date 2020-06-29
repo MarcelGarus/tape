@@ -8,6 +8,8 @@ class Float32Block implements Block {
   bool operator ==(Object other) =>
       identical(this, other) || other is Float32Block && value == other.value;
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
+
+  String toString([int _]) => 'Float32Block($value)';
 }
 
 extension _Float32BlocksWriter on _Writer {
