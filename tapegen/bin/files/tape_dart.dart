@@ -37,11 +37,6 @@ extension _RegistrationMap on FunctionDeclaration {
   }
 }
 
-T _debugPrint<T>(T obj) {
-  print('\n$obj');
-  return obj;
-}
-
 extension _MapEntries on SetOrMapLiteral {
   Iterable<MapLiteralEntry> get allEntries sync* {
     for (final element in elements) {
@@ -86,10 +81,12 @@ extension _Registrations on Iterable<MapLiteralEntry> {
 extension TapeDartFile on File {
   Future<void> createAndInitialize() async {
     assert(this == tapeDartFile);
+
     final task = Task(
       descriptionPresent: 'Creating $normalizedPath...',
       descriptionPast: 'Created $normalizedPath.',
     );
+
     if (existsSync()) {
       task.success('Tape file already exists at $normalizedPath.');
       return;
@@ -103,10 +100,10 @@ extension TapeDartFile on File {
           "@TapeInitialization(nextTypeId: 0)",
           "void initializeTape() {",
           "  // 📦 Register adapters from taped-packages.",
-          "  //Tape",
-          "  //  ..initializeFlutter()",
-          "  //  ..initializeTimeTable()",
-          "  //  ..initializeRrule();",
+          "  Tape",
+          "    ..registerDartCoreAdapters()",
+          "    ..registerDartTypedDataAdapters()",
+          "    ..registerDartMathAdapters();",
           "",
           "  Tape.registerAdapters({",
           "    // 🌱 For now, it's pretty empty here.",
