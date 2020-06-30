@@ -39,8 +39,9 @@ class _AdaptersDecoder extends Converter<Block, Object> {
 
   @override
   Object convert(Block block) {
+    final typedBlock = block.as<TypedBlock>();
     return defaultTapeRegistry
-        .adapterForId(block.as<TypedBlock>().typeId)
-        .fromBlock(block);
+        .adapterForId(typedBlock.typeId)
+        .fromBlock(typedBlock.child);
   }
 }
