@@ -83,14 +83,14 @@ void main() {
 
       test('produces expected encoding', () {
         AdapterForString()
-          ..expectEncoding('Foo', BytesBlock([1, 2, 3]))
-          ..expectEncoding('❤️', BytesBlock([1, 2]))
-          ..expectEncoding('hi\0you', BytesBlock([1, 2, 0, 3, 4, 5]));
+          ..expectEncoding('Foo', BytesBlock([70, 111, 111]))
+          ..expectEncoding('❤️', BytesBlock([226, 157, 164, 239, 184, 143]))
+          ..expectEncoding('F\x00oo', BytesBlock([70, 0, 111, 111]));
       });
 
       test('is compatible with all versions', () {
         AdapterForString()
-          ..expectDecoding(BytesBlock([1, 2]), '❤️')
+          ..expectDecoding(BytesBlock([226, 157, 164, 239, 184, 143]), '❤️')
           ..expectDecoding(BytesBlock([]), '');
       });
     });
@@ -120,20 +120,20 @@ void main() {
       test('encoding works', () {
         AdapterForUint16()
           ..expectSameValueAfterRoundtrip(Uint16(42))
-          ..expectSameValueAfterRoundtrip(Uint16(200000))
+          ..expectSameValueAfterRoundtrip(Uint16(2000))
           ..expectSameValueAfterRoundtrip(Uint16(0));
       });
 
       test('produces expected encoding', () {
         AdapterForUint16()
           ..expectEncoding(Uint16(42), Uint16Block(42))
-          ..expectEncoding(Uint16(1000000), Uint16Block(1000000));
+          ..expectEncoding(Uint16(10000), Uint16Block(10000));
       });
 
       test('is compatible with all versions', () {
         AdapterForUint16()
           ..expectDecoding(Uint16Block(42), Uint16(42))
-          ..expectDecoding(Uint16Block(1000000), Uint16(1000000));
+          ..expectDecoding(Uint16Block(10000), Uint16(10000));
       });
     });
 
@@ -141,20 +141,20 @@ void main() {
       test('encoding works', () {
         AdapterForUint32()
           ..expectSameValueAfterRoundtrip(Uint32(42))
-          ..expectSameValueAfterRoundtrip(Uint32(200000000000))
+          ..expectSameValueAfterRoundtrip(Uint32(200000000))
           ..expectSameValueAfterRoundtrip(Uint32(0));
       });
 
       test('produces expected encoding', () {
         AdapterForUint32()
           ..expectEncoding(Uint32(42), Uint32Block(42))
-          ..expectEncoding(Uint32(10000000000000), Uint32Block(10000000000000));
+          ..expectEncoding(Uint32(1000000000), Uint32Block(1000000000));
       });
 
       test('is compatible with all versions', () {
         AdapterForUint32()
           ..expectDecoding(Uint32Block(42), Uint32(42))
-          ..expectDecoding(Uint32Block(10000000000000), Uint32(10000000000000));
+          ..expectDecoding(Uint32Block(1000000000), Uint32(1000000000));
       });
     });
 
@@ -183,20 +183,20 @@ void main() {
       test('encoding works', () {
         AdapterForInt16()
           ..expectSameValueAfterRoundtrip(Int16(42))
-          ..expectSameValueAfterRoundtrip(Int16(-200000000000))
+          ..expectSameValueAfterRoundtrip(Int16(-20000))
           ..expectSameValueAfterRoundtrip(Int16(0));
       });
 
       test('produces expected encoding', () {
         AdapterForInt16()
           ..expectEncoding(Int16(42), Int16Block(42))
-          ..expectEncoding(Int16(-10000000000000), Int16Block(-10000000000000));
+          ..expectEncoding(Int16(-10000), Int16Block(-10000));
       });
 
       test('is compatible with all versions', () {
         AdapterForInt16()
           ..expectDecoding(Int16Block(42), Int16(42))
-          ..expectDecoding(Int16Block(-10000000000000), Int16(-10000000000000));
+          ..expectDecoding(Int16Block(-10000), Int16(-10000));
       });
     });
 
@@ -204,20 +204,20 @@ void main() {
       test('encoding works', () {
         AdapterForInt32()
           ..expectSameValueAfterRoundtrip(Int32(42))
-          ..expectSameValueAfterRoundtrip(Int32(-200000000000))
+          ..expectSameValueAfterRoundtrip(Int32(-2000000))
           ..expectSameValueAfterRoundtrip(Int32(0));
       });
 
       test('produces expected encoding', () {
         AdapterForInt32()
           ..expectEncoding(Int32(42), Int32Block(42))
-          ..expectEncoding(Int32(-10000000000000), Int32Block(-10000000000000));
+          ..expectEncoding(Int32(-1000000000), Int32Block(-1000000000));
       });
 
       test('is compatible with all versions', () {
         AdapterForInt32()
           ..expectDecoding(Int32Block(42), Int32(42))
-          ..expectDecoding(Int32Block(-10000000000000), Int32(-10000000000000));
+          ..expectDecoding(Int32Block(-1000000000), Int32(-1000000000));
       });
     });
 
