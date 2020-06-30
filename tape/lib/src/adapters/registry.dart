@@ -151,7 +151,9 @@ class TapeRegistry {
 
   String _createAdapterSuggestion(Type type) {
     final suggestedId = _suggestedAdapters[type.toString()] ??
-        _adaptersByIds.keys.reduce(max) + 1 + _suggestedAdapters.length;
+        (_adaptersByIds.isEmpty
+            ? 0
+            : _adaptersByIds.keys.reduce(max) + 1 + _suggestedAdapters.length);
     _suggestedAdapters[type.toString()] = suggestedId;
 
     return 'AdapterFor$type().registerForId($suggestedId)';
