@@ -15,8 +15,10 @@ class TypedBlock implements Block {
       other is TypedBlock && typeId == other.typeId && child == other.child;
   int get hashCode => runtimeType.hashCode ^ typeId.hashCode ^ child.hashCode;
 
-  String toString([int indention = 0]) =>
-      'TypedBlock($typeId\n${' ' * indention}${child.toString(indention + 1)}\n)';
+  String toString([int indention = 0]) => 'TypedBlock(\n'
+      '${'  ' * indention}  typeId: $typeId,\n'
+      '${'  ' * indention}  child: ${child.toString(indention + 1)},\n'
+      '${'  ' * indention})';
 }
 
 // An encoded [TypedBlock] looks like this:

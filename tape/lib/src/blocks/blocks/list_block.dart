@@ -14,9 +14,9 @@ class ListBlock implements Block {
   String toString([int indention = 0]) {
     final buffer = StringBuffer()..write('ListBlock([');
     for (final child in children) {
-      buffer.writeln('${' ' * indention}${child.toString(indention + 1)}');
+      buffer.writeln('${'  ' * indention}  ${child.toString(indention + 1)},');
     }
-    buffer.write('])');
+    buffer.write('${'  ' * indention}])');
     return buffer.toString();
   }
 }

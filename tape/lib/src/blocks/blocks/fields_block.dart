@@ -14,12 +14,12 @@ class FieldsBlock implements Block {
   int get hashCode => runtimeType.hashCode ^ _dce.hash(fields);
 
   String toString([int indention = 0]) {
-    final buffer = StringBuffer()..write('FieldsBlock({');
+    final buffer = StringBuffer()..writeln('FieldsBlock({');
     for (final field in fields.entries) {
       buffer.writeln(
-          '${' ' * indention}${field.key}: ${field.value.toString(indention + 1)}');
+          '${' ' * indention}  ${field.key}: ${field.value.toString(indention + 1)},');
     }
-    buffer.write('})');
+    buffer.write('${'  ' * indention}})');
     return buffer.toString();
   }
 }
