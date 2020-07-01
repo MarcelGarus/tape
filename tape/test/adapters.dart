@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:tape/test.dart';
 import 'package:test/test.dart';
 
@@ -28,7 +30,7 @@ void main() {
     ..registerDartMathAdapters()
     ..registerDartTypedDataAdapters();
 
-  group('dart:core adapters', () {
+  group('dart:core', () {
     group('AdapterForNull', () {
       test('encoding works', () {
         AdapterForNull().expectSameValueAfterRoundtrip(null);
@@ -699,5 +701,234 @@ void main() {
     });
   });
 
-  group('dart:math adapters', () {});
+  group('dart:math', () {
+    group('AdapterForMutableRectangle', () {
+      test('encoding works', () {
+        // Map doesn't implement ==, so we need to compare the entries manually.
+        AdapterForMutableRectangle<int>()
+          ..expectSameValueAfterRoundtrip(MutableRectangle(0, 1, 3, 7))
+          ..expectSameValueAfterRoundtrip(MutableRectangle(1, 5, 7, 6));
+
+        AdapterForMutableRectangle<double>()
+          ..expectSameValueAfterRoundtrip(MutableRectangle(0.5, 1.5, 3.75, 6.5))
+          ..expectSameValueAfterRoundtrip(MutableRectangle(0.25, 0, 4.5, 3));
+      });
+
+      test('produces expected encoding', () {
+        AdapterForMutableRectangle<int>()
+          ..expectEncoding(
+            MutableRectangle(0, 1, 3, 7),
+            FieldsBlock({
+              0: adapters.encode(0),
+              1: adapters.encode(1),
+              2: adapters.encode(3),
+              3: adapters.encode(7),
+            }),
+          )
+          ..expectEncoding(
+            MutableRectangle(1, 5, 7, 6),
+            FieldsBlock({
+              0: adapters.encode(1),
+              1: adapters.encode(5),
+              2: adapters.encode(7),
+              3: adapters.encode(6),
+            }),
+          );
+        AdapterForMutableRectangle<double>()
+          ..expectEncoding(
+            MutableRectangle(0.5, -1.5, 3.75, 6.5),
+            FieldsBlock({
+              0: adapters.encode(0.5),
+              1: adapters.encode(-1.5),
+              2: adapters.encode(3.75),
+              3: adapters.encode(6.5),
+            }),
+          )
+          ..expectEncoding(
+            MutableRectangle(-0.25, 0, 4.5, 3),
+            FieldsBlock({
+              0: adapters.encode(-0.25),
+              1: adapters.encode(0.0),
+              2: adapters.encode(4.5),
+              3: adapters.encode(3.0),
+            }),
+          );
+      });
+
+      test('is compatible with all versions', () {
+        AdapterForMutableRectangle<int>().expectDecoding(
+          FieldsBlock({
+            0: TypedBlock(typeId: -10, child: IntBlock(0)),
+            1: TypedBlock(typeId: -10, child: IntBlock(1)),
+            2: TypedBlock(typeId: -10, child: IntBlock(8)),
+            3: TypedBlock(typeId: -10, child: IntBlock(7)),
+          }),
+          MutableRectangle(0, 1, 8, 7),
+        );
+        AdapterForMutableRectangle<double>().expectDecoding(
+          FieldsBlock({
+            0: TypedBlock(typeId: -12, child: DoubleBlock(-0.25)),
+            1: TypedBlock(typeId: -12, child: DoubleBlock(0.0)),
+            2: TypedBlock(typeId: -12, child: DoubleBlock(4.5)),
+            3: TypedBlock(typeId: -12, child: DoubleBlock(3.0)),
+          }),
+          MutableRectangle(-0.25, 0, 4.5, 3),
+        );
+      });
+    });
+
+    group('AdapterForRectangle', () {
+      test('encoding works', () {
+        // Map doesn't implement ==, so we need to compare the entries manually.
+        AdapterForRectangle<int>()
+          ..expectSameValueAfterRoundtrip(Rectangle(0, 1, 3, 7))
+          ..expectSameValueAfterRoundtrip(Rectangle(1, 5, 7, 6));
+
+        AdapterForRectangle<double>()
+          ..expectSameValueAfterRoundtrip(Rectangle(0.5, 1.5, 3.75, 6.5))
+          ..expectSameValueAfterRoundtrip(Rectangle(0.25, 0, 4.5, 3));
+      });
+
+      test('produces expected encoding', () {
+        AdapterForRectangle<int>()
+          ..expectEncoding(
+            Rectangle(0, 1, 3, 7),
+            FieldsBlock({
+              0: adapters.encode(0),
+              1: adapters.encode(1),
+              2: adapters.encode(3),
+              3: adapters.encode(7),
+            }),
+          )
+          ..expectEncoding(
+            Rectangle(1, 5, 7, 6),
+            FieldsBlock({
+              0: adapters.encode(1),
+              1: adapters.encode(5),
+              2: adapters.encode(7),
+              3: adapters.encode(6),
+            }),
+          );
+        AdapterForRectangle<double>()
+          ..expectEncoding(
+            Rectangle(0.5, -1.5, 3.75, 6.5),
+            FieldsBlock({
+              0: adapters.encode(0.5),
+              1: adapters.encode(-1.5),
+              2: adapters.encode(3.75),
+              3: adapters.encode(6.5),
+            }),
+          )
+          ..expectEncoding(
+            Rectangle(-0.25, 0, 4.5, 3),
+            FieldsBlock({
+              0: adapters.encode(-0.25),
+              1: adapters.encode(0.0),
+              2: adapters.encode(4.5),
+              3: adapters.encode(3.0),
+            }),
+          );
+      });
+
+      test('is compatible with all versions', () {
+        AdapterForRectangle<int>().expectDecoding(
+          FieldsBlock({
+            0: TypedBlock(typeId: -10, child: IntBlock(0)),
+            1: TypedBlock(typeId: -10, child: IntBlock(1)),
+            2: TypedBlock(typeId: -10, child: IntBlock(8)),
+            3: TypedBlock(typeId: -10, child: IntBlock(7)),
+          }),
+          Rectangle(0, 1, 8, 7),
+        );
+        AdapterForRectangle<double>().expectDecoding(
+          FieldsBlock({
+            0: TypedBlock(typeId: -12, child: DoubleBlock(-0.25)),
+            1: TypedBlock(typeId: -12, child: DoubleBlock(0.0)),
+            2: TypedBlock(typeId: -12, child: DoubleBlock(4.5)),
+            3: TypedBlock(typeId: -12, child: DoubleBlock(3.0)),
+          }),
+          Rectangle(-0.25, 0, 4.5, 3),
+        );
+      });
+    });
+
+    group('AdapterForPoint', () {
+      test('encoding works', () {
+        // Map doesn't implement ==, so we need to compare the entries manually.
+        AdapterForPoint<int>()
+          ..expectSameValueAfterRoundtrip(Point(0, 1))
+          ..expectSameValueAfterRoundtrip(Point(1, 5));
+
+        AdapterForPoint<double>()
+          ..expectSameValueAfterRoundtrip(Point(0.5, 1.5))
+          ..expectSameValueAfterRoundtrip(Point(0.25, 0));
+      });
+
+      test('produces expected encoding', () {
+        AdapterForPoint<int>()
+          ..expectEncoding(
+            Point(0, 1),
+            FieldsBlock({0: adapters.encode(0), 1: adapters.encode(1)}),
+          )
+          ..expectEncoding(
+            Point(1, 5),
+            FieldsBlock({0: adapters.encode(1), 1: adapters.encode(5)}),
+          );
+        AdapterForPoint<double>()
+          ..expectEncoding(
+            Point(0.5, -1.5),
+            FieldsBlock({0: adapters.encode(0.5), 1: adapters.encode(-1.5)}),
+          )
+          ..expectEncoding(
+            Point(-0.25, 0),
+            FieldsBlock({0: adapters.encode(-0.25), 1: adapters.encode(0.0)}),
+          );
+      });
+
+      test('is compatible with all versions', () {
+        AdapterForPoint<int>().expectDecoding(
+          FieldsBlock({
+            0: TypedBlock(typeId: -10, child: IntBlock(0)),
+            1: TypedBlock(typeId: -10, child: IntBlock(1)),
+          }),
+          Point(0, 1),
+        );
+        AdapterForPoint<double>().expectDecoding(
+          FieldsBlock({
+            0: TypedBlock(typeId: -12, child: DoubleBlock(-0.25)),
+            1: TypedBlock(typeId: -12, child: DoubleBlock(0.0)),
+          }),
+          Point(-0.25, 0),
+        );
+      });
+    });
+  });
+
+  group('dart:typed_data', () {
+    group('AdapterForUint8List', () {
+      test('encoding works', () {
+        AdapterForUint8List()
+          ..expectSameValueAfterRoundtrip(Uint8List.fromList([1, 2, 3]));
+      });
+
+      test('produces expected encoding', () {
+        AdapterForUint8List()
+          ..expectEncoding(
+            Uint8List.fromList([1, 2, 3]),
+            BytesBlock([1, 2, 3]),
+          )
+          ..expectEncoding(
+            Uint8List.fromList([4, 5, 10, 12, 255]),
+            BytesBlock([4, 5, 10, 12, 255]),
+          );
+      });
+
+      test('is compatible with all versions', () {
+        AdapterForUint8List().expectDecoding(
+          BytesBlock([1, 2, 3]),
+          Uint8List.fromList([1, 2, 3]),
+        );
+      });
+    });
+  });
 }
