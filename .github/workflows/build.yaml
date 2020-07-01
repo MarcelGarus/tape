@@ -10,7 +10,8 @@ jobs:
   install-tape:
     name: Install tape dependencies
     runs-on: ubuntu-latest
-    container: { image: google/dart:2.7 }
+    container:
+      image: google/dart:2.7
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -30,7 +31,8 @@ jobs:
     name: Install tapegen dependencies
     needs: install-tape
     runs-on: ubuntu-latest
-    container: { image: google/dart:2.7 }
+    container:
+      image: google/dart:2.7
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -50,7 +52,8 @@ jobs:
     name: Run tape tests
     needs: install-tape
     runs-on: ubuntu-latest
-    container: { image: google/dart:2.7 }
+    container:
+      image: google/dart:2.7
     steps:
       - name: Checkout source
         uses: actions/download-artifact@v2
@@ -67,7 +70,8 @@ jobs:
     name: Run tapegen tests
     needs: install-tapegen
     runs-on: ubuntu-latest
-    container: { image: google/dart:2.7 }
+    container:
+      image: google/dart:2.7
     steps:
       - name: Checkout source
         uses: actions/download-artifact@v2
@@ -84,7 +88,8 @@ jobs:
     name: Tape coverage
     needs: install-tape
     runs-on: ubuntu-latest
-    container: { image: google/dart:2.7 }
+    container:
+      image: google/dart:2.7
     steps:
       - name: Checkout tape source
         uses: actions/download-artifact@v2
@@ -104,7 +109,8 @@ jobs:
     name: Tapegen coverage
     needs: install-tapegen
     runs-on: ubuntu-latest
-    container: { image: google/dart:2.7 }
+    container:
+      image: google/dart:2.7
     steps:
       - name: Checkout tapegen source
         uses: actions/download-artifact@v2
