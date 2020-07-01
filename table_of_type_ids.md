@@ -1,20 +1,11 @@
 # The Table of Type IDs
 
-If you are creating a Dart package that needs to register custom type adapters and that's intended to be published on [pub.dev](https://pub.dev), don't hesitate to file a pull request adding type ids to this table.
+If you are [creating a taped-package](how_to_create_a_taped_package.md), this table shows which ids you are allowed to use.
+@marcelgarus will reserve an id for you here and reference it in your taped-package issue.
 
-> TODO: This is not up-to-date.
->
-> Consider adding something like the following to your package to allow users to call `binary.initializeMyPackage()`:
->
-> ```dart
-> extension MyPackageBinary on BinaryApi {
->   void initializeMyPackage() {
->     TypeRegistry.registerAdapters({
->       ...
->     });
->   }
-> }
-> ```
+[Create a new taped-package issue](https://github.com/marcelgarus/tape/issues/new?labels=taped-package&template=1-taped-package.md)
+
+---
 
 Type id reservations are done in batches of 10. The x stands for any digit.
 
