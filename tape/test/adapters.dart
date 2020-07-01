@@ -14,16 +14,6 @@ extension TestableAdapter<T> on TapeAdapter<T> {
       expect(fromBlock(block), equals(value));
 }
 
-extension TestableClassAdapter<T> on TapeClassAdapter<T> {
-  void expectFieldsEncoding(T value, Fields fields) => expect(
-      toBlock(value),
-      equals(FieldsBlock({
-        for (final field in fields) field.id: adapters.encode(field.value),
-      })));
-  void expectFieldsDecoding(Fields fields, T value) =>
-      expect(fromFields(fields), equals(value));
-}
-
 void main() {
   Tape
     ..registerDartCoreAdapters()
