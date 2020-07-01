@@ -6,13 +6,11 @@ import '../blocks/blocks.dart';
 const throwIfMissing = Object();
 
 /// A snapshot of a class's field values.
-class Fields {
+class Fields extends Iterable<Field> {
   const Fields(this._fields);
 
   final Map<int, dynamic> _fields;
   Map<int, dynamic> toMap() => Map.from(_fields);
-  List<Field> get fields =>
-      _fields.entries.map((entry) => Field(entry.key, entry.value)).toList();
 
   T get<T>(int fieldId, {dynamic orDefault = throwIfMissing}) {
     if (_fields.containsKey(fieldId)) {
@@ -26,7 +24,22 @@ class Fields {
     return orDefault;
   }
 
-  bool contains(int fieldId) => _fields.containsKey(fieldId);
+  bool containsId(int fieldId) => _fields.containsKey(fieldId);
+
+  String toString() {
+    final buffer = StringBuffer()..writeln('Fields({');
+    for (final field in this) {
+      buffer.writeln('  ${field.id}: ${field.value},');
+    }
+    buffer.writeln('})');
+    return buffer.toString();
+  }
+
+  @override
+  Iterator<Field> get iterator => _fields.entries
+      .map((entry) => Field(entry.key, entry.value))
+      .toList()
+      .iterator;
 }
 
 class Field<T> {
