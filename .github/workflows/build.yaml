@@ -64,25 +64,9 @@ jobs:
         run: pub get
 
       - name: Run tests
-        run: pub run test
-
-  test-tapegen:
-    name: Run tapegen tests
-    needs: install-tapegen
-    runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
-    steps:
-      - name: Checkout source
-        uses: actions/download-artifact@v2
-        with:
-          name: tapegen-source
-
-      - name: Install dependencies
-        run: pub get
-
-      - name: Run tests
-        run: pub run test
+        run: |
+          pub run test test/blocks.dart
+          pub run test test/adapters.dart
 
   tape-coverage:
     name: Tape coverage
@@ -95,27 +79,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: tape-source
-
-      - name: Install dependencies
-        run: pub get
-
-      - name: Collect coverage
-        run: pub run test_coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
-
-  tapegen-coverage:
-    name: Tapegen coverage
-    needs: install-tapegen
-    runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
-    steps:
-      - name: Checkout tapegen source
-        uses: actions/download-artifact@v2
-        with:
-          name: tapegen-source
 
       - name: Install dependencies
         run: pub get
