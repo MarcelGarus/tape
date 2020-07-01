@@ -17,9 +17,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: pub get
-        with:
-          path: tape
+        run: |
+          cd tape
+          pub get
 
       - name: Persist current state
         uses: actions/upload-artifact@v1
@@ -37,9 +37,9 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Install dependencies
-        run: pub get
-        with:
-          path: tapegen
+        run: |
+          cd tapegen
+          pub get
 
       - name: Persist current state
         uses: actions/upload-artifact@v1
