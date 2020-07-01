@@ -7,8 +7,8 @@ import 'commands/assist.dart';
 import 'commands/doctor.dart';
 import 'commands/help.dart';
 import 'commands/init.dart';
-import 'errors.dart';
 import 'console.dart';
+import 'errors.dart';
 
 // Maybe useful emojis: 🧼, 🔭, 🌱, 💉, 🧱, 🕸️
 
@@ -44,13 +44,14 @@ class Command {
 
 final commands = <Command>[
   help,
-  // version, TODO: implement version
+  // TODO(marcelgarus): implement version
+  // version
   init,
   assist,
   doctor,
 ];
 
-void main(List<String> args) async {
+Future<void> main(List<String> args) async {
   try {
     await _dispatch(args);
   } on CliError catch (e) {

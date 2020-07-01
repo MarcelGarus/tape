@@ -23,6 +23,7 @@ class UnknownCommandError extends CliError {
 
   final String commandName;
 
+  @override
   String toString() {
     final bestMatch = StringSimilarity.findBestMatch(
       commandName,
@@ -41,6 +42,7 @@ class UnexpectedArgumentError extends CliError {
 
   final String argument;
 
+  @override
   String toString() => 'Unknown argument "$argument".';
 }
 
@@ -49,6 +51,7 @@ class FileNotFoundError extends CliError {
 
   final File file;
 
+  @override
   String toString() => "Couldn't find ${file.normalizedPath}.";
 }
 
@@ -57,6 +60,7 @@ class CannotReadFromFileError extends CliError {
 
   final File file;
 
+  @override
   String toString() => "Couldn't read from ${file.normalizedPath}.";
 }
 
@@ -65,13 +69,15 @@ class CannotWriteToFileError extends CliError {
 
   final File file;
 
+  @override
   String toString() => "Couldn't write to ${file.normalizedPath}.";
 }
 
 class FileContainsSyntaxErrors extends CliError {
   FileContainsSyntaxErrors() : super(6);
 
-  String toString() => "It contains syntax errors.";
+  @override
+  String toString() => 'It contains syntax errors.';
 }
 
 class CannotFormatCodeError extends CliError {

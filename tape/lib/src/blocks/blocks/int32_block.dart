@@ -8,10 +8,14 @@ class Int32Block implements Block {
 
   final int value;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) || other is Int32Block && value == other.value;
+
+  @override
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
 
+  @override
   String toString([int _]) => 'Int32Block($value)';
 }
 

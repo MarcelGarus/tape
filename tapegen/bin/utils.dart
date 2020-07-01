@@ -28,7 +28,7 @@ extension SingleOrNull<T> on Iterable<T> {
 
 extension StreamyAdd<T> on List<T> {
   Future<void> addStream(Stream<T> stream) async {
-    await addAll(await stream.toList());
+    addAll(await stream.toList());
   }
 }
 
@@ -69,6 +69,9 @@ extension CompilableSourceCode on String {
     task?.subtask('compiling');
     try {
       return parseString(content: this).unit;
+      // Sadly, we can't always ensure that we pass in correct Dart code. But
+      // that's okay, I guess.
+      // ignore: avoid_catching_errors
     } on ArgumentError {
       throw FileContainsSyntaxErrors();
     }
@@ -108,10 +111,11 @@ extension ModifyCode on String {
     // important so that we don't mess up the offsets.
     replacements = replacements.sortedBy((replacement) => replacement.offset);
     var cursor = 0;
-    var buffer = StringBuffer();
+    final buffer = StringBuffer();
     for (final replacement in replacements) {
-      buffer.write(substring(cursor, replacement.offset));
-      buffer.write(replacement.replaceWith);
+      buffer
+        ..write(substring(cursor, replacement.offset))
+        ..write(replacement.replaceWith);
       cursor = replacement.offset + replacement.length;
     }
     buffer.write(substring(cursor));

@@ -10,7 +10,7 @@ class TapeInitialization {
   final int nextTypeId;
 }
 
-/// Annotating a class with `@TapeClass` indicates that a [TapeAdapter] should
+/// Annotating a class with `@TapeClass` indicates that a `TapeAdapter` should
 /// get generated for it when running `tapegen`.
 class TapeClass {
   const TapeClass({@required this.nextFieldId})

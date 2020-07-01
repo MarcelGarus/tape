@@ -9,11 +9,15 @@ class BytesBlock implements Block {
 
   final List<int> bytes;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is BytesBlock && _dce.equals(bytes, other.bytes);
+
+  @override
   int get hashCode => runtimeType.hashCode ^ _dce.hash(bytes);
 
+  @override
   String toString([int _]) =>
       'BytesBlock([${bytes.map((byte) => byte.toString()).join(', ')}])';
 }
@@ -30,7 +34,7 @@ extension _BytesBlockWriter on _Writer {
 }
 
 extension _BytesBlockReader on _Reader {
-  // TODO: We can probably make this lots more efficient by just returning a view of the actual ByteData. To be able to do that, we'd have the change the Reader signature though.
+  // TODO(marcelgarus): We can probably make this lots more efficient by just returning a view of the actual ByteData. To be able to do that, we'd have the change the Reader signature though.
   BytesBlock readBytesBlock() {
     final length = readInt64();
     return BytesBlock([

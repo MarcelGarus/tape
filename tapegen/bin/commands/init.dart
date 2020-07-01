@@ -11,7 +11,7 @@ import '../utils.dart';
 final init = Command(
   names: ['init', 'initialize'],
   description: 'create tape boilerplate for your project',
-  action: (List<String> args) async {
+  action: (args) async {
     final isForPackage = args.remove('--package');
     var isConfirmed = args.remove('--confirmed');
     makeSureNoMoreArguments(args);
@@ -24,10 +24,10 @@ final init = Command(
       }
       if (!isConfirmed) {
         print('Aborting.');
-        return -1; // TODO: decide on return value
+        return -1; // TODO(marcelgarus): decide on return value
       }
 
-      var task = Task(
+      final task = Task(
         descriptionPresent: 'Changing pubspec.yaml description',
         descriptionPast: 'Changed pubspec.yaml description',
       );
@@ -42,10 +42,10 @@ final init = Command(
           'adapters for $projectName. Intended to be used with $projectName '
           'and tape.');
 
-      // TODO: Replace default readme.
-      // TODO: Replace license.
-      // TODO: Replace lib/TODO_taped.dart.
-      // TODO: Replace test/TODO_taped_test.dart.
+      // TODO(marcelgarus): Replace default readme.
+      // TODO(marcelgarus): Replace license.
+      // TODO(marcelgarus): Replace lib/TODO_taped.dart.
+      // TODO(marcelgarus): Replace test/TODO_taped_test.dart.
     } else {
       await tapeDartFile.createAndInitialize();
       await mainDartFile.addCallToInitializeTape();

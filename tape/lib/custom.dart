@@ -1,4 +1,4 @@
-/// Everything you need to create custom, more efficient [TapeAdapter]s.
+/// Everything you need to create custom, more efficient `TapeAdapter`s.
 
 export 'dart:typed_data';
 

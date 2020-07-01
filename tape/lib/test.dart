@@ -1,4 +1,4 @@
-/// Everything you need to test [TapeAdapter]s.
+/// Everything you need to test `TapeAdapter`s.
 
 export 'dart:typed_data';
 

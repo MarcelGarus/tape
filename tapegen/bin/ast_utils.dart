@@ -65,7 +65,7 @@ extension NamedAnnotations on List<Annotation> {
 }
 
 /// We want to be able to get the annotations of [ClassDeclaration]s,
-/// [FieldElement]s (class fields), and [FormalParameter]s (constructor
+/// `FieldElement`s (class fields), and [FormalParameter]s (constructor
 /// parameters).
 /// However, not all of them implement [AnnotatedNode]. Apparently,
 /// [AnnotatedNode] also implies that the class supports doc-comments.
@@ -76,6 +76,9 @@ extension AnnotatedAstNode on AstNode {
     // try-catch suggested by @jakemac53
     try {
       return (this as dynamic).metadata;
+      // Catching errors is fine in this case, because the API is badly
+      // designed.
+      // ignore: avoid_catching_errors
     } on NoSuchMethodError {
       return [];
     }

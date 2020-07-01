@@ -2,10 +2,11 @@ import 'adapters/adapters.dart';
 
 /// Adapters get registered here and packages provide initializing extension
 /// methods on this object.
+// ignore: non_constant_identifier_names
 final Tape = TapeApi._(defaultTapeRegistry);
 
-/// Next to the [tape] codec, the [TapeApi] is the main way to interact with
-/// tape. For now, that's only registering adapters.
+/// Next to the `tape` codec, the [TapeApi] is the main way to interact with
+/// Tape. For now, that's only registering adapters.
 /// To counter confusion, the [TapeApi]'s `registerAdapters` method ensures that
 /// all ids are non-negative if imported via `package:tape/tape.dart`, or that
 /// all ids are negative if imported via `package:tape/package.dart`. To

@@ -5,10 +5,14 @@ class Float32Block implements Block {
 
   final double value;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) || other is Float32Block && value == other.value;
+
+  @override
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
 
+  @override
   String toString([int _]) => 'Float32Block($value)';
 }
 

@@ -4,6 +4,7 @@ part of '../blocks.dart';
 abstract class Block {
   const Block._();
 
+  @override
   String toString([int indention]);
 }
 
@@ -68,7 +69,7 @@ extension _BlockWriter on _Writer {
       assert(
         false,
         "This shouldn't happen because unsupported shouldn't have an id. "
-        "So, we should have failed above.",
+        'So, we should have failed above.',
       );
     }
   }

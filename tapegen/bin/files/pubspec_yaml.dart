@@ -1,8 +1,3 @@
-import 'package:pubspec_parse/pubspec_parse.dart';
-
-import '../ast_utils.dart';
-import '../console.dart';
-import '../errors.dart';
 import '../utils.dart';
 
 final pubspecYamlFile = File('pubspec.yaml');

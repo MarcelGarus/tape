@@ -33,3 +33,4 @@ dev_dependencies:
   matcher: ^0.12.6
   source_gen_test: ^0.1.0
   test: any
+  extra_pedantic: any

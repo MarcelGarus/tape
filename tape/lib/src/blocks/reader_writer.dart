@@ -20,6 +20,9 @@ class _Reader {
     return cursorBefore;
   }
 
+  // We could just use a setter, but `jumpTo` is semantically more accurate and
+  // also makes clear that is is something special happening.
+  // ignore: use_setters_to_change_properties
   void jumpTo(int offset) => _cursor = offset;
 
   int readUint8() => _data.getUint8(_reserve(1));
@@ -62,9 +65,8 @@ class _Writer {
   int _reserve(int numBytes) {
     if (_buffer.length - _cursor < numBytes) {
       // We create a list that is 2-4 times larger than required.
-      var newSize = _pow2roundup((_cursor + numBytes) * 2);
-      var newBuffer = Uint8List(newSize);
-      newBuffer.setRange(0, _cursor, _buffer);
+      final newSize = _pow2roundup((_cursor + numBytes) * 2);
+      final newBuffer = Uint8List(newSize)..setRange(0, _cursor, _buffer);
       _buffer = newBuffer;
       _data = ByteData.view(_buffer.buffer);
     }
@@ -74,6 +76,7 @@ class _Writer {
     return cursorBefore;
   }
 
+  // ignore: use_setters_to_change_properties
   void jumpTo(int offset) => _cursor = offset;
 
   void writeUint8(int value, {int offset}) {
@@ -127,8 +130,9 @@ class _Writer {
   }
 }
 
-int _pow2roundup(int x) {
-  assert(x > 0);
+int _pow2roundup(int value) {
+  assert(value > 0);
+  var x = value;
   --x;
   x |= x >> 1;
   x |= x >> 2;

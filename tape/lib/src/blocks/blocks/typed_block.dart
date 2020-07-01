@@ -1,6 +1,6 @@
 part of '../blocks.dart';
 
-/// Annotates the subtree with a [typeId] that indicates which [TapeAdapter] can
+/// Annotates the subtree with a [typeId] that indicates which `TapeAdapter` can
 /// interpret the blocks.
 class TypedBlock implements Block {
   TypedBlock({@required this.typeId, @required this.child})
@@ -10,11 +10,15 @@ class TypedBlock implements Block {
   final int typeId;
   final Block child;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is TypedBlock && typeId == other.typeId && child == other.child;
+
+  @override
   int get hashCode => runtimeType.hashCode ^ typeId.hashCode ^ child.hashCode;
 
+  @override
   String toString([int indention = 0]) => 'TypedBlock(\n'
       '${'  ' * indention}  typeId: $typeId,\n'
       '${'  ' * indention}  child: ${child.toString(indention + 1)},\n'

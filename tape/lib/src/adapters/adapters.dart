@@ -15,10 +15,10 @@ class _AdaptersCodec extends Codec<Object, Block> {
   const _AdaptersCodec();
 
   @override
-  get encoder => const _AdaptersEncoder();
+  Converter<Object, Block> get encoder => const _AdaptersEncoder();
 
   @override
-  get decoder => const _AdaptersDecoder();
+  Converter<Block, Object> get decoder => const _AdaptersDecoder();
 }
 
 class _AdaptersEncoder extends Converter<Object, Block> {

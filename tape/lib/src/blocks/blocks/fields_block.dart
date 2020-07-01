@@ -8,11 +8,15 @@ class FieldsBlock implements Block {
 
   final Map<int, Block> fields;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is FieldsBlock && _dce.equals(fields, other.fields);
+
+  @override
   int get hashCode => runtimeType.hashCode ^ _dce.hash(fields);
 
+  @override
   String toString([int indention = 0]) {
     final buffer = StringBuffer()..writeln('FieldsBlock({');
     for (final field in fields.entries) {

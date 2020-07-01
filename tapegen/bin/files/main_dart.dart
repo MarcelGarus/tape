@@ -23,7 +23,7 @@ extension MainDartFile on File {
         task.success('You already call initializeTape() in your main method '
             'in $path.');
       });
-      mainDartFile.write(content);
+      await mainDartFile.write(content);
       task.success();
     } on CliError catch (e) {
       task.error("$e. You'll have to manually insert the call to "
@@ -34,8 +34,8 @@ extension MainDartFile on File {
   Iterable<Replacement> _addDependencyToTapeDartFile(
     CompilationUnit unit,
   ) sync* {
-    // TODO: Also recognize absolute imports, like `import 'package:example/tape.dart';`
-    // TODO: Even this check is not working yet.
+    // TODO(marcelgarus): Also recognize absolute imports, like `import 'package:example/tape.dart';`
+    // TODO(marcelgarus): Even this check is not working yet.
     // Check if the source code already imports the `tape.dart` file.
     final importsTapeFile = unit.imports
         .where((import) => import.selectedUriContent == 'tape.dart')
@@ -50,7 +50,7 @@ extension MainDartFile on File {
   }
 
   Iterable<Replacement> _addCallInMainMethod(CompilationUnit unit) sync* {
-    // TODO: Check if the call to initializeTape() is already made.
+    // TODO(marcelgarus): Check if the call to initializeTape() is already made.
 
     // Insert `initializeTape();` at the beginning of the main method.
     final mainFunctionBody = unit.topLevelFunctions.mainFunction?.body;
@@ -74,7 +74,7 @@ extension MainDartFile on File {
           '}',
         );
       } else if (mainFunctionBody is EmptyFunctionBody) {
-        // TODO: Throw
+        // TODO(marcelgarus): Throw something
         // The main method has the form `void main();`. Main methods can't be
         // abstract, so the user did something weird. We just fail.
         // task.error("Failed to automatically insert a call to initializeTape() "

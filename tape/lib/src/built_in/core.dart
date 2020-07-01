@@ -106,13 +106,18 @@ extension DartCoreTaped on TapeApi {
   }
 }
 
+// "Don't use the Null type, unless your are positive that you don't want void."
+// We are positive.
+// ignore: prefer_void_to_null
 class AdapterForNull extends TapeAdapter<Null> {
   const AdapterForNull();
 
   @override
+  // ignore: prefer_void_to_null
   Null fromBlock(Block block) => null;
 
   @override
+  // ignore: prefer_void_to_null
   Block toBlock(Null value) => Uint8Block(0);
 }
 
@@ -235,14 +240,14 @@ class AdapterForBigInt extends TapeClassAdapter<BigInt> {
     // From https://github.com/dart-lang/sdk/issues/32803
     BigInt read(int start, int end) {
       if (end - start <= 4) {
-        int result = 0;
-        for (int i = end - 1; i >= start; i--) {
+        var result = 0;
+        for (var i = end - 1; i >= start; i--) {
           result = result * 256 + bytes[i];
         }
         return BigInt.from(result);
       }
-      int mid = start + ((end - start) >> 1);
-      var result = read(start, mid) +
+      final mid = start + ((end - start) >> 1);
+      final result = read(start, mid) +
           read(mid, end) * (BigInt.one << ((mid - start) * 8));
       return result;
     }
@@ -254,15 +259,15 @@ class AdapterForBigInt extends TapeClassAdapter<BigInt> {
   @override
   Fields toFields(BigInt number) {
     final isNegative = number.isNegative;
-    number = number.abs();
 
     // From https://github.com/dart-lang/sdk/issues/32803
-    int numBytes = (number.bitLength + 7) >> 3;
-    var b256 = BigInt.from(256);
-    var bytes = Uint8List(numBytes);
-    for (int i = 0; i < numBytes; i++) {
-      bytes[i] = number.remainder(b256).toInt();
-      number = number >> 8;
+    var x = number.abs();
+    final numBytes = (x.bitLength + 7) >> 3;
+    final b256 = BigInt.from(256);
+    final bytes = Uint8List(numBytes);
+    for (var i = 0; i < numBytes; i++) {
+      bytes[i] = x.remainder(b256).toInt();
+      x = x >> 8;
     }
 
     return Fields({

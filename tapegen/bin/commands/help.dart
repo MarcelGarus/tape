@@ -8,12 +8,12 @@ final help = Command(
   action: (args) async {
     makeSureNoMoreArguments(args);
 
-    _printHelp();
+    await _printHelp();
     return 0;
   },
 );
 
-void _printHelp() async {
+Future<void> _printHelp() async {
   print('Welcome to tape!');
   print('For information about what tape is and how to use it, consult');
   print('https://pub.dev/packages/tape.');
@@ -30,7 +30,7 @@ void _printHelp() async {
   printTitle('Global options:');
   print('  --simple-output   for output without colors or replacement');
   print('');
-  print('More help: help <command>'); // TODO: implement more help
+  print('More help: help <command>'); // TODO(marcelgarus): implement more help
   print('Questions? Issues? https://github.com/marcelgarus/tape/issues/new');
 
   // print('Advanced functionality:');

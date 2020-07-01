@@ -4,8 +4,12 @@ import 'package:meta/meta.dart';
 
 import 'adapter.dart';
 import 'errors.dart';
+import 'utils.dart';
 
-void debugPrint(Object object) => print(object);
+void debugPrint(Object object) {
+  // ignore: avoid_print
+  if (isDebugMode) print(object);
+}
 
 /// The [defaultTapeRegistry] holds references to all [TapeAdapter]s used to
 /// serialize and deserialize classes. It the registry makes it possible to
@@ -185,11 +189,11 @@ class _AdapterNode<T> {
   final TapeAdapter<T> adapter;
   bool get isVirtual => adapter == null;
 
-  /// Whether to show warnings for subtypes. If [true] and values do not match
+  /// Whether to show warnings for subtypes. If `true` and values do not match
   /// this [_AdapterNode] exactly, a warning will be outputted to the console.
   /// For example, if the developer tries to encode a `SomeType<int>`, but the
   /// only [_AdapterNode] found is one of `SomeType<dynamic>`, a warning will be
-  /// logged in the console if [showWarningForSubtypes] is [true].
+  /// logged in the console if [showWarningForSubtypes] is `true`.
   final bool showWarningForSubtypes;
 
   /// [_AdapterNode]s of subtypes.
@@ -231,14 +235,14 @@ class _AdapterNode<T> {
   }
 
   void debugDump() {
-    final buffer = StringBuffer();
-    buffer.write('root node for objects to serialize\n');
+    final buffer = StringBuffer()
+      ..writeln('root node for objects to serialize');
     final children = _children;
 
     for (final child in children) {
       buffer.write(child._debugToString('', child == children.last));
     }
-    print(buffer);
+    debugPrint(buffer);
   }
 
   String _debugToString(String prefix, bool isLast) {

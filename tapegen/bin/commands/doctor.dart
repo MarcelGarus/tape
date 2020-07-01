@@ -9,13 +9,13 @@ import '../utils.dart';
 final doctor = Command(
   names: ['doctor', 'doc', 'dr'],
   description: 'information about the usage of tape in your project',
-  action: (List<String> args) async {
+  action: (args) async {
     makeSureNoMoreArguments(args);
 
     print('Running tape doctor. Allons-y!'); // Doctor Who reference.
     print('');
 
-    // TODO: Check if a new version of tape is available.
+    // TODO(marcelgarus): Check if a new version of tape is available.
 
     final pubspec = Pubspec.parse(File('pubspec.yaml').readAsStringSync());
 
@@ -52,7 +52,7 @@ String _getDependencyInfos(Dependency dependency) {
     return 'missing';
   }
   if (dependency is GitDependency) {
-    // TODO: Make this more beautiful. Most of the values will be null.
+    // TODO(marcelgarus): Make this more beautiful. Most of the values will be null.
     return '${dependency.url}, using ref ${dependency.ref} from path ${dependency.path}';
   }
   if (dependency is PathDependency) {
@@ -62,6 +62,5 @@ String _getDependencyInfos(Dependency dependency) {
     return dependency.version.toString();
   }
 
-  // TODO:
   throw 'Unknown dependency type ${dependency.runtimeType}';
 }

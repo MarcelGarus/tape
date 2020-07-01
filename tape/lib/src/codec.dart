@@ -9,10 +9,10 @@ class _TapeCodec extends Codec<Object, List<int>> {
   const _TapeCodec();
 
   @override
-  get encoder => _TapeEncoder();
+  Converter<Object, List<int>> get encoder => _TapeEncoder();
 
   @override
-  get decoder => _TapeDecoder();
+  Converter<List<int>, Object> get decoder => _TapeDecoder();
 }
 
 class _TapeEncoder extends Converter<Object, List<int>> {

@@ -11,10 +11,14 @@ class SafeBlock implements Block {
 
   final Block child;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) || other is SafeBlock && child == other.child;
+
+  @override
   int get hashCode => runtimeType.hashCode ^ child.hashCode;
 
+  @override
   String toString([int indention = 0]) =>
       'SafeBlock(\n${' ' * indention}${child.toString(indention + 1)}\n)';
 }
@@ -26,10 +30,15 @@ class UnsupportedBlock implements Block {
 
   final int blockId;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UnsupportedBlock && blockId == other.blockId;
 
+  @override
+  int get hashCode => runtimeType.hashCode ^ blockId.hashCode;
+
+  @override
   String toString([int _]) => 'UnsupportedBlock($blockId)';
 }
 

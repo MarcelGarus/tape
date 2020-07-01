@@ -25,7 +25,7 @@ class LockFileBuilder implements Builder {
         'adapter: ${await buildStep.readAsString(exportLibrary)};',
     ];
     if (content.isNotEmpty) {
-      buildStep.writeAsString(
+      await buildStep.writeAsString(
         AssetId(buildStep.inputId.package, 'tape.lock'),
         content.join('\n'),
       );
@@ -54,9 +54,6 @@ class LockFile {
     @required this.types,
   });
 
-  final Version version;
-  final List<LockedTapeClass> types;
-
   factory LockFile.fromYaml(String yamlString) {
     final data = loadYaml(yamlString);
     return LockFile(
@@ -77,9 +74,11 @@ class LockFile {
     );
   }
 
+  final Version version;
+  final List<LockedTapeClass> types;
+
   String toYaml() {
-    final buffer = StringBuffer();
-    buffer
+    final buffer = StringBuffer()
       ..writeln('# 📼.🔒')
       ..writeln('# This file should be checked into version control. Do not '
           'edit it by hand!')
@@ -87,7 +86,7 @@ class LockFile {
           'this file.')
       ..writeln()
       ..writeln("# Btw, this file is in yaml format. Here's more information "
-          "about this file:")
+          'about this file:')
       ..writeln('# TODO')
       ..writeln()
       ..writeln('version: $version')

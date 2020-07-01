@@ -1,3 +1,7 @@
+// Some integer literals are so large that they would be rounded in JS. Gladly,
+// these tests are only intended to be run on the Dart VM, so that's fine.
+// ignore_for_file: avoid_js_rounded_ints
+
 import 'dart:math';
 
 import 'package:tape/custom.dart';
@@ -17,6 +21,7 @@ void expectEncoding(Block block, List<int> correctBytes) {
 }
 
 class CustomBlock implements Block {
+  @override
   String toString([int _]) => 'CustomBlock()';
 }
 
@@ -193,7 +198,7 @@ void main() {
 
   group('DoubleBlock', () {
     test('encodes and decodes doubles correctly', () {
-      expectEncoding(DoubleBlock(0.0), [11, 0, 0, 0, 0, 0, 0, 0, 0]);
+      expectEncoding(DoubleBlock(0), [11, 0, 0, 0, 0, 0, 0, 0, 0]);
       expectEncoding(DoubleBlock(2.5), [11, 64, 4, 0, 0, 0, 0, 0, 0]);
       expectEncoding(DoubleBlock(-2.5), [11, 192, 4, 0, 0, 0, 0, 0, 0]);
       expectEncoding(DoubleBlock(200.5), [11, 64, 105, 16, 0, 0, 0, 0, 0]);
@@ -207,7 +212,7 @@ void main() {
 
   group('Float32Block', () {
     test('encodes and decodes floating point numbers correctly', () {
-      expectEncoding(Float32Block(0.0), [12, 0, 0, 0, 0]);
+      expectEncoding(Float32Block(0), [12, 0, 0, 0, 0]);
       expectEncoding(Float32Block(2.5), [12, 64, 32, 0, 0]);
       expectEncoding(Float32Block(-2.5), [12, 192, 32, 0, 0]);
       expectEncoding(Float32Block(200.5), [12, 67, 72, 128, 0]);
@@ -304,5 +309,5 @@ void main() {
     );
   });
 
-  // TODO: Test encoding ending abruptly.
+  // TODO(marcelgarus): Test encoding ending abruptly.
 }

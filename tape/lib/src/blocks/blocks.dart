@@ -34,10 +34,10 @@ class _BlocksCodec extends Codec<Block, List<int>> {
   const _BlocksCodec();
 
   @override
-  get encoder => const _BlocksEncoder();
+  Converter<Block, List<int>> get encoder => const _BlocksEncoder();
 
   @override
-  get decoder => const _BlocksDecoder();
+  Converter<List<int>, Block> get decoder => const _BlocksDecoder();
 }
 
 class _BlocksEncoder extends Converter<Block, List<int>> {

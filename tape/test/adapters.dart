@@ -1,3 +1,7 @@
+// Some integer literals are so large that they would be rounded in JS. Gladly,
+// these tests are only intended to be run on the Dart VM, so that's fine.
+// ignore_for_file: avoid_js_rounded_ints
+
 import 'dart:math';
 
 import 'package:tape/test.dart';
@@ -758,9 +762,9 @@ void main() {
         AdapterForMutableRectangle<double>().expectDecoding(
           FieldsBlock({
             0: TypedBlock(typeId: -12, child: DoubleBlock(-0.25)),
-            1: TypedBlock(typeId: -12, child: DoubleBlock(0.0)),
+            1: TypedBlock(typeId: -12, child: DoubleBlock(0)),
             2: TypedBlock(typeId: -12, child: DoubleBlock(4.5)),
-            3: TypedBlock(typeId: -12, child: DoubleBlock(3.0)),
+            3: TypedBlock(typeId: -12, child: DoubleBlock(3)),
           }),
           MutableRectangle(-0.25, 0, 4.5, 3),
         );
@@ -833,9 +837,9 @@ void main() {
         AdapterForRectangle<double>().expectDecoding(
           FieldsBlock({
             0: TypedBlock(typeId: -12, child: DoubleBlock(-0.25)),
-            1: TypedBlock(typeId: -12, child: DoubleBlock(0.0)),
+            1: TypedBlock(typeId: -12, child: DoubleBlock(0)),
             2: TypedBlock(typeId: -12, child: DoubleBlock(4.5)),
-            3: TypedBlock(typeId: -12, child: DoubleBlock(3.0)),
+            3: TypedBlock(typeId: -12, child: DoubleBlock(3)),
           }),
           Rectangle(-0.25, 0, 4.5, 3),
         );
@@ -886,7 +890,7 @@ void main() {
         AdapterForPoint<double>().expectDecoding(
           FieldsBlock({
             0: TypedBlock(typeId: -12, child: DoubleBlock(-0.25)),
-            1: TypedBlock(typeId: -12, child: DoubleBlock(0.0)),
+            1: TypedBlock(typeId: -12, child: DoubleBlock(0)),
           }),
           Point(-0.25, 0),
         );
@@ -897,8 +901,9 @@ void main() {
   group('dart:typed_data', () {
     group('AdapterForUint8List', () {
       test('encoding works', () {
-        AdapterForUint8List()
-          ..expectSameValueAfterRoundtrip(Uint8List.fromList([1, 2, 3]));
+        AdapterForUint8List().expectSameValueAfterRoundtrip(
+          Uint8List.fromList([1, 2, 3]),
+        );
       });
 
       test('produces expected encoding', () {

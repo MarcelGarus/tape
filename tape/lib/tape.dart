@@ -1,5 +1,5 @@
-/// Everything you need to use [tape] to serialize objects and to create
-/// [TapeClassAdapter]s using annotations.
+/// Everything you need to use Tape to serialize objects and to create
+/// `TapeClassAdapter`s using annotations.
 
 export 'dart:typed_data';
 

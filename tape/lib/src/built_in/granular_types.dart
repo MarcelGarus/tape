@@ -4,8 +4,14 @@ class Uint8 {
   final int _value;
 
   int toInt() => _value;
+
+  @override
   bool operator ==(Object other) => other is Uint8 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }
 
@@ -15,8 +21,14 @@ class Uint16 {
   final int _value;
 
   int toInt() => _value;
+
+  @override
   bool operator ==(Object other) => other is Uint16 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }
 
@@ -26,8 +38,14 @@ class Uint32 {
   final int _value;
 
   int toInt() => _value;
+
+  @override
   bool operator ==(Object other) => other is Uint32 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }
 
@@ -37,8 +55,14 @@ class Int8 {
   final int _value;
 
   int toInt() => _value;
+
+  @override
   bool operator ==(Object other) => other is Int8 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }
 
@@ -48,8 +72,14 @@ class Int16 {
   final int _value;
 
   int toInt() => _value;
+
+  @override
   bool operator ==(Object other) => other is Int16 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }
 
@@ -59,8 +89,14 @@ class Int32 {
   final int _value;
 
   int toInt() => _value;
+
+  @override
   bool operator ==(Object other) => other is Int32 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }
 
@@ -70,7 +106,13 @@ class Float32 {
   final double _value;
 
   double toDouble() => _value;
+
+  @override
   bool operator ==(Object other) => other is Float32 && _value == other._value;
+
+  @override
   int get hashCode => _value.hashCode;
+
+  @override
   String toString() => _value.toString();
 }

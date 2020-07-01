@@ -6,7 +6,7 @@ import '../blocks/blocks.dart';
 const throwIfMissing = Object();
 
 /// A snapshot of a class's field values.
-class Fields extends Iterable<Field> {
+class Fields extends Iterable<Field<dynamic>> {
   const Fields(this._fields);
 
   final Map<int, dynamic> _fields;
@@ -18,7 +18,6 @@ class Fields extends Iterable<Field> {
     }
     if (orDefault == throwIfMissing) {
       throw 'Missing field!';
-      // TODO: throw exception
       // throw MissingFieldException();
     }
     return orDefault;
@@ -26,6 +25,7 @@ class Fields extends Iterable<Field> {
 
   bool containsId(int fieldId) => _fields.containsKey(fieldId);
 
+  @override
   String toString() {
     final buffer = StringBuffer()..writeln('Fields({');
     for (final field in this) {
@@ -36,7 +36,7 @@ class Fields extends Iterable<Field> {
   }
 
   @override
-  Iterator<Field> get iterator => _fields.entries
+  Iterator<Field<dynamic>> get iterator => _fields.entries
       .map((entry) => Field(entry.key, entry.value))
       .toList()
       .iterator;
@@ -58,6 +58,7 @@ abstract class TapeClassAdapter<T> extends TapeAdapter<T> {
   Fields toFields(T object);
   T fromFields(Fields fields);
 
+  @override
   T fromBlock(Block block) {
     final fields = Fields({
       for (final field in block.as<FieldsBlock>().fields.entries)
@@ -66,6 +67,7 @@ abstract class TapeClassAdapter<T> extends TapeAdapter<T> {
     return fromFields(fields);
   }
 
+  @override
   Block toBlock(T object) {
     return FieldsBlock({
       for (final field in toFields(object)._fields.entries)

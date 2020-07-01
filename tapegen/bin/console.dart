@@ -1,10 +1,7 @@
-import 'dart:io';
-
 import 'package:console/console.dart';
 import 'package:meta/meta.dart';
 
 import 'errors.dart';
-import 'utils.dart';
 
 /// Whether the use rich output, e.g. ansi colors, emojis and loading spinners.
 // May be overridden in `tape.dart`.
@@ -34,6 +31,7 @@ Future<bool> confirm(String question) async {
 /// […] Assisting with lib/main.dart, formatting...
 /// [✓] Assisted with lib/main.dart.
 /// or
+// ignore: comment_references
 /// [X] Assisting with lib/main.dart failed: Couldn't open file.
 class Task {
   Task({@required this.descriptionPresent, @required this.descriptionPast}) {
@@ -55,7 +53,7 @@ class Task {
   }
 
   void subtask(String subtask) {
-    _updateMessage('${descriptionPresent}, $subtask...');
+    _updateMessage('$descriptionPresent, $subtask...');
   }
 
   void _print() {

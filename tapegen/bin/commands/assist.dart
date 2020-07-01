@@ -6,14 +6,14 @@ import 'package:watcher/watcher.dart';
 import '../console.dart';
 import '../files/any_dart.dart';
 import '../files/tape_dart.dart';
-import '../utils.dart';
 import '../tapegen.dart';
+import '../utils.dart';
 
 /// Assists the developer by autocompleting annotations.
 final assist = Command(
   names: ['assist'],
   description: 'assists you while writing code',
-  action: (List<String> args) async {
+  action: (args) async {
     makeSureNoMoreArguments(args);
 
     print('Running assist...');
@@ -58,6 +58,6 @@ Future<void> _assistWithFile(String path) async {
         .where((type) => !type.contains('<'))
         .map((type) => AdapterToRegister('AdapterFor$type()'))
         .toList();
-    tapeDartFile.registerAdapters(adapters);
+    await tapeDartFile.registerAdapters(adapters);
   }
 }

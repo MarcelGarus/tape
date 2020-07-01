@@ -47,7 +47,7 @@ extension AnyDartFile on File {
         yield* _ensurePartOfDirectiveExists(unit);
       }
     });
-    write(newContent, task);
+    await write(newContent, task);
 
     task.success();
     return AssistResult(tapeTypes);

@@ -1,34 +1,24 @@
-import 'dart:convert';
-import 'dart:io';
-
 import 'package:analyzer/dart/element/element.dart';
+// That's just the way the import system works for now.
+// ignore: implementation_imports
 import 'package:build/src/builder/build_step.dart';
 import 'package:meta/meta.dart';
 import 'package:source_gen/source_gen.dart';
-import 'package:tape/tape.dart';
 import 'package:dartx/dartx.dart';
 
-import 'concrete_data.dart';
 import 'utils.dart';
 
 @immutable
 class TapeGenerator extends Generator {
   @override
   Future<String> generate(LibraryReader library, BuildStep buildStep) async {
-    // Initialize logging.
-    final logSink = File('tape.log').openWrite(mode: FileMode.append);
-    void log(String message) => logSink.writeln(message);
-
-    // Load lock file.
-    final lockFile = Object();
-
     // final foundClasses = <ConcreteTapeClass>[];
     final adapters = <String>[];
 
     for (final element in library.allElements) {
       // @TapeClass
       if (element is ClassElement && element.isTapeClass) {
-        if (element.isEnum) throw 'Enum is annotated with @TapeClass.'; // TODO:
+        if (element.isEnum) throw 'Enum is annotated with @TapeClass.';
 
         // foundClasses.add(ConcreteTapeClass.fromElement(element));
         adapters.add(_generateAdapter(element));
@@ -38,16 +28,14 @@ class TapeGenerator extends Generator {
     // for (final foundClass in foundClasses) {
     //   log(JsonEncoder.withIndent('  ').convert(foundClass));
     // }
-    await logSink.close();
     return adapters.join('\n');
   }
 }
 
 String _generateAdapter(ClassElement element) {
-  final code = StringBuffer();
-  code
-    ..writeln(
-        'class AdapterFor${element.nameWithGenerics.withoutCruft} extends TapeClassAdapter<${element.nameWithGenerics}> {')
+  final code = StringBuffer()
+    ..writeln('class AdapterFor${element.nameWithGenerics.withoutCruft} '
+        'extends TapeClassAdapter<${element.nameWithGenerics}> {')
     ..writeln(
         '  const AdapterFor${element.nameWithoutGenerics.withoutCruft}();')
     ..writeln()
@@ -60,20 +48,18 @@ String _generateAdapter(ClassElement element) {
 }
 
 String _generateFromFieldsMethod(ClassElement element) {
-  final code = StringBuffer();
-
-  code
+  final code = StringBuffer()
     ..writeln('@override')
     ..writeln('${element.nameWithGenerics} fromFields(Fields fields) {')
     ..writeln('  return ${element.nameWithGenerics}(');
 
   final constructor = element.constructors.firstWhere(
     (constructor) => constructor.name.isEmpty,
-    orElse: () => throw 'Provide an unnamed constructor', // TODO: better error
+    orElse: () => throw 'Provide an unnamed constructor',
   );
 
-  var fields = element.fieldsToTape;
-  // TODO: ensure that all fields also have a fieldId
+  final fields = element.fieldsToTape;
+  // TODO(marcelgarus): ensure that all fields also have a fieldId
   for (final parameter in constructor.initializingFormalParameters) {
     final field =
         fields.firstOrNullWhere((field) => field.name == parameter.name);
@@ -91,7 +77,7 @@ String _generateFromFieldsMethod(ClassElement element) {
   // There may still be fields to initialize that were not in the constructor
   // as initializing formals. We hope these are mutable fields, so we using
   // cascades.
-  for (var field in fields) {
+  for (final field in fields) {
     code.write('..${field.name} = ${_generateFieldGetter(field)}');
   }
 
@@ -101,9 +87,8 @@ String _generateFromFieldsMethod(ClassElement element) {
 }
 
 String _generateFieldGetter(FieldElement field) {
-  final code = StringBuffer();
-
-  code.write('fields.get<${field.type.getDisplayString()}>(${field.fieldId}');
+  final code = StringBuffer()
+    ..write('fields.get<${field.type.getDisplayString()}>(${field.fieldId}');
   if (field.defaultValue != null) {
     code.write(', orDefault: ${field.defaultValue}');
   }
@@ -113,9 +98,7 @@ String _generateFieldGetter(FieldElement field) {
 }
 
 String _generateToFieldsMethod(ClassElement element) {
-  final code = StringBuffer();
-
-  code
+  final code = StringBuffer()
     ..writeln('@override')
     ..writeln('Fields toFields(${element.nameWithGenerics} object) {')
     ..writeln('  return Fields({');

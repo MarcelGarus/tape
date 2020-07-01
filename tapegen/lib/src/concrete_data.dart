@@ -1,7 +1,7 @@
-import 'package:analyzer/dart/element/element.dart';
-import 'package:meta/meta.dart';
+// import 'package:analyzer/dart/element/element.dart';
+// import 'package:meta/meta.dart';
 
-import 'utils.dart';
+// import 'utils.dart';
 
 // /// Every tape type should have an adapter named `AdapterFor<TypeName>` that is
 // /// registered in the `tape.dart` file using `Tape.registerAdapters` or in a

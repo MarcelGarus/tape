@@ -1,7 +1,8 @@
+// ignore_for_file: uri_has_not_been_generated, avoid_print
+
 import 'package:meta/meta.dart';
 import 'package:tape/tape.dart';
 
-// ignore: uri_has_not_been_generated
 import 'main.g.dart';
 
 @TapeClass(nextFieldId: 3)

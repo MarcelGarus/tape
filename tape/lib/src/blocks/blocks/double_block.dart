@@ -5,10 +5,14 @@ class DoubleBlock implements Block {
 
   final double value;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) || other is DoubleBlock && value == other.value;
+
+  @override
   int get hashCode => runtimeType.hashCode ^ value.hashCode;
 
+  @override
   String toString([int _]) => 'DoubleBlock($value)';
 }
 

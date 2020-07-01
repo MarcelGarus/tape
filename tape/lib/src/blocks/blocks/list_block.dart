@@ -6,11 +6,15 @@ class ListBlock implements Block {
 
   final List<Block> children;
 
+  @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ListBlock && _dce.equals(children, other.children);
+
+  @override
   int get hashCode => runtimeType.hashCode ^ _dce.hash(children);
 
+  @override
   String toString([int indention = 0]) {
     final buffer = StringBuffer()..writeln('ListBlock([');
     for (final child in children) {
