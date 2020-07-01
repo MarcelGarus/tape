@@ -49,7 +49,7 @@ jobs:
 
   test-tape:
     name: Run tape tests
-    needs: tape-install
+    needs: install-tape
     runs-on: ubuntu-latest
     container:
       image: google/dart:2.7
@@ -67,7 +67,7 @@ jobs:
 
   test-tapegen:
     name: Run tapegen tests
-    needs: tapegen-install
+    needs: install-tapegen
     runs-on: ubuntu-latest
     container:
       image: google/dart:2.7
