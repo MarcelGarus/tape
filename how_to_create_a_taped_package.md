@@ -100,9 +100,41 @@ extension FlutterTaped on TapeApi {
 Also, consider adding tests in `test/sample_taped_test.dart`:
 
 ```dart
+extension TestableAdapter<T> on TapeAdapter<T> {
+  T roundtripValue(T value) => fromBlock(toBlock(value));
+  void expectSameValueAfterRoundtrip(T value) =>
+      expect(roundtripValue(value), equals(value));
 
+  void expectEncoding(T value, Block block) =>
+      expect(toBlock(value), equals(block));
+  void expectDecoding(Block block, T value) =>
+      expect(fromBlock(block), equals(value));
+}
+
+void main() {
+  group('AdapterForColor', () {
+    test('encoding works', () {
+      AdapterForColor()
+        ..expectSameValueAfterRoundtrip(Colors.blue[500])
+        ..expectSameValueAfterRoundtrip(Colors.red.withAlpha(200))
+        ..expectSameValueAfterRoundtrip(Colors.pink[300])
+        ..expectSameValueAfterRoundtrip(Colors.teal.withOpacity(0.4));
+    });
+
+    test('produces expected encoding', () {
+      AdapterForColor()
+        ..expectEncoding(Colors.blue, Uint32Block(4280391411))
+        ..expectEncoding(Colors.teal.withOpacity(0.2), Uint32Block(855676552));
+    });
+
+    test('is compatible with all versions', () {
+      AdapterForColor()
+        ..expectDecoding(Uint32Block(4280391411), Colors.blue[500])
+        ..expectDecoding(Uint32Block(855676552), Colors.teal.withOpacity(0.2));
+    });
+  });
+}
 ```
-// TODO: Replace test/TODO_taped_test.dart.
 </details>
 
 Now, it's time to actually write adapters!
@@ -116,7 +148,7 @@ Or insert a link to the custom adapter guide.
 
 
 ```bash
-pub run tapegen package pr-for-type-ids
+pub run tapegen init --package
 ```
 
 It's time to wait! After your PR has been merged, just insert the type ids in the `sample_tape.dart` file of your package.
