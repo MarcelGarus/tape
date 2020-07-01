@@ -12,7 +12,7 @@ class ListBlock implements Block {
   int get hashCode => runtimeType.hashCode ^ _dce.hash(children);
 
   String toString([int indention = 0]) {
-    final buffer = StringBuffer()..write('ListBlock([');
+    final buffer = StringBuffer()..writeln('ListBlock([');
     for (final child in children) {
       buffer.writeln('${'  ' * indention}  ${child.toString(indention + 1)},');
     }
