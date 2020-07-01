@@ -44,4 +44,7 @@ class UnexpectedBlockError extends AdapterError {
 
   final Block block;
   final Type expectedType;
+
+  String toString() =>
+      'Expected $expectedType, but found ${block.runtimeType}:\n$block';
 }
