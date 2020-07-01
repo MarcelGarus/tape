@@ -229,12 +229,8 @@ class AdapterForBigInt extends TapeClassAdapter<BigInt> {
 
   @override
   BigInt fromFields(Fields fields) {
-    final isNegative = fields.get(0, orDefault: false);
-
-    if (!fields.contains(1)) {
-      return BigInt.zero;
-    }
-    final bytes = fields.get(1, orDefault: null);
+    final isNegative = fields.get<bool>(0, orDefault: false);
+    final bytes = fields.get<List<int>>(1);
 
     // From https://github.com/dart-lang/sdk/issues/32803
     BigInt read(int start, int end) {
@@ -261,11 +257,11 @@ class AdapterForBigInt extends TapeClassAdapter<BigInt> {
     number = number.abs();
 
     // From https://github.com/dart-lang/sdk/issues/32803
-    int bytes = (number.bitLength + 7) >> 3;
+    int numBytes = (number.bitLength + 7) >> 3;
     var b256 = BigInt.from(256);
-    var result = Uint8List(bytes);
-    for (int i = 0; i < bytes; i++) {
-      result[i] = number.remainder(b256).toInt();
+    var bytes = Uint8List(numBytes);
+    for (int i = 0; i < numBytes; i++) {
+      bytes[i] = number.remainder(b256).toInt();
       number = number >> 8;
     }
 
@@ -304,7 +300,7 @@ class AdapterForRegExp extends TapeClassAdapter<RegExp> {
   @override
   RegExp fromFields(Fields fields) {
     return RegExp(
-      fields.get(0, orDefault: ''), // TODO: throw
+      fields.get(0),
       caseSensitive: fields.get(1, orDefault: true),
       multiLine: fields.get(2, orDefault: false),
       unicode: fields.get(3, orDefault: false),
@@ -358,10 +354,7 @@ class AdapterForMapEntry<K, V> extends TapeClassAdapter<MapEntry<K, V>> {
 
   @override
   MapEntry<K, V> fromFields(Fields fields) {
-    return MapEntry(
-      fields.get(0, orDefault: null), // TODO: throw
-      fields.get(1, orDefault: null), // TODO: throw
-    );
+    return MapEntry(fields.get(0), fields.get(1));
   }
 
   @override
