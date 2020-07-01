@@ -85,7 +85,7 @@ jobs:
 
   tape-coverage:
     name: Coverage
-    needs: install
+    needs: install-tape
     runs-on: ubuntu-latest
     container:
       image: google/dart:2.7
@@ -106,7 +106,7 @@ jobs:
 
   tapegen-coverage:
     name: Coverage
-    needs: install
+    needs: install-tapegen
     runs-on: ubuntu-latest
     container:
       image: google/dart:2.7
