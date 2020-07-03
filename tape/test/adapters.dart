@@ -67,7 +67,7 @@ void main() {
           ..expectSameValueAfterRoundtrip('Hello world! 👋🏻')
           ..expectSameValueAfterRoundtrip('!@#\$%^&*()`~')
           ..expectSameValueAfterRoundtrip('')
-          ..expectSameValueAfterRoundtrip('	              ​    　')
+          ..expectSameValueAfterRoundtrip('	              ​  　')
           // This string shifts things from the left to the right, so don't be
           // confused why the parenthesis is on the left.
           ..expectSameValueAfterRoundtrip(
