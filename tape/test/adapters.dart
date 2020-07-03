@@ -362,22 +362,28 @@ void main() {
     group('AdapterForDateTime', () {
       test('encoding works', () {
         AdapterForDateTime()
-          ..expectSameValueAfterRoundtrip(DateTime(2020, 1, 15))
-          ..expectSameValueAfterRoundtrip(DateTime(2000, 1, 15))
+          ..expectSameValueAfterRoundtrip(DateTime.utc(2020, 1, 15))
+          ..expectSameValueAfterRoundtrip(DateTime.utc(2000, 1, 15))
           ..expectSameValueAfterRoundtrip(DateTime(1990, 1, 1))
           ..expectSameValueAfterRoundtrip(DateTime(3090, 8, 28));
       });
 
       test('produces expected encoding', () {
+        // We need to use utc dates here because otherwise the concrete instant
+        // would depend on the timezone where the test is running, which is not
+        // what we want.
         AdapterForDateTime()
-          ..expectEncoding(DateTime(2000, 1, 15), IntBlock(947890800000000))
-          ..expectEncoding(DateTime(3090, 8, 28), IntBlock(35364463200000000));
+          ..expectEncoding(DateTime.utc(2000, 1, 15), IntBlock(947890800000000))
+          ..expectEncoding(
+              DateTime.utc(3090, 8, 28), IntBlock(35364463200000000));
       });
 
       test('is compatible with all versions', () {
+        // We need to use utc dates for the same reason as above.
         AdapterForDateTime()
-          ..expectDecoding(IntBlock(947890800000000), DateTime(2000, 1, 15))
-          ..expectDecoding(IntBlock(35364463200000000), DateTime(3090, 8, 28));
+          ..expectDecoding(IntBlock(947890800000000), DateTime.utc(2000, 1, 15))
+          ..expectDecoding(
+              IntBlock(35364463200000000), DateTime.utc(3090, 8, 28));
       });
     });
 
