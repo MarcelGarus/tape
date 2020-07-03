@@ -277,15 +277,24 @@ class AdapterForBigInt extends TapeClassAdapter<BigInt> {
   }
 }
 
-class AdapterForDateTime extends TapeAdapter<DateTime> {
+class AdapterForDateTime extends TapeClassAdapter<DateTime> {
   const AdapterForDateTime();
 
   @override
-  DateTime fromBlock(Block block) =>
-      DateTime.fromMicrosecondsSinceEpoch(block.as<IntBlock>().value);
+  Fields toFields(DateTime dateTime) {
+    return Fields({
+      0: dateTime.isUtc,
+      1: dateTime.microsecondsSinceEpoch,
+    });
+  }
 
   @override
-  Block toBlock(DateTime dateTime) => IntBlock(dateTime.microsecondsSinceEpoch);
+  DateTime fromFields(Fields fields) {
+    return DateTime.fromMicrosecondsSinceEpoch(
+      fields.get<int>(1),
+      isUtc: fields.get<bool>(0),
+    );
+  }
 }
 
 class AdapterForDuration extends TapeAdapter<Duration> {

@@ -373,17 +373,39 @@ void main() {
         // would depend on the timezone where the test is running, which is not
         // what we want.
         AdapterForDateTime()
-          ..expectEncoding(DateTime.utc(2000, 1, 15), IntBlock(947890800000000))
           ..expectEncoding(
-              DateTime.utc(3090, 8, 28), IntBlock(35364463200000000));
+            DateTime.utc(2000, 1, 15),
+            FieldsBlock({
+              0: adapters.encode(true),
+              1: adapters.encode(947894400000000),
+            }),
+          )
+          ..expectEncoding(
+            DateTime.utc(3090, 8, 28),
+            FieldsBlock({
+              0: adapters.encode(true),
+              1: adapters.encode(35364470400000000),
+            }),
+          );
       });
 
       test('is compatible with all versions', () {
         // We need to use utc dates for the same reason as above.
         AdapterForDateTime()
-          ..expectDecoding(IntBlock(947890800000000), DateTime.utc(2000, 1, 15))
           ..expectDecoding(
-              IntBlock(35364463200000000), DateTime.utc(3090, 8, 28));
+            FieldsBlock({
+              0: adapters.encode(true),
+              1: adapters.encode(947894400000000),
+            }),
+            DateTime.utc(2000, 1, 15),
+          )
+          ..expectDecoding(
+            FieldsBlock({
+              0: adapters.encode(true),
+              1: adapters.encode(35364470400000000),
+            }),
+            DateTime.utc(3090, 8, 28),
+          );
       });
     });
 
