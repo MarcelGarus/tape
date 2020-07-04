@@ -67,27 +67,23 @@ jobs:
         run: |
           pub run test test/blocks.dart
           pub run test test/adapters.dart
-
-  tape-coverage:
-    name: Tape coverage
-    needs: install-tape
-    runs-on: ubuntu-latest
-    container:
-      image: google/dart:2.7
-    steps:
-      - name: Checkout tape source
-        uses: actions/download-artifact@v2
-        with:
-          name: tape-source
-
-      - name: Install dependencies
-        run: pub get
-
-      - name: Collect coverage
-        run: pub run test_coverage
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1
+  # tape-coverage:
+  #   name: Tape coverage
+  #   needs: install-tape
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: google/dart:2.7
+  #   steps:
+  #     - name: Checkout tape source
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: tape-source
+  #     - name: Install dependencies
+  #       run: pub get
+  #     - name: Collect coverage
+  #       run: pub run test_coverage
+  #     - name: Upload coverage to Codecov
+  #       uses: codecov/codecov-action@v1
   # lint:
   #   name: Lint
   #   needs: install
