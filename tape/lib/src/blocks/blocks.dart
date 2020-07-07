@@ -54,8 +54,12 @@ class _BlocksDecoder extends Converter<List<int>, Block> {
   Block convert(List<int> input) {
     final reader = _Reader(input);
     final block = reader.readBlock();
+
     if (reader.cursor < input.length) {
-      throw BlockEncodingHasExtraBytesException();
+      throw BlockEncodingHasExtraBytesException(
+        parsedBlock: block,
+        offset: reader.cursor,
+      );
     }
     return block;
   }

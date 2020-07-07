@@ -29,6 +29,8 @@ const _blockIds = {
   SafeBlock: 0x0d,
 };
 
+final blockTypes = _blockIds.keys.toList();
+
 extension _BlockWriter on _Writer {
   void writeBlock(Block block) {
     final type = block.runtimeType;
